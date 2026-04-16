@@ -1,0 +1,125 @@
+'use client';
+
+import Link from 'next/link';
+import { categories } from '@/lib/data';
+import { formatNumber } from '@/lib/utils';
+import { HiOutlineFire, HiOutlineTag, HiOutlineUsers } from 'react-icons/hi';
+
+export default function Sidebar() {
+    const trendingTags = [
+        { name: 'React', count: 1234 },
+        { name: 'Next.js', count: 987 },
+        { name: 'Python', count: 876 },
+        { name: 'Machine Learning', count: 765 },
+        { name: 'TypeScript', count: 654 },
+        { name: 'Node.js', count: 543 },
+        { name: 'CSS', count: 432 },
+        { name: 'Docker', count: 321 },
+    ];
+
+    const topContributors = [
+        { name: 'Alex Johnson', avatar: 'https://ui-avatars.com/api/?name=Alex+Johnson&background=6366f1&color=fff', reputation: 15420 },
+        { name: 'Sarah Chen', avatar: 'https://ui-avatars.com/api/?name=Sarah+Chen&background=8b5cf6&color=fff', reputation: 12800 },
+        { name: 'David Kumar', avatar: 'https://ui-avatars.com/api/?name=David+Kumar&background=ef4444&color=fff', reputation: 11200 },
+    ];
+
+    return (
+        <aside className="space-y-6">
+            {/* Categories */}
+            <div className="card p-5">
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center">
+                    <HiOutlineTag className="w-5 h-5 mr-2 text-primary-500" />
+                    Categories
+                </h3>
+                <div className="space-y-1.5">
+                    {categories.slice(0, 6).map((cat) => (
+                        <Link
+                            key={cat.id}
+                            href={`/problems?category=${cat.name}`}
+                            className="flex items-center justify-between px-3 py-2 rounded-lg 
+                       hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
+                        >
+                            <span className="flex items-center space-x-2">
+                                <span>{cat.icon}</span>
+                                <span className="text-sm text-slate-600 dark:text-slate-400 
+                               group-hover:text-slate-900 dark:group-hover:text-white">
+                                    {cat.name}
+                                </span>
+                            </span>
+                            <span className="text-xs text-slate-400 bg-slate-100 dark:bg-slate-800 
+                             px-2 py-0.5 rounded-full">
+                                {formatNumber(cat.count)}
+                            </span>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+
+            {/* Trending Tags */}
+            <div className="card p-5">
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center">
+                    <HiOutlineFire className="w-5 h-5 mr-2 text-orange-500" />
+                    Trending Tags
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                    {trendingTags.map((tag) => (
+                        <Link
+                            key={tag.name}
+                            href={`/problems?tag=${tag.name}`}
+                            className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 
+                       dark:text-slate-400 text-xs font-medium rounded-lg 
+                       hover:bg-primary-50 dark:hover:bg-primary-900/20 
+                       hover:text-primary-600 dark:hover:text-primary-400 
+                       transition-colors"
+                        >
+                            #{tag.name}
+                            <span className="ml-1 text-slate-400">×{formatNumber(tag.count)}</span>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+
+            {/* Top Contributors */}
+            <div className="card p-5">
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center">
+                    <HiOutlineUsers className="w-5 h-5 mr-2 text-emerald-500" />
+                    Top Contributors
+                </h3>
+                <div className="space-y-3">
+                    {topContributors.map((user, i) => (
+                        <Link
+                            key={user.name}
+                            href={`/profile/${i + 1}`}
+                            className="flex items-center space-x-3 p-2 rounded-lg 
+                       hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                        >
+                            <span className="text-sm font-bold text-slate-400 w-5">
+                                #{i + 1}
+                            </span>
+                            <img
+                                src={user.avatar}
+                                alt={user.name}
+                                className="w-8 h-8 rounded-lg"
+                            />
+                            <div>
+                                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                                    {user.name}
+                                </p>
+                                <p className="text-xs text-primary-500">
+                                    {formatNumber(user.reputation)} rep
+                                </p>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+                <Link
+                    href="/leaderboard"
+                    className="block text-center text-sm text-primary-600 dark:text-primary-400 
+                   font-medium mt-4 hover:underline"
+                >
+                    View Leaderboard →
+                </Link>
+            </div>
+        </aside>
+    );
+}
