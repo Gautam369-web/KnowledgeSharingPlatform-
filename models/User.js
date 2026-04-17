@@ -15,6 +15,9 @@ const UserSchema = new mongoose.Schema({
     badges: [{ type: String }],
     problemsSolved: { type: Number, default: 0 },
     articlesWritten: { type: Number, default: 0 },
+    isVerified: { type: Boolean, default: false },
+    otp: { type: String },
+    otpExpiry: { type: Date },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     joinedAt: { type: Date, default: Date.now }

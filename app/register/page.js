@@ -17,7 +17,10 @@ export default function RegisterPage() {
         password: '',
         confirmPassword: '',
     });
+    const [otp, setOtp] = useState('');
+    const [showOTP, setShowOTP] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [resending, setResending] = useState(false);
     const router = useRouter();
     const { register } = useAuth();
 
@@ -32,17 +35,68 @@ export default function RegisterPage() {
             return;
         }
         setLoading(true);
-        const result = await register(formData);
-        if (result.success) {
-            router.push('/dashboard');
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setShowOTP(true);
+            } else {
+                alert(data.message || 'Registration failed');
+            }
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
+    };
+
+    const handleVerifyOTP = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const response = await fetch('/api/auth/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: formData.email, otp }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                router.push('/login?verified=true');
+            } else {
+                alert(data.message || 'Verification failed');
+            }
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleResendOTP = async () => {
+        setResending(true);
+        try {
+            const response = await fetch('/api/auth/resend-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: formData.email }),
+            });
+            const data = await response.json();
+            alert(data.message);
+        } catch (error) {
+            alert('Failed to resend OTP');
+        } finally {
+            setResending(false);
+        }
     };
 
     return (
         <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950">
             <div className="w-full max-w-md">
-                <div className="card p-8 sm:p-10">
+                <div className="card p-8 sm:p-10 shadow-2xl border-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
                     <div className="text-center mb-10">
                         <Link href="/" className="inline-flex items-center space-x-2 mb-6 group">
                             <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-purple-600 
@@ -52,127 +106,181 @@ export default function RegisterPage() {
                             </div>
                         </Link>
                         <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">
-                            Create Account
+                            {showOTP ? 'Verify Email' : 'Create Account'}
                         </h1>
                         <p className="text-slate-500 dark:text-slate-400 mt-2">
-                            Join the SolveHub expert community
+                            {showOTP
+                                ? `We've sent a code to ${formData.email}`
+                                : 'Join the SolveHub expert community'}
                         </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="space-y-1">
-                            <label className="label-text">Full Name</label>
-                            <div className="relative">
-                                <HiOutlineUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                    {!showOTP ? (
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="space-y-1">
+                                <label className="label-text">Full Name</label>
+                                <div className="relative">
+                                    <HiOutlineUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        required
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        className="input-field pl-12"
+                                        placeholder="John Doe"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="label-text">Email Address</label>
+                                <div className="relative">
+                                    <HiOutlineMail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        required
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        className="input-field pl-12"
+                                        placeholder="name@example.com"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="label-text">Password</label>
+                                <div className="relative">
+                                    <HiOutlineLockClosed className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        required
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        className="input-field pl-12"
+                                        placeholder="••••••••"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="label-text">Confirm Password</label>
+                                <div className="relative">
+                                    <HiOutlineLockClosed className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                                    <input
+                                        type="password"
+                                        name="confirmPassword"
+                                        required
+                                        value={formData.confirmPassword}
+                                        onChange={handleChange}
+                                        className="input-field pl-12"
+                                        placeholder="••••••••"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="pt-2">
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full btn-primary !py-4 text-lg"
+                                >
+                                    {loading ? (
+                                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
+                                    ) : (
+                                        <span className="flex items-center justify-center">
+                                            Create Account <HiOutlineArrowRight className="ml-2 w-5 h-5" />
+                                        </span>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    ) : (
+                        <form onSubmit={handleVerifyOTP} className="space-y-6">
+                            <div className="space-y-1">
+                                <label className="label-text text-center block">Enter 6-digit OTP</label>
                                 <input
                                     type="text"
-                                    name="name"
+                                    maxLength="6"
                                     required
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    className="input-field pl-12"
-                                    placeholder="John Doe"
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                                    className="input-field text-center text-3xl tracking-[1rem] font-mono h-16"
+                                    placeholder="000000"
                                 />
                             </div>
-                        </div>
 
-                        <div className="space-y-1">
-                            <label className="label-text">Email Address</label>
-                            <div className="relative">
-                                <HiOutlineMail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    type="email"
-                                    name="email"
-                                    required
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="input-field pl-12"
-                                    placeholder="name@example.com"
-                                />
+                            <div className="space-y-4">
+                                <button
+                                    type="submit"
+                                    disabled={loading || otp.length !== 6}
+                                    className="w-full btn-primary !py-4 text-lg"
+                                >
+                                    {loading ? (
+                                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
+                                    ) : (
+                                        'Verify & Complete'
+                                    )}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={handleResendOTP}
+                                    disabled={resending}
+                                    className="w-full text-sm text-slate-500 hover:text-primary-600 transition-colors py-2 font-medium"
+                                >
+                                    {resending ? 'Resending...' : "Didn't receive the code? Resend"}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowOTP(false)}
+                                    className="w-full text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors font-medium"
+                                >
+                                    Go back to registration
+                                </button>
                             </div>
-                        </div>
+                        </form>
+                    )}
 
-                        <div className="space-y-1">
-                            <label className="label-text">Password</label>
-                            <div className="relative">
-                                <HiOutlineLockClosed className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    type="password"
-                                    name="password"
-                                    required
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="input-field pl-12"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-1">
-                            <label className="label-text">Confirm Password</label>
-                            <div className="relative">
-                                <HiOutlineLockClosed className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    required
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    className="input-field pl-12"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="pt-2">
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full btn-primary !py-4 text-lg"
-                            >
-                                {loading ? (
-                                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                ) : (
-                                    <span className="flex items-center justify-center">
-                                        Create Account <HiOutlineArrowRight className="ml-2 w-5 h-5" />
+                    {!showOTP && (
+                        <>
+                            <div className="relative my-8">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-slate-200 dark:border-slate-800" />
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+                                    <span className="bg-white dark:bg-slate-900 px-3 text-slate-500 font-bold tracking-widest">
+                                        Or sign up with
                                     </span>
-                                )}
-                            </button>
-                        </div>
-                    </form>
+                                </div>
+                            </div>
 
-                    <div className="relative my-8">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-slate-200 dark:border-slate-800" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-white dark:bg-slate-900 px-3 text-slate-500 font-bold tracking-widest">
-                                Or sign up with
-                            </span>
-                        </div>
-                    </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <button className="flex items-center justify-center px-4 py-3 border-2 
+                                     border-slate-100 dark:border-slate-800 rounded-xl 
+                                     hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-bold text-sm">
+                                    <FaGoogle className="w-4 h-4 mr-2 text-red-500" />
+                                    Google
+                                </button>
+                                <button className="flex items-center justify-center px-4 py-3 border-2 
+                                     border-slate-100 dark:border-slate-800 rounded-xl 
+                                     hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-bold text-sm">
+                                    <FaGithub className="w-4 h-4 mr-2 text-slate-900 dark:text-white" />
+                                    GitHub
+                                </button>
+                            </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <button className="flex items-center justify-center px-4 py-3 border-2 
-                             border-slate-100 dark:border-slate-800 rounded-xl 
-                             hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-bold text-sm">
-                            <FaGoogle className="w-4 h-4 mr-2 text-red-500" />
-                            Google
-                        </button>
-                        <button className="flex items-center justify-center px-4 py-3 border-2 
-                             border-slate-100 dark:border-slate-800 rounded-xl 
-                             hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-bold text-sm">
-                            <FaGithub className="w-4 h-4 mr-2 text-slate-900 dark:text-white" />
-                            GitHub
-                        </button>
-                    </div>
-
-                    <p className="text-center text-sm text-slate-500 mt-8">
-                        Already have an account?{' '}
-                        <Link href="/login" className="font-bold text-primary-600 hover:underline">
-                            Sign In
-                        </Link>
-                    </p>
+                            <p className="text-center text-sm text-slate-500 mt-8">
+                                Already have an account?{' '}
+                                <Link href="/login" className="font-bold text-primary-600 hover:underline">
+                                    Sign In
+                                </Link>
+                            </p>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
