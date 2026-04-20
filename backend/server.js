@@ -15,13 +15,41 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
-app.use(helmet());
+
+// Enhanced CORS Configuration
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://knowledge-sharing-platform-chi.vercel.app',
+    /^https:\/\/knowledge-sharing-platform-.*-projects\.vercel\.app$/ // Matches Vercel previews
+];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.some(o => typeof o === 'string' ? o === origin : o.test(origin))) {
+            return callback(null, true);
+        }
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Relax Helmet for API use
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 app.use(morgan('dev'));
 
-// Basic Route
+// Health Check
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'healthy', timestamp: new Date() });
+});
+
 app.get('/', (req, res) => {
-    res.send('SolveHub API is running...');
+    res.send('SolveHub API is running (v1.0.1)...');
 });
 
 // Import Routes
