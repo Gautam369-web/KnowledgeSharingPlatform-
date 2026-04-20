@@ -8,6 +8,14 @@ const connectDB = require('./config/db');
 // Load environment variables
 dotenv.config();
 
+// Required Environment Variables Check
+const requiredEnvs = ['MONGODB_URI', 'EMAIL_SERVER_USER', 'EMAIL_SERVER_PASSWORD', 'EMAIL_SERVER_HOST', 'EMAIL_SERVER_PORT'];
+const missingEnvs = requiredEnvs.filter(env => !process.env[env]);
+
+if (missingEnvs.length > 0) {
+    console.error(`CRITICAL: Missing environment variables: ${missingEnvs.join(', ')}`);
+}
+
 // Connect to Database
 connectDB();
 
