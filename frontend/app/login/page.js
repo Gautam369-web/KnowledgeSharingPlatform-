@@ -25,20 +25,20 @@ export default function LoginPage() {
     };
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', background: '#0d0d0f', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', background: '#0a1a0d', position: 'relative', overflow: 'hidden' }}>
             {/* Grid background */}
-            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(245,158,11,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(245,158,11,0.03) 1px,transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(212,160,23,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(212,160,23,0.03) 1px,transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
             {/* Glow */}
-            <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(245,158,11,0.07) 0%,transparent 70%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(212,160,23,0.07) 0%,transparent 70%)', pointerEvents: 'none' }} />
 
             <div style={{ width: '100%', maxWidth: 420, position: 'relative', zIndex: 1 }}>
                 {/* Card */}
-                <div style={{ background: '#111114', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: '40px 36px' }}>
+                <div style={{ background: '#0e2010', border: '1px solid rgba(74,158,92,0.16)', borderRadius: 20, padding: '40px 36px' }}>
 
                     {/* Header */}
                     <div style={{ textAlign: 'center', marginBottom: 36 }}>
                         <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', marginBottom: 24 }}>
-                            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 18, color: '#0d0d0f', fontFamily: "'Bricolage Grotesque',sans-serif" }}>S</div>
+                            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#d4a017', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 18, color: '#0a1a0d', fontFamily: "'Bricolage Grotesque',sans-serif" }}>S</div>
                         </Link>
                         <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 28, fontWeight: 900, color: '#fff', marginBottom: 8, letterSpacing: '-0.02em' }}>Welcome back</h1>
                         <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Sign in to your SolveHub account</p>
@@ -86,9 +86,9 @@ export default function LoginPage() {
 
                     {/* Divider */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '24px 0' }}>
-                        <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.07)' }} />
+                        <div style={{ flex: 1, height: 1, background: 'rgba(74,158,92,0.14)' }} />
                         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '0.08em' }}>OR</span>
-                        <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.07)' }} />
+                        <div style={{ flex: 1, height: 1, background: 'rgba(74,158,92,0.14)' }} />
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
@@ -104,7 +104,7 @@ export default function LoginPage() {
 
                     <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.35)', marginTop: 28 }}>
                         No account?{' '}
-                        <Link href="/register" style={{ color: '#f59e0b', fontWeight: 700, textDecoration: 'none' }}>Create one free</Link>
+                        <Link href="/register" style={{ color: '#d4a017', fontWeight: 700, textDecoration: 'none' }}>Create one free</Link>
                     </p>
                 </div>
             </div>

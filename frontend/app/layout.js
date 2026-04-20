@@ -19,25 +19,25 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <body style={{ margin: 0, padding: 0, background: '#0d0d0f', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <body style={{ margin: 0, padding: 0, background: '#0a1a0d', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
                 <AuthProvider>
                     <Toaster
                         position="top-right"
                         toastOptions={{
                             duration: 4000,
                             style: {
-                                background: '#16161a',
+                                background: '#152c18',
                                 color: '#fff',
                                 borderRadius: '10px',
-                                border: '1px solid rgba(245,158,11,0.25)',
+                                border: '1px solid rgba(212,160,23,0.25)',
                                 fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontSize: '13px',
                             },
                             success: {
-                                iconTheme: { primary: '#f59e0b', secondary: '#0d0d0f' },
+                                iconTheme: { primary: '#d4a017', secondary: '#0a1a0d' },
                             },
                             error: {
-                                iconTheme: { primary: '#f87171', secondary: '#0d0d0f' },
+                                iconTheme: { primary: '#f87171', secondary: '#0a1a0d' },
                             },
                         }}
                     />

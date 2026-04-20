@@ -16,27 +16,27 @@ export default function SearchPage() {
         : [];
 
     return (
-        <div style={{ minHeight: '100vh', background: '#0d0d0f', paddingTop: 88 }}>
+        <div style={{ minHeight: '100vh', background: '#0a1a0d', paddingTop: 88 }}>
             <div style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px' }}>
                 <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 32, textAlign: 'center' }}>
-                    Search <em style={{ color: '#f59e0b', fontStyle: 'italic' }}>Everything</em>
+                    Search <em style={{ color: '#d4a017', fontStyle: 'italic' }}>Everything</em>
                 </h1>
 
                 {/* Search input */}
                 <div style={{ position: 'relative', marginBottom: 40 }}>
-                    <HiOutlineSearch style={{ position: 'absolute', left: 18, top: '50%', transform: 'translateY(-50%)', color: '#f59e0b', width: 22, height: 22 }} />
+                    <HiOutlineSearch style={{ position: 'absolute', left: 18, top: '50%', transform: 'translateY(-50%)', color: '#d4a017', width: 22, height: 22 }} />
                     <input
                         autoFocus type="text"
                         placeholder="Search problems, articles, topics..."
                         value={query} onChange={e => setQuery(e.target.value)}
                         style={{
                             width: '100%', padding: '18px 18px 18px 54px',
-                            background: '#111114', border: '1px solid rgba(245,158,11,0.3)',
+                            background: '#0e2010', border: '1px solid rgba(212,160,23,0.3)',
                             borderRadius: 14, color: '#fff', fontSize: 16, outline: 'none',
                             fontFamily: "'Bricolage Grotesque',sans-serif", transition: 'border-color 0.2s, box-shadow 0.2s',
                         }}
-                        onFocus={e => { e.target.style.borderColor = 'rgba(245,158,11,0.6)'; e.target.style.boxShadow = '0 0 0 4px rgba(245,158,11,0.08)'; }}
-                        onBlur={e => { e.target.style.borderColor = 'rgba(245,158,11,0.3)'; e.target.style.boxShadow = 'none'; }}
+                        onFocus={e => { e.target.style.borderColor = 'rgba(212,160,23,0.6)'; e.target.style.boxShadow = '0 0 0 4px rgba(212,160,23,0.08)'; }}
+                        onBlur={e => { e.target.style.borderColor = 'rgba(212,160,23,0.3)'; e.target.style.boxShadow = 'none'; }}
                     />
                 </div>
 
@@ -46,8 +46,8 @@ export default function SearchPage() {
                         {matchedProblems.length > 0 && (
                             <div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-                                    <HiOutlineLightningBolt style={{ color: '#f59e0b', width: 16 }} />
-                                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#f59e0b' }}>PROBLEMS</span>
+                                    <HiOutlineLightningBolt style={{ color: '#d4a017', width: 16 }} />
+                                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#d4a017' }}>PROBLEMS</span>
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                                     {matchedProblems.map((p, i) => (

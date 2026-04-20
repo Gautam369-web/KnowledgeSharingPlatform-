@@ -17,13 +17,13 @@ export default function ArticlesPage() {
     );
 
     return (
-        <div style={{ minHeight: '100vh', background: '#0d0d0f', paddingTop: 88 }}>
+        <div style={{ minHeight: '100vh', background: '#0a1a0d', paddingTop: 88 }}>
             {/* Header */}
-            <div style={{ background: '#111114', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '40px 24px 32px' }}>
+            <div style={{ background: '#0e2010', borderBottom: '1px solid rgba(74,158,92,0.12)', padding: '40px 24px 32px' }}>
                 <div style={{ maxWidth: 1200, margin: '0 auto' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                        <HiOutlineBookOpen style={{ color: '#f59e0b', width: 20, height: 20 }} />
-                        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#f59e0b' }}>KNOWLEDGE BASE</span>
+                        <HiOutlineBookOpen style={{ color: '#d4a017', width: 20, height: 20 }} />
+                        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#d4a017' }}>KNOWLEDGE BASE</span>
                     </div>
                     <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>
                         Articles &amp; Guides
@@ -40,8 +40,8 @@ export default function ArticlesPage() {
                                 <button key={c} onClick={() => setActiveCategory(c)} style={{
                                     padding: '5px 14px', borderRadius: 100, border: 'none', cursor: 'pointer',
                                     fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', fontFamily: "'Bricolage Grotesque',sans-serif",
-                                    background: activeCategory === c ? '#f59e0b' : 'rgba(255,255,255,0.04)',
-                                    color: activeCategory === c ? '#0d0d0f' : 'rgba(255,255,255,0.5)',
+                                    background: activeCategory === c ? '#d4a017' : 'rgba(255,255,255,0.04)',
+                                    color: activeCategory === c ? '#0a1a0d' : 'rgba(255,255,255,0.5)',
                                     transition: 'all 0.2s',
                                 }}>{c}</button>
                             ))}
@@ -60,8 +60,8 @@ export default function ArticlesPage() {
                     {filtered.map((article, i) => (
                         <Link key={article.id || i} href={`/articles/${article.id}`} style={{ textDecoration: 'none' }}>
                             <div className="card card-hover" style={{ padding: '28px', height: '100%' }}
-                                onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(245,158,11,0.25)'}
-                                onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'}
+                                onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(212,160,23,0.25)'}
+                                onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(74,158,92,0.14)'}
                             >
                                 <span className="badge badge-primary" style={{ marginBottom: 14 }}>{article.category}</span>
                                 <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.4, marginBottom: 10, letterSpacing: '-0.01em' }}>{article.title}</h2>
@@ -71,7 +71,7 @@ export default function ArticlesPage() {
                                         <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}><HiOutlineClock style={{ width: 13 }} />{article.readTime || 5} min</span>
                                         <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}><HiOutlineEye style={{ width: 13 }} />{article.views || 0}</span>
                                     </div>
-                                    <HiOutlineArrowRight style={{ color: '#f59e0b', width: 18 }} />
+                                    <HiOutlineArrowRight style={{ color: '#d4a017', width: 18 }} />
                                 </div>
                             </div>
                         </Link>
@@ -80,7 +80,7 @@ export default function ArticlesPage() {
 
                 {filtered.length === 0 && (
                     <div style={{ textAlign: 'center', padding: '80px 0' }}>
-                        <HiOutlineBookOpen style={{ width: 48, height: 48, color: 'rgba(245,158,11,0.3)', margin: '0 auto 16px' }} />
+                        <HiOutlineBookOpen style={{ width: 48, height: 48, color: 'rgba(212,160,23,0.3)', margin: '0 auto 16px' }} />
                         <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 15 }}>No articles found. Be the first to write one!</p>
                     </div>
                 )}

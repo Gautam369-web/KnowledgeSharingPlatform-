@@ -99,22 +99,22 @@ export default function RegisterPage() {
     };
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '100px 24px', background: '#0d0d0f', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '100px 24px', background: '#0a1a0d', position: 'relative', overflow: 'hidden' }}>
             {/* Grid background */}
-            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(245,158,11,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(245,158,11,0.03) 1px,transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(212,160,23,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(212,160,23,0.03) 1px,transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
             {/* Glows */}
-            <div style={{ position: 'absolute', top: '20%', left: '30%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(245,158,11,0.05) 0%,transparent 70%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', top: '20%', left: '30%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(212,160,23,0.05) 0%,transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', bottom: '10%', right: '20%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle,rgba(129,140,248,0.04) 0%,transparent 70%)', pointerEvents: 'none' }} />
 
             <div style={{ width: '100%', maxWidth: showOTP ? 400 : 460, position: 'relative', zIndex: 1 }}>
 
                 {/* ── Card ── */}
-                <div style={{ background: '#111114', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: '40px 32px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}>
+                <div style={{ background: '#0e2010', border: '1px solid rgba(74,158,92,0.16)', borderRadius: 24, padding: '40px 32px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}>
 
                     {/* Logo/Header */}
                     <div style={{ textAlign: 'center', marginBottom: 36 }}>
                         <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', marginBottom: 20 }}>
-                            <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#f59e0b,#d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 18, color: '#0d0d0f', fontFamily: "'Bricolage Grotesque',sans-serif" }}>S</div>
+                            <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#f59e0b,#d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 18, color: '#0a1a0d', fontFamily: "'Bricolage Grotesque',sans-serif" }}>S</div>
                         </Link>
                         <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 32, fontWeight: 900, color: '#fff', marginBottom: 8, letterSpacing: '-0.02em' }}>
                             {showOTP ? 'Check your mail' : 'Create an Account'}
@@ -196,19 +196,19 @@ export default function RegisterPage() {
 
                             {/* Divider */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '14px 0' }}>
-                                <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+                                <div style={{ flex: 1, height: 1, background: 'rgba(74,158,92,0.12)' }} />
                                 <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', fontWeight: 700, letterSpacing: '0.08em' }}>OR CONTINUE WITH</span>
-                                <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+                                <div style={{ flex: 1, height: 1, background: 'rgba(74,158,92,0.12)' }} />
                             </div>
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                                <button type="button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 0', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'background 0.2s', fontFamily: "'Bricolage Grotesque',sans-serif" }}
+                                <button type="button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 0', borderRadius: 10, border: '1px solid rgba(74,158,92,0.16)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'background 0.2s', fontFamily: "'Bricolage Grotesque',sans-serif" }}
                                     onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
                                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                                 >
                                     <FaGoogle style={{ color: '#ea4335', width: 14 }} /> Google
                                 </button>
-                                <button type="button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 0', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'background 0.2s', fontFamily: "'Bricolage Grotesque',sans-serif" }}
+                                <button type="button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 0', borderRadius: 10, border: '1px solid rgba(74,158,92,0.16)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'background 0.2s', fontFamily: "'Bricolage Grotesque',sans-serif" }}
                                     onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
                                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                                 >
@@ -229,7 +229,7 @@ export default function RegisterPage() {
                                     value={otp} onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
                                     style={{
                                         width: '100%', height: 64, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
-                                        borderRadius: 14, textAlign: 'center', fontSize: 32, fontWeight: 800, color: '#f59e0b',
+                                        borderRadius: 14, textAlign: 'center', fontSize: 32, fontWeight: 800, color: '#d4a017',
                                         letterSpacing: 8, fontFamily: "'Bricolage Grotesque',sans-serif",
                                     }}
                                     placeholder="000000"
@@ -238,7 +238,7 @@ export default function RegisterPage() {
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                                 <button type="submit" disabled={loading || otp.length !== 6} className="btn-primary" style={{ width: '100%', height: 50, justifyContent: 'center' }}>
-                                    {loading ? <div style={{ width: 18, height: 18, border: '2px solid rgba(13,13,15,0.3)', borderTop: '2px solid #0d0d0f', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> : <><span>VERIFY ACCOUNT</span><HiOutlineShieldCheck /></>}
+                                    {loading ? <div style={{ width: 18, height: 18, border: '2px solid rgba(13,13,15,0.3)', borderTop: '2px solid #0a1a0d', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> : <><span>VERIFY ACCOUNT</span><HiOutlineShieldCheck /></>}
                                 </button>
 
                                 <button type="button" onClick={handleResendOTP} disabled={resending} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 8 }}>
@@ -249,9 +249,9 @@ export default function RegisterPage() {
                     )}
 
                     {!showOTP && (
-                        <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.35)', marginTop: 28, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 24 }}>
+                        <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.35)', marginTop: 28, borderTop: '1px solid rgba(74,158,92,0.12)', paddingTop: 24 }}>
                             Joined us already?{' '}
-                            <Link href="/login" style={{ color: '#f59e0b', fontWeight: 700, textDecoration: 'none' }}>Sign In</Link>
+                            <Link href="/login" style={{ color: '#d4a017', fontWeight: 700, textDecoration: 'none' }}>Sign In</Link>
                         </p>
                     )}
                 </div>

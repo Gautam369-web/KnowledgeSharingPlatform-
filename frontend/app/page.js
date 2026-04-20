@@ -56,7 +56,7 @@ const FEATURES = [
         icon: '◈',
         title: 'Problem Forge',
         body: 'Post complex problems with rich markdown. Tag domains, set priority, and watch experts race to solve them.',
-        accent: '#f59e0b',
+        accent: '#d4a017',
     },
     {
         icon: '⬡',
@@ -127,7 +127,7 @@ const TESTIMONIALS = [
         name: 'Priya Anand',
         role: 'Engineering Lead · Stripe',
         avatar: 'PA',
-        color: '#f59e0b',
+        color: '#d4a017',
     },
     {
         quote: "The reputation system is addictive. Our team genuinely competes to be the most helpful — and our code quality shows it.",
@@ -167,7 +167,7 @@ export default function LandingPage() {
 
             <div
                 className="min-h-screen text-white"
-                style={{ background: '#0d0d0f', fontFamily: "'Bricolage Grotesque', sans-serif" }}
+                style={{ background: '#0a1a0d', fontFamily: "'Bricolage Grotesque', sans-serif" }}
             >
                 {/* ══════════════════════════
                     HERO
@@ -177,8 +177,8 @@ export default function LandingPage() {
                     <div style={{
                         position: 'absolute', inset: 0, pointerEvents: 'none',
                         backgroundImage: `
-                          linear-gradient(rgba(245,158,11,0.04) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(245,158,11,0.04) 1px, transparent 1px)
+                          linear-gradient(rgba(212,160,23,0.04) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(212,160,23,0.04) 1px, transparent 1px)
                         `,
                         backgroundSize: '60px 60px',
                     }} />
@@ -186,25 +186,25 @@ export default function LandingPage() {
                     <div style={{
                         position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)',
                         width: 700, height: 700, borderRadius: '50%',
-                        background: 'radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%)',
+                        background: 'radial-gradient(circle, rgba(212,160,23,0.12) 0%, transparent 70%)',
                         pointerEvents: 'none',
                     }} />
                     {/* Spinning ring */}
                     <div style={{
                         position: 'absolute', top: '38%', left: '50%', transform: 'translate(-50%,-50%)',
                         width: 500, height: 500, borderRadius: '50%',
-                        border: '1px solid rgba(245,158,11,0.08)',
+                        border: '1px solid rgba(212,160,23,0.08)',
                     }} className="animate-spin-slow" />
 
                     <div style={{ maxWidth: 820, position: 'relative', zIndex: 1 }}>
                         <FadeUp delay={0}>
                             <div style={{
                                 display: 'inline-flex', alignItems: 'center', gap: 8,
-                                background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)',
+                                background: 'rgba(212,160,23,0.1)', border: '1px solid rgba(212,160,23,0.3)',
                                 borderRadius: 100, padding: '6px 16px', marginBottom: 32,
-                                fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', color: '#f59e0b',
+                                fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', color: '#d4a017',
                             }}>
-                                <span style={{ width: 6, height: 6, background: '#f59e0b', borderRadius: '50%', display: 'inline-block' }} />
+                                <span style={{ width: 6, height: 6, background: '#d4a017', borderRadius: '50%', display: 'inline-block' }} />
                                 NOW IN OPEN BETA · 12,000+ EXPERTS JOINED
                             </div>
                         </FadeUp>
@@ -246,14 +246,14 @@ export default function LandingPage() {
                         <FadeUp delay={240}>
                             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
                                 <Link href="/register" style={{
-                                    background: '#f59e0b', color: '#0d0d0f',
+                                    background: '#d4a017', color: '#0a1a0d',
                                     fontWeight: 800, fontSize: 15, letterSpacing: '0.04em',
                                     padding: '14px 32px', borderRadius: 10, textDecoration: 'none',
                                     display: 'inline-flex', alignItems: 'center', gap: 8,
                                     transition: 'all 0.2s',
                                 }}
                                     onMouseEnter={e => { e.currentTarget.style.background = '#fbbf24'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                                    onMouseLeave={e => { e.currentTarget.style.background = '#f59e0b'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = '#d4a017'; e.currentTarget.style.transform = 'translateY(0)'; }}
                                 >
                                     JOIN FOR FREE →
                                 </Link>
@@ -265,7 +265,7 @@ export default function LandingPage() {
                                     display: 'inline-flex', alignItems: 'center', gap: 8,
                                     transition: 'all 0.2s',
                                 }}
-                                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(245,158,11,0.4)'; e.currentTarget.style.color = '#fff'; }}
+                                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(212,160,23,0.4)'; e.currentTarget.style.color = '#fff'; }}
                                     onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; }}
                                 >
                                     EXPLORE PROBLEMS
@@ -279,8 +279,8 @@ export default function LandingPage() {
                         <div style={{
                             position: 'relative', zIndex: 1, marginTop: 80,
                             display: 'grid', gridTemplateColumns: 'repeat(4,1fr)',
-                            gap: 1, background: 'rgba(245,158,11,0.12)',
-                            border: '1px solid rgba(245,158,11,0.18)',
+                            gap: 1, background: 'rgba(212,160,23,0.12)',
+                            border: '1px solid rgba(212,160,23,0.18)',
                             borderRadius: 14, overflow: 'hidden',
                             maxWidth: 700, width: '100%',
                         }}>
@@ -289,7 +289,7 @@ export default function LandingPage() {
                                     padding: '20px 16px', textAlign: 'center',
                                     background: 'rgba(13,13,15,0.7)',
                                 }}>
-                                    <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 28, fontWeight: 900, color: '#f59e0b', letterSpacing: '-0.03em' }}>{s.value}</div>
+                                    <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 28, fontWeight: 900, color: '#d4a017', letterSpacing: '-0.03em' }}>{s.value}</div>
                                     <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.06em', marginTop: 4 }}>{s.label.toUpperCase()}</div>
                                 </div>
                             ))}
@@ -300,10 +300,10 @@ export default function LandingPage() {
                 {/* ══════════════════════════
                     FEATURES
                 ══════════════════════════ */}
-                <section id="features" style={{ padding: '120px 24px', background: '#111114' }}>
+                <section id="features" style={{ padding: '120px 24px', background: '#0e2010' }}>
                     <div style={{ maxWidth: 1120, margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: 72 }}>
-                            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#f59e0b', marginBottom: 16 }}>PLATFORM CAPABILITIES</p>
+                            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#d4a017', marginBottom: 16 }}>PLATFORM CAPABILITIES</p>
                             <h2 style={{
                                 fontFamily: "'Bricolage Grotesque',sans-serif",
                                 fontSize: 'clamp(36px,5vw,56px)',
@@ -320,7 +320,7 @@ export default function LandingPage() {
                                     key={i}
                                     style={{
                                         background: 'rgba(255,255,255,0.02)',
-                                        border: '1px solid rgba(255,255,255,0.07)',
+                                        border: '1px solid rgba(74,158,92,0.14)',
                                         borderRadius: 16, padding: '32px 28px',
                                         transition: 'border-color 0.3s, transform 0.3s',
                                         cursor: 'default',
@@ -329,7 +329,7 @@ export default function LandingPage() {
                                     }}
                                     className="animate-fade-up"
                                     onMouseEnter={e => { e.currentTarget.style.borderColor = `${f.accent}40`; e.currentTarget.style.transform = 'translateY(-4px)'; }}
-                                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(74,158,92,0.14)'; e.currentTarget.style.transform = 'translateY(0)'; }}
                                 >
                                     <div style={{
                                         fontSize: 28, marginBottom: 18,
@@ -347,15 +347,15 @@ export default function LandingPage() {
                 {/* ══════════════════════════
                     SHOWCASE BAND
                 ══════════════════════════ */}
-                <section id="showcase" style={{ padding: '100px 24px', background: '#0d0d0f', position: 'relative', overflow: 'hidden' }}>
+                <section id="showcase" style={{ padding: '100px 24px', background: '#0a1a0d', position: 'relative', overflow: 'hidden' }}>
                     <div style={{
                         position: 'absolute', inset: 0, pointerEvents: 'none',
-                        background: 'linear-gradient(135deg,rgba(245,158,11,0.05) 0%,transparent 60%)',
+                        background: 'linear-gradient(135deg,rgba(212,160,23,0.05) 0%,transparent 60%)',
                     }} />
                     <div style={{ maxWidth: 1120, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
                         {/* Text */}
                         <div>
-                            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#f59e0b', marginBottom: 16 }}>HOW IT WORKS</p>
+                            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#d4a017', marginBottom: 16 }}>HOW IT WORKS</p>
                             <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(32px,4vw,48px)', fontWeight: 900, color: '#fff', lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: 24 }}>
                                 A living,<br /><em>breathing</em><br />knowledge base
                             </h2>
@@ -367,10 +367,10 @@ export default function LandingPage() {
                                     <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
                                         <div style={{
                                             minWidth: 28, height: 28, borderRadius: '50%',
-                                            background: 'rgba(245,158,11,0.15)',
-                                            border: '1px solid rgba(245,158,11,0.35)',
+                                            background: 'rgba(212,160,23,0.15)',
+                                            border: '1px solid rgba(212,160,23,0.35)',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            fontSize: 11, fontWeight: 800, color: '#f59e0b',
+                                            fontSize: 11, fontWeight: 800, color: '#d4a017',
                                         }}>{i + 1}</div>
                                         <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, paddingTop: 4 }}>{step}</p>
                                     </div>
@@ -381,7 +381,7 @@ export default function LandingPage() {
                         {/* Visual card mockup */}
                         <div style={{ position: 'relative' }} className="animate-float">
                             <div style={{
-                                background: '#16161a', border: '1px solid rgba(245,158,11,0.2)',
+                                background: '#152c18', border: '1px solid rgba(212,160,23,0.2)',
                                 borderRadius: 20, padding: 28, fontFamily: "'JetBrains Mono',monospace",
                             }}>
                                 <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
@@ -390,18 +390,18 @@ export default function LandingPage() {
                                     ))}
                                 </div>
                                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginBottom: 12 }}>// Recently solved</div>
-                                <div style={{ fontSize: 13, color: '#f59e0b', marginBottom: 6 }}>{">"} Optimizing React re-renders at scale</div>
+                                <div style={{ fontSize: 13, color: '#d4a017', marginBottom: 6 }}>{">"} Optimizing React re-renders at scale</div>
                                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', marginBottom: 16 }}>14 solutions · 2.3k views · 12 min ago</div>
-                                <div style={{ width: '100%', height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 16 }} />
+                                <div style={{ width: '100%', height: 1, background: 'rgba(74,158,92,0.12)', marginBottom: 16 }} />
                                 <div style={{ fontSize: 13, color: '#34d399', marginBottom: 6 }}>{">"} JWT refresh token race conditions</div>
                                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', marginBottom: 16 }}>7 solutions · 890 views · 1 hr ago</div>
-                                <div style={{ width: '100%', height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 16 }} />
+                                <div style={{ width: '100%', height: 1, background: 'rgba(74,158,92,0.12)', marginBottom: 16 }} />
                                 <div style={{ fontSize: 13, color: '#818cf8', marginBottom: 6 }}>{">"} PostgreSQL query plan regression</div>
                                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>22 solutions · 5.1k views · 3 hr ago</div>
                                 <div style={{
                                     marginTop: 24,
-                                    background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)',
-                                    borderRadius: 8, padding: '10px 14px', fontSize: 11, color: '#f59e0b',
+                                    background: 'rgba(212,160,23,0.08)', border: '1px solid rgba(212,160,23,0.2)',
+                                    borderRadius: 8, padding: '10px 14px', fontSize: 11, color: '#d4a017',
                                     letterSpacing: '0.04em',
                                 }}>
                                     ✓  VERIFIED BY 340 ENGINEERS
@@ -414,10 +414,10 @@ export default function LandingPage() {
                 {/* ══════════════════════════
                     PRICING
                 ══════════════════════════ */}
-                <section id="pricing" style={{ padding: '120px 24px', background: '#111114' }}>
+                <section id="pricing" style={{ padding: '120px 24px', background: '#0e2010' }}>
                     <div style={{ maxWidth: 1000, margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: 72 }}>
-                            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#f59e0b', marginBottom: 16 }}>TRANSPARENT PRICING</p>
+                            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#d4a017', marginBottom: 16 }}>TRANSPARENT PRICING</p>
                             <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(36px,5vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>
                                 Simple. No surprises.
                             </h2>
@@ -426,15 +426,15 @@ export default function LandingPage() {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 20 }}>
                             {PLANS.map((plan, i) => (
                                 <div key={i} style={{
-                                    background: plan.featured ? 'rgba(245,158,11,0.06)' : 'rgba(255,255,255,0.02)',
-                                    border: plan.featured ? '1px solid rgba(245,158,11,0.4)' : '1px solid rgba(255,255,255,0.07)',
+                                    background: plan.featured ? 'rgba(212,160,23,0.06)' : 'rgba(255,255,255,0.02)',
+                                    border: plan.featured ? '1px solid rgba(212,160,23,0.4)' : '1px solid rgba(74,158,92,0.14)',
                                     borderRadius: 20, padding: '36px 28px',
                                     position: 'relative', overflow: 'hidden',
                                 }}>
                                     {plan.featured && (
                                         <div style={{
                                             position: 'absolute', top: 16, right: 16,
-                                            background: '#f59e0b', color: '#0d0d0f',
+                                            background: '#d4a017', color: '#0a1a0d',
                                             fontSize: 10, fontWeight: 800, letterSpacing: '0.1em',
                                             padding: '3px 10px', borderRadius: 100,
                                         }}>POPULAR</div>
@@ -452,7 +452,7 @@ export default function LandingPage() {
                                             padding: '12px 0', borderRadius: 10, fontWeight: 800, fontSize: 13, letterSpacing: '0.05em',
                                             marginBottom: 28,
                                             ...(plan.ctaStyle === 'solid'
-                                                ? { background: '#f59e0b', color: '#0d0d0f' }
+                                                ? { background: '#d4a017', color: '#0a1a0d' }
                                                 : { border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }),
                                         }}
                                     >
@@ -461,7 +461,7 @@ export default function LandingPage() {
                                     <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
                                         {plan.perks.map((perk, j) => (
                                             <li key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>
-                                                <span style={{ color: '#f59e0b', fontSize: 16, lineHeight: 1 }}>✦</span> {perk}
+                                                <span style={{ color: '#d4a017', fontSize: 16, lineHeight: 1 }}>✦</span> {perk}
                                             </li>
                                         ))}
                                     </ul>
@@ -474,10 +474,10 @@ export default function LandingPage() {
                 {/* ══════════════════════════
                     TESTIMONIALS
                 ══════════════════════════ */}
-                <section id="testimonials" style={{ padding: '120px 24px', background: '#0d0d0f' }}>
+                <section id="testimonials" style={{ padding: '120px 24px', background: '#0a1a0d' }}>
                     <div style={{ maxWidth: 1100, margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: 72 }}>
-                            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#f59e0b', marginBottom: 16 }}>SOCIAL PROOF</p>
+                            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#d4a017', marginBottom: 16 }}>SOCIAL PROOF</p>
                             <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(36px,5vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>
                                 Teams who ship faster
                             </h2>
@@ -486,7 +486,7 @@ export default function LandingPage() {
                             {TESTIMONIALS.map((t, i) => (
                                 <div key={i} style={{
                                     background: 'rgba(255,255,255,0.02)',
-                                    border: '1px solid rgba(255,255,255,0.07)',
+                                    border: '1px solid rgba(74,158,92,0.14)',
                                     borderRadius: 18, padding: '32px 28px',
                                     position: 'relative',
                                 }}>
@@ -499,7 +499,7 @@ export default function LandingPage() {
                                             width: 40, height: 40, borderRadius: '50%',
                                             background: `linear-gradient(135deg,${t.color},${t.color}90)`,
                                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            fontSize: 13, fontWeight: 800, color: '#0d0d0f',
+                                            fontSize: 13, fontWeight: 800, color: '#0a1a0d',
                                         }}>{t.avatar}</div>
                                         <div>
                                             <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{t.name}</div>
@@ -515,11 +515,11 @@ export default function LandingPage() {
                 {/* ══════════════════════════
                     CTA
                 ══════════════════════════ */}
-                <section style={{ padding: '80px 24px 120px', background: '#111114' }}>
+                <section style={{ padding: '80px 24px 120px', background: '#0e2010' }}>
                     <div style={{
                         maxWidth: 860, margin: '0 auto', textAlign: 'center',
-                        background: 'linear-gradient(135deg,rgba(245,158,11,0.08) 0%,rgba(245,158,11,0.03) 100%)',
-                        border: '1px solid rgba(245,158,11,0.25)',
+                        background: 'linear-gradient(135deg,rgba(212,160,23,0.08) 0%,rgba(212,160,23,0.03) 100%)',
+                        border: '1px solid rgba(212,160,23,0.25)',
                         borderRadius: 28, padding: '72px 40px',
                         position: 'relative', overflow: 'hidden',
                     }}>
@@ -527,10 +527,10 @@ export default function LandingPage() {
                         <div style={{
                             position: 'absolute', top: -80, right: -80,
                             width: 300, height: 300, borderRadius: '50%',
-                            background: 'radial-gradient(circle,rgba(245,158,11,0.15) 0%,transparent 70%)',
+                            background: 'radial-gradient(circle,rgba(212,160,23,0.15) 0%,transparent 70%)',
                             pointerEvents: 'none',
                         }} />
-                        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#f59e0b', marginBottom: 20 }}>START TODAY · FREE FOREVER</p>
+                        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#d4a017', marginBottom: 20 }}>START TODAY · FREE FOREVER</p>
                         <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(36px,5vw,60px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 20 }}>
                             Stop searching.<br /><em>Start solving.</em>
                         </h2>
@@ -539,14 +539,14 @@ export default function LandingPage() {
                         </p>
                         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
                             <Link href="/register" style={{
-                                background: '#f59e0b', color: '#0d0d0f',
+                                background: '#d4a017', color: '#0a1a0d',
                                 fontWeight: 800, fontSize: 15, letterSpacing: '0.05em',
                                 padding: '15px 36px', borderRadius: 10, textDecoration: 'none',
                                 display: 'inline-flex', alignItems: 'center', gap: 8,
                                 transition: 'all 0.2s',
                             }}
                                 onMouseEnter={e => { e.currentTarget.style.background = '#fbbf24'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                                onMouseLeave={e => { e.currentTarget.style.background = '#f59e0b'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = '#d4a017'; e.currentTarget.style.transform = 'translateY(0)'; }}
                             >
                                 CREATE FREE ACCOUNT →
                             </Link>
@@ -558,23 +558,23 @@ export default function LandingPage() {
                     FOOTER
                 ══════════════════════════ */}
                 <footer style={{
-                    borderTop: '1px solid rgba(255,255,255,0.06)',
-                    padding: '40px 24px', background: '#0d0d0f',
+                    borderTop: '1px solid rgba(74,158,92,0.12)',
+                    padding: '40px 24px', background: '#0a1a0d',
                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16,
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <div style={{
                             width: 28, height: 28, borderRadius: 8,
-                            background: '#f59e0b',
+                            background: '#d4a017',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontWeight: 900, fontSize: 14, color: '#0d0d0f',
+                            fontWeight: 900, fontSize: 14, color: '#0a1a0d',
                         }}>S</div>
                         <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-0.01em' }}>SolveHub</span>
                     </div>
                     <div style={{ display: 'flex', gap: 28 }}>
                         {['Privacy', 'Terms', 'GitHub', 'Contact'].map(l => (
                             <a key={l} href="#" style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', textDecoration: 'none', fontWeight: 600, letterSpacing: '0.06em', transition: 'color 0.2s' }}
-                                onMouseEnter={e => e.target.style.color = '#f59e0b'}
+                                onMouseEnter={e => e.target.style.color = '#d4a017'}
                                 onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.3)'}
                             >{l.toUpperCase()}</a>
                         ))}
