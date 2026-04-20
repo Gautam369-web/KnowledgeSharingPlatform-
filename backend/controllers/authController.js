@@ -87,3 +87,44 @@ exports.resendOTP = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 };
+
+// @desc    Login user
+// @route   POST /api/auth/login
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        if (!user.isVerified) {
+            return res.status(401).json({ message: 'Please verify your email before logging in' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        // Return user data (excluding password)
+        const userResponse = {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            reputation: user.reputation || 0,
+            avatar: user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=f59e0b&color=0d0d0f`,
+            joinedAt: user.createdAt,
+            problemsSolved: user.problemsSolved || 0,
+            articlesWritten: user.articlesWritten || 0,
+        };
+
+        res.status(200).json({
+            message: 'Login successful',
+            user: userResponse
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    }
+};

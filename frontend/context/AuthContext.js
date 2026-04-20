@@ -64,29 +64,21 @@ export function AuthProvider({ children }) {
     const login = async (email, password) => {
         setLoading(true);
         try {
-            // Since we don't have [...nextauth] yet, we can't use signIn from next-auth/react
-            // But we can implement a temporary login API or just wait for NextAuth setup.
-            // For now, let's just use the mock logic but prepare for real API
+            const response = await fetch(`${API_URL}/api/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await response.json();
 
-            // TODO: Implement real login API call
-            console.log('Login attempt with:', email);
-
-            // Temporary: keep mock until NextAuth is fully configured
-            const HARDCODED_USER = {
-                id: '1',
-                name: 'Test User',
-                email: 'test@example.com',
-                password: 'password123',
-            };
-
-            if (email === HARDCODED_USER.email && password === HARDCODED_USER.password) {
-                setUser(HARDCODED_USER);
-                localStorage.setItem('currentUser', JSON.stringify(HARDCODED_USER));
-                toast.success(`Welcome back!`);
+            if (response.ok) {
+                setUser(data.user);
+                localStorage.setItem('currentUser', JSON.stringify(data.user));
+                toast.success(`Welcome back, ${data.user.name}!`);
                 return { success: true };
             } else {
-                toast.error('Invalid email or password');
-                return { success: false, error: 'Invalid credentials' };
+                toast.error(data.message || 'Invalid email or password');
+                return { success: false, error: data.message };
             }
         } catch (error) {
             toast.error('Login failed. Please try again.');
