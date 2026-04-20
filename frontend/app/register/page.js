@@ -25,7 +25,7 @@ export default function RegisterPage() {
     const router = useRouter();
     const { register } = useAuth();
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
