@@ -53,7 +53,18 @@ app.use(morgan('dev'));
 
 // Health Check
 app.get('/api/health', (req, res) => {
-    res.status(200).json({ status: 'healthy', timestamp: new Date() });
+    const dbStatus = require('mongoose').connection.readyState;
+    const statusMap = {
+        0: 'disconnected',
+        1: 'connected',
+        2: 'connecting',
+        3: 'disconnecting'
+    };
+    res.status(200).json({
+        status: 'alive',
+        database: statusMap[dbStatus] || 'unknown',
+        timestamp: new Date()
+    });
 });
 
 app.get('/', (req, res) => {
