@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
@@ -10,12 +11,17 @@ export default function LoginPage() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        await login(formData.email, formData.password);
+        const result = await login(formData.email, formData.password);
         setLoading(false);
+
+        if (result && result.success) {
+            router.push('/dashboard');
+        }
     };
 
     return (
@@ -67,7 +73,14 @@ export default function LoginPage() {
                         </div>
 
                         <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 8, width: '100%', justifyContent: 'center' }}>
-                            {loading ? <div style={{ width: 18, height: 18, border: '2px solid rgba(13,13,15,0.3)', borderTop: '2px solid #0d0d0f', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> : <><span>SIGN IN</span><HiOutlineArrowRight /></>}
+                            {loading ? (
+                                <div className="flex items-center gap-2">
+                                    <div style={{ width: 16, height: 16, border: '2px solid rgba(0,0,0,0.2)', borderTop: '2px solid #000', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
+                                    <span>SIGNING IN...</span>
+                                </div>
+                            ) : (
+                                <><span>SIGN IN</span><HiOutlineArrowRight /></>
+                            )}
                         </button>
                     </form>
 

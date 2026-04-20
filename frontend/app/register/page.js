@@ -184,7 +184,14 @@ export default function RegisterPage() {
                             </div>
 
                             <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 12, width: '100%', height: 50, justifyContent: 'center' }}>
-                                {loading ? <div style={{ width: 18, height: 18, border: '2px solid rgba(13,13,15,0.3)', borderTop: '2px solid #0d0d0f', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> : <><span>CREATE ACCOUNT</span><HiOutlineArrowRight /></>}
+                                {loading ? (
+                                    <div className="flex items-center gap-2">
+                                        <div style={{ width: 16, height: 16, border: '2px solid rgba(0,0,0,0.2)', borderTop: '2px solid #000', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
+                                        <span>CREATING ACCOUNT...</span>
+                                    </div>
+                                ) : (
+                                    <><span>CREATE ACCOUNT</span><HiOutlineArrowRight /></>
+                                )}
                             </button>
 
                             {/* Divider */}
