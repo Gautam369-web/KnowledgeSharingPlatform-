@@ -49,7 +49,7 @@ const KEYFRAMES = `
 /* ─────────────────────────────────────────
    Data
 ───────────────────────────────────────── */
-const NAV_LINKS = ['Features', 'Showcase', 'Pricing', 'Testimonials'];
+
 
 const FEATURES = [
     {
@@ -156,13 +156,8 @@ const STATS = [
    Main Component
 ───────────────────────────────────────── */
 export default function LandingPage() {
-    const [scrolled, setScrolled] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
-
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 40);
-        window.addEventListener('scroll', onScroll);
-        return () => window.removeEventListener('scroll', onScroll);
+        // Scroll logic removed with navbar
     }, []);
 
     return (
@@ -174,74 +169,6 @@ export default function LandingPage() {
                 className="min-h-screen text-white"
                 style={{ background: '#0d0d0f', fontFamily: "'Syne', sans-serif" }}
             >
-                {/* ══════════════════════════
-                    NAV
-                ══════════════════════════ */}
-                <nav
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        zIndex: 50,
-                        transition: 'background 0.3s, backdrop-filter 0.3s, border-color 0.3s',
-                        background: scrolled ? 'rgba(13,13,15,0.85)' : 'transparent',
-                        backdropFilter: scrolled ? 'blur(20px)' : 'none',
-                        borderBottom: scrolled ? '1px solid rgba(245,158,11,0.15)' : '1px solid transparent',
-                    }}
-                >
-                    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-                        {/* Logo */}
-                        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-                            <div style={{
-                                width: 36, height: 36, borderRadius: 10,
-                                background: 'linear-gradient(135deg,#f59e0b,#d97706)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontWeight: 900, fontSize: 18, color: '#0d0d0f',
-                            }}>S</div>
-                            <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 18, color: '#fff', letterSpacing: '-0.02em' }}>SolveHub</span>
-                        </Link>
-
-                        {/* Desktop Links */}
-                        <div style={{ display: 'flex', gap: 32, alignItems: 'center' }} className="hidden md:flex">
-                            {NAV_LINKS.map(l => (
-                                <a
-                                    key={l}
-                                    href={`#${l.toLowerCase()}`}
-                                    style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '0.04em' }}
-                                    onMouseEnter={e => e.target.style.color = '#f59e0b'}
-                                    onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.55)'}
-                                >
-                                    {l.toUpperCase()}
-                                </a>
-                            ))}
-                        </div>
-
-                        {/* CTA */}
-                        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                            <Link href="/login" style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, fontWeight: 600, textDecoration: 'none', padding: '8px 16px', transition: 'color 0.2s' }}
-                                onMouseEnter={e => e.target.style.color = '#fff'}
-                                onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.6)'}
-                            >
-                                Sign In
-                            </Link>
-                            <Link
-                                href="/register"
-                                style={{
-                                    background: '#f59e0b', color: '#0d0d0f',
-                                    fontWeight: 800, fontSize: 13, letterSpacing: '0.04em',
-                                    padding: '9px 20px', borderRadius: 8, textDecoration: 'none',
-                                    transition: 'background 0.2s, transform 0.2s',
-                                }}
-                                onMouseEnter={e => { e.target.style.background = '#fbbf24'; e.target.style.transform = 'translateY(-1px)'; }}
-                                onMouseLeave={e => { e.target.style.background = '#f59e0b'; e.target.style.transform = 'translateY(0)'; }}
-                            >
-                                GET STARTED →
-                            </Link>
-                        </div>
-                    </div>
-                </nav>
-
                 {/* ══════════════════════════
                     HERO
                 ══════════════════════════ */}
