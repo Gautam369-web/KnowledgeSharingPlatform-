@@ -2,116 +2,76 @@
 
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
-import DashboardStats from '@/components/DashboardStats';
-import ActivityFeed from '@/components/ActivityFeed';
-import ProblemCard from '@/components/ProblemCard';
-import Sidebar from '@/components/Sidebar';
-import { problems } from '@/lib/data';
-import {
-    HiOutlineUser, HiOutlineLightningBolt,
-    HiOutlinePencilAlt, HiOutlineStar,
-    HiOutlineFolderOpen, HiOutlineBell
-} from 'react-icons/hi';
+import { HiOutlineLightningBolt, HiOutlineBookOpen, HiOutlineTrendingUp, HiOutlineUser, HiOutlineStar, HiOutlineFire } from 'react-icons/hi';
 
 export default function DashboardPage() {
-    const { user, isAuthenticated } = useAuth();
+    const { user } = useAuth();
 
-    if (!isAuthenticated) return null;
+    const stats = [
+        { label: 'Problems Posted', value: user?.problemsSolved || 0, icon: HiOutlineLightningBolt, color: '#f59e0b' },
+        { label: 'Articles Written', value: user?.articlesWritten || 0, icon: HiOutlineBookOpen, color: '#34d399' },
+        { label: 'Reputation', value: user?.reputation || 0, icon: HiOutlineStar, color: '#818cf8' },
+        { label: 'Day Streak', value: user?.streak || 0, icon: HiOutlineFire, color: '#f87171' },
+    ];
 
-    const userStats = {
-        problemsSolved: 24,
-        solutionsGiven: 42,
-        reputation: user.reputation,
-        articlesWritten: 7
-    };
-
-    const myProblems = problems.filter(p => p.author.id === user.id);
-
-    const recentActivities = [
-        { type: 'solution', user: 'You', action: 'answered', target: 'How to speed up MongoDB aggregation?', date: new Date(Date.now() - 1000 * 60 * 30).toISOString(), link: '/problems/1' },
-        { type: 'problem', user: 'You', action: 'posted', target: 'Memory leak in Node.js stream', date: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(), link: '/problems/2' },
-        { type: 'badge', user: 'You', action: 'received', target: 'Helpful Contributor', date: new Date(Date.now() - 1000 * 3600 * 24).toISOString() },
+    const quickLinks = [
+        { label: 'Post a Problem', href: '/problems/new', icon: HiOutlineLightningBolt, color: '#f59e0b' },
+        { label: 'Write an Article', href: '/articles/new', icon: HiOutlineBookOpen, color: '#34d399' },
+        { label: 'Leaderboard', href: '/leaderboard', icon: HiOutlineTrendingUp, color: '#818cf8' },
+        { label: 'View Profile', href: `/profile/${user?.id || user?._id || '1'}`, icon: HiOutlineUser, color: '#f472b6' },
     ];
 
     return (
-        <div className="page-container">
-            <div className="flex flex-col lg:flex-row gap-8">
-                <div className="flex-1 min-w-0 space-y-8">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-3xl font-black text-slate-900 dark:text-white">
-                                Expert Dashboard
-                            </h1>
-                            <p className="text-slate-500 mt-1">
-                                Welcome back, <span className="text-slate-900 dark:text-white font-bold">{user.name}</span>
-                            </p>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                            <button className="p-3 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm relative hover:bg-slate-50 transition-all">
-                                <HiOutlineBell className="w-6 h-6 text-slate-500" />
-                                <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-900" />
-                            </button>
-                            <Link href={`/profile/${user.id}`} className="btn-secondary !py-3">
-                                <HiOutlineUser className="w-5 h-5 mr-2" />
-                                View Public Profile
-                            </Link>
-                        </div>
-                    </div>
+        <div style={{ minHeight: '100vh', background: '#0d0d0f', paddingTop: 88 }}>
+            {/* Header */}
+            <div style={{ background: '#111114', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '40px 24px 32px' }}>
+                <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#f59e0b', marginBottom: 8 }}>DASHBOARD</p>
+                    <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(28px,4vw,42px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>
+                        Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}
+                    </h1>
+                    <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginTop: 6 }}>Here's your activity overview</p>
+                </div>
+            </div>
 
-                    <DashboardStats stats={userStats} />
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="card p-6">
-                            <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center">
-                                    <HiOutlineLightningBolt className="w-5 h-5 mr-2 text-amber-500" />
-                                    Action Center
-                                </h3>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <Link href="/problems/new" className="p-4 bg-primary-50 dark:bg-primary-900/20 rounded-2xl border border-primary-100 dark:border-primary-800 text-center hover:scale-105 transition-all group">
-                                    <HiOutlineLightningBolt className="w-8 h-8 text-primary-600 mx-auto mb-2 group-hover:animate-bounce" />
-                                    <p className="text-xs font-bold text-primary-700 dark:text-primary-400">Post Problem</p>
-                                </Link>
-                                <Link href="/articles/new" className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-2xl border border-purple-100 dark:border-purple-800 text-center hover:scale-105 transition-all group">
-                                    <HiOutlinePencilAlt className="w-8 h-8 text-purple-600 mx-auto mb-2 group-hover:animate-bounce" />
-                                    <p className="text-xs font-bold text-purple-700 dark:text-purple-400">Write Article</p>
-                                </Link>
-                                <Link href="/leaderboard" className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-100 dark:border-amber-800 text-center hover:scale-105 transition-all group">
-                                    <HiOutlineStar className="w-8 h-8 text-amber-600 mx-auto mb-2 group-hover:animate-bounce" />
-                                    <p className="text-xs font-bold text-amber-700 dark:text-amber-400">Check Rank</p>
-                                </Link>
-                                <Link href="/search" className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-800 text-center hover:scale-105 transition-all group">
-                                    <HiOutlineFolderOpen className="w-8 h-8 text-emerald-600 mx-auto mb-2 group-hover:animate-bounce" />
-                                    <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">My Library</p>
-                                </Link>
-                            </div>
-                        </div>
-
-                        <div className="card p-6">
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Recent Activity</h3>
-                            <ActivityFeed activities={recentActivities} />
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">My Submissions</h3>
-                        <div className="space-y-4">
-                            {myProblems.map(p => (
-                                <ProblemCard key={p.id} problem={p} />
-                            ))}
-                            {myProblems.length === 0 && (
-                                <div className="card p-12 text-center text-slate-500 italic">
-                                    You haven&apos;t posted any problems yet.
+            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px' }}>
+                {/* Stats */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 16, marginBottom: 32 }}>
+                    {stats.map((s, i) => (
+                        <div key={i} className="card" style={{ padding: '24px 20px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                                <div style={{ width: 36, height: 36, borderRadius: 10, background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <s.icon style={{ color: s.color, width: 18, height: 18 }} />
                                 </div>
-                            )}
+                                <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em' }}>{s.label.toUpperCase()}</span>
+                            </div>
+                            <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 36, fontWeight: 900, color: s.color }}>{s.value}</div>
                         </div>
-                    </div>
+                    ))}
                 </div>
 
-                <div className="w-full lg:w-80 flex-shrink-0">
-                    <Sidebar />
+                {/* Quick Links */}
+                <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 24, fontWeight: 700, color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>Quick Actions</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 14 }}>
+                    {quickLinks.map((l, i) => (
+                        <Link key={i} href={l.href} style={{ textDecoration: 'none' }}>
+                            <div className="card card-hover" style={{ padding: '20px', display: 'flex', align: 'center', gap: 12 }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: `${l.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                    <l.icon style={{ color: l.color, width: 20, height: 20 }} />
+                                </div>
+                                <span style={{ fontSize: 14, fontWeight: 700, color: '#fff', alignSelf: 'center' }}>{l.label}</span>
+                            </div>
+                        </Link>
+                    ))}
                 </div>
+
+                {/* Sign in prompt */}
+                {!user && (
+                    <div style={{ textAlign: 'center', padding: '60px 0' }}>
+                        <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 15, marginBottom: 20 }}>You must be signed in to view your dashboard.</p>
+                        <Link href="/login" className="btn-primary">SIGN IN</Link>
+                    </div>
+                )}
             </div>
         </div>
     );

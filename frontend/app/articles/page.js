@@ -1,92 +1,89 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import ArticleCard from '@/components/ArticleCard';
-import Sidebar from '@/components/Sidebar';
-import CategoryFilter from '@/components/CategoryFilter';
+import { useState } from 'react';
 import { articles } from '@/lib/data';
-import { HiOutlineSearch, HiOutlinePencilAlt, HiOutlineLightningBolt } from 'react-icons/hi';
+import { HiOutlineSearch, HiOutlineBookOpen, HiOutlineClock, HiOutlineEye, HiOutlineArrowRight } from 'react-icons/hi';
+
+const CATEGORIES = ['All', 'React', 'Node.js', 'Python', 'DevOps', 'Machine Learning', 'Security'];
 
 export default function ArticlesPage() {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [search, setSearch] = useState('');
+    const [activeCategory, setActiveCategory] = useState('All');
 
-    const filteredArticles = articles.filter(a => {
-        const matchesSearch = a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            a.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || a.category === selectedCategory;
-        return matchesSearch && matchesCategory;
-    });
-
-    const featuredArticle = articles.find(a => a.featured) || articles[0];
+    const filtered = articles.filter(a =>
+        (activeCategory === 'All' || a.category === activeCategory) &&
+        a.title.toLowerCase().includes(search.toLowerCase())
+    );
 
     return (
-        <div className="page-container">
-            <div className="flex flex-col lg:flex-row gap-8">
-                <div className="flex-1 min-w-0">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                        <div>
-                            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-                                Knowledge Base
-                            </h1>
-                            <p className="text-slate-500 dark:text-slate-400 mt-1">
-                                Deep dives, tutorials and expert insights
-                            </p>
-                        </div>
-                        <Link href="/articles/new" className="btn-primary">
-                            <HiOutlinePencilAlt className="w-5 h-5 mr-2" />
-                            Write Article
-                        </Link>
+        <div style={{ minHeight: '100vh', background: '#0d0d0f', paddingTop: 88 }}>
+            {/* Header */}
+            <div style={{ background: '#111114', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '40px 24px 32px' }}>
+                <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                        <HiOutlineBookOpen style={{ color: '#f59e0b', width: 20, height: 20 }} />
+                        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#f59e0b' }}>KNOWLEDGE BASE</span>
                     </div>
+                    <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>
+                        Articles &amp; Guides
+                    </h1>
+                    <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 28 }}>In-depth knowledge from expert contributors</p>
 
-                    {!searchQuery && selectedCategory === 'All' && (
-                        <div className="mb-12">
-                            <div className="flex items-center space-x-2 mb-6">
-                                <HiOutlineLightningBolt className="w-5 h-5 text-amber-500" />
-                                <h2 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-widest text-sm">
-                                    Featured Story
-                                </h2>
-                            </div>
-                            <ArticleCard article={featuredArticle} featured />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                        <div style={{ position: 'relative', maxWidth: 520 }}>
+                            <HiOutlineSearch style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)', width: 18 }} />
+                            <input type="text" placeholder="Search articles..." value={search} onChange={e => setSearch(e.target.value)} className="input-field" style={{ paddingLeft: 44 }} />
                         </div>
-                    )}
-
-                    <div className="space-y-8">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <CategoryFilter
-                                selected={selectedCategory}
-                                onSelect={setSelectedCategory}
-                            />
-                            <div className="relative w-full md:w-64">
-                                <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-                                <input
-                                    type="text"
-                                    placeholder="Search articles..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="input-field pl-10 !py-2 text-sm"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {filteredArticles.map((article) => (
-                                <ArticleCard key={article.id} article={article} />
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                            {CATEGORIES.map(c => (
+                                <button key={c} onClick={() => setActiveCategory(c)} style={{
+                                    padding: '5px 14px', borderRadius: 100, border: 'none', cursor: 'pointer',
+                                    fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', fontFamily: "'Syne',sans-serif",
+                                    background: activeCategory === c ? '#f59e0b' : 'rgba(255,255,255,0.04)',
+                                    color: activeCategory === c ? '#0d0d0f' : 'rgba(255,255,255,0.5)',
+                                    transition: 'all 0.2s',
+                                }}>{c}</button>
                             ))}
                         </div>
-
-                        {filteredArticles.length === 0 && (
-                            <div className="card p-12 text-center bg-slate-50 dark:bg-slate-900/50">
-                                <p className="text-slate-500">No articles found matching your criteria.</p>
-                            </div>
-                        )}
                     </div>
                 </div>
+            </div>
 
-                <div className="w-full lg:w-80 flex-shrink-0">
-                    <Sidebar />
+            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', fontWeight: 600 }}>{filtered.length} ARTICLES</span>
+                    <Link href="/articles/new" className="btn-primary" style={{ padding: '9px 20px', fontSize: 12 }}>+ WRITE ARTICLE</Link>
                 </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(340px,1fr))', gap: 20 }}>
+                    {filtered.map((article, i) => (
+                        <Link key={article.id || i} href={`/articles/${article.id}`} style={{ textDecoration: 'none' }}>
+                            <div className="card card-hover" style={{ padding: '28px', height: '100%' }}
+                                onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(245,158,11,0.25)'}
+                                onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'}
+                            >
+                                <span className="badge badge-primary" style={{ marginBottom: 14 }}>{article.category}</span>
+                                <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.4, marginBottom: 10, letterSpacing: '-0.01em' }}>{article.title}</h2>
+                                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 20, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{article.excerpt}</p>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                                    <div style={{ display: 'flex', gap: 16 }}>
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}><HiOutlineClock style={{ width: 13 }} />{article.readTime || 5} min</span>
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}><HiOutlineEye style={{ width: 13 }} />{article.views || 0}</span>
+                                    </div>
+                                    <HiOutlineArrowRight style={{ color: '#f59e0b', width: 18 }} />
+                                </div>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+
+                {filtered.length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '80px 0' }}>
+                        <HiOutlineBookOpen style={{ width: 48, height: 48, color: 'rgba(245,158,11,0.3)', margin: '0 auto 16px' }} />
+                        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 15 }}>No articles found. Be the first to write one!</p>
+                    </div>
+                )}
             </div>
         </div>
     );

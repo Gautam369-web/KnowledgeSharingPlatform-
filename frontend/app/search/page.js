@@ -1,126 +1,92 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { useState, useEffect, Suspense } from 'react';
-import SearchBar from '@/components/SearchBar';
-import ProblemCard from '@/components/ProblemCard';
-import ArticleCard from '@/components/ArticleCard';
-import UserCard from '@/components/UserCard';
-import { problems, articles, leaderboard } from '@/lib/data';
-import { HiOutlineSearch, HiOutlineDocumentText, HiOutlineQuestionMarkCircle, HiOutlineUserGroup } from 'react-icons/hi';
+import { useState } from 'react';
+import Link from 'next/link';
+import { problems, articles } from '@/lib/data';
+import { HiOutlineSearch, HiOutlineLightningBolt, HiOutlineBookOpen } from 'react-icons/hi';
 
-function SearchContent() {
-    const searchParams = useSearchParams();
-    const query = searchParams.get('q') || '';
-    const [activeTab, setActiveTab] = useState('all');
+export default function SearchPage() {
+    const [query, setQuery] = useState('');
 
-    const filteredProblems = problems.filter(p =>
-        p.title.toLowerCase().includes(query.toLowerCase()) ||
-        p.tags.some(t => t.toLowerCase().includes(query.toLowerCase()))
-    );
-
-    const filteredArticles = articles.filter(a =>
-        a.title.toLowerCase().includes(query.toLowerCase()) ||
-        a.category.toLowerCase().includes(query.toLowerCase())
-    );
-
-    const filteredUsers = leaderboard.filter(u =>
-        u.name.toLowerCase().includes(query.toLowerCase())
-    );
-
-    const totalResults = filteredProblems.length + filteredArticles.length + filteredUsers.length;
-
-    const tabs = [
-        { id: 'all', label: 'All Results', count: totalResults },
-        { id: 'problems', label: 'Problems', icon: HiOutlineQuestionMarkCircle, count: filteredProblems.length },
-        { id: 'articles', label: 'Articles', icon: HiOutlineDocumentText, count: filteredArticles.length },
-        { id: 'people', label: 'People', icon: HiOutlineUserGroup, count: filteredUsers.length },
-    ];
+    const matchedProblems = query.length > 1
+        ? problems.filter(p => p.title.toLowerCase().includes(query.toLowerCase())).slice(0, 4)
+        : [];
+    const matchedArticles = query.length > 1
+        ? articles.filter(a => a.title.toLowerCase().includes(query.toLowerCase())).slice(0, 4)
+        : [];
 
     return (
-        <div className="page-container max-w-6xl mx-auto">
-            <div className="mb-12 text-center">
-                <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-8">
-                    {query ? `Search Results for "${query}"` : 'Global Search'}
+        <div style={{ minHeight: '100vh', background: '#0d0d0f', paddingTop: 88 }}>
+            <div style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px' }}>
+                <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 32, textAlign: 'center' }}>
+                    Search <em style={{ color: '#f59e0b', fontStyle: 'italic' }}>Everything</em>
                 </h1>
-                <SearchBar fullWidth />
-            </div>
 
-            <div className="flex border-b border-slate-100 dark:border-slate-800 mb-8 overflow-x-auto no-scrollbar">
-                {tabs.map(tab => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center space-x-2 px-6 py-4 text-sm font-bold uppercase tracking-widest border-b-2 transition-all whitespace-nowrap ${activeTab === tab.id
-                            ? 'border-primary-500 text-primary-600'
-                            : 'border-transparent text-slate-400 hover:text-slate-600'
-                            }`}
-                    >
-                        {tab.icon && <tab.icon className="w-4 h-4" />}
-                        <span>{tab.label}</span>
-                        <span className={`ml-2 px-2 py-0.5 rounded-md text-[10px] ${activeTab === tab.id ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
-                            }`}>
-                            {tab.count}
-                        </span>
-                    </button>
-                ))}
-            </div>
+                {/* Search input */}
+                <div style={{ position: 'relative', marginBottom: 40 }}>
+                    <HiOutlineSearch style={{ position: 'absolute', left: 18, top: '50%', transform: 'translateY(-50%)', color: '#f59e0b', width: 22, height: 22 }} />
+                    <input
+                        autoFocus type="text"
+                        placeholder="Search problems, articles, topics..."
+                        value={query} onChange={e => setQuery(e.target.value)}
+                        style={{
+                            width: '100%', padding: '18px 18px 18px 54px',
+                            background: '#111114', border: '1px solid rgba(245,158,11,0.3)',
+                            borderRadius: 14, color: '#fff', fontSize: 16, outline: 'none',
+                            fontFamily: "'Syne',sans-serif", transition: 'border-color 0.2s, box-shadow 0.2s',
+                        }}
+                        onFocus={e => { e.target.style.borderColor = 'rgba(245,158,11,0.6)'; e.target.style.boxShadow = '0 0 0 4px rgba(245,158,11,0.08)'; }}
+                        onBlur={e => { e.target.style.borderColor = 'rgba(245,158,11,0.3)'; e.target.style.boxShadow = 'none'; }}
+                    />
+                </div>
 
-            <div className="space-y-12 pb-20">
-                {(activeTab === 'all' || activeTab === 'problems') && filteredProblems.length > 0 && (
-                    <div>
-                        <h2 className="text-xl font-bold mb-6 flex items-center">
-                            <HiOutlineQuestionMarkCircle className="w-6 h-6 mr-2 text-primary-500" />
-                            Technical Problems
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {filteredProblems.map(p => <ProblemCard key={p.id} problem={p} />)}
-                        </div>
+                {/* Results */}
+                {query.length > 1 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+                        {matchedProblems.length > 0 && (
+                            <div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                                    <HiOutlineLightningBolt style={{ color: '#f59e0b', width: 16 }} />
+                                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#f59e0b' }}>PROBLEMS</span>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                    {matchedProblems.map((p, i) => (
+                                        <Link key={i} href={`/problems/${p.id}`} style={{ textDecoration: 'none' }}>
+                                            <div className="card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                <span style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{p.title}</span>
+                                                <span className="badge badge-primary">{p.category || 'General'}</span>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {matchedArticles.length > 0 && (
+                            <div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                                    <HiOutlineBookOpen style={{ color: '#34d399', width: 16 }} />
+                                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#34d399' }}>ARTICLES</span>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                    {matchedArticles.map((a, i) => (
+                                        <Link key={i} href={`/articles/${a.id}`} style={{ textDecoration: 'none' }}>
+                                            <div className="card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                <span style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{a.title}</span>
+                                                <span className="badge badge-accent">{a.category}</span>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {matchedProblems.length === 0 && matchedArticles.length === 0 && (
+                            <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 15, padding: '40px 0' }}>No results for &ldquo;{query}&rdquo;</p>
+                        )}
                     </div>
-                )}
-
-                {(activeTab === 'all' || activeTab === 'articles') && filteredArticles.length > 0 && (
-                    <div>
-                        <h2 className="text-xl font-bold mb-6 flex items-center">
-                            <HiOutlineDocumentText className="w-6 h-6 mr-2 text-purple-500" />
-                            Knowledge Articles
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {filteredArticles.map(a => <ArticleCard key={a.id} article={a} />)}
-                        </div>
-                    </div>
-                )}
-
-                {(activeTab === 'all' || activeTab === 'people') && filteredUsers.length > 0 && (
-                    <div>
-                        <h2 className="text-xl font-bold mb-6 flex items-center">
-                            <HiOutlineUserGroup className="w-6 h-6 mr-2 text-emerald-500" />
-                            Expert Network
-                        </h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                            {filteredUsers.map(u => <UserCard key={u.id} user={u} />)}
-                        </div>
-                    </div>
-                )}
-
-                {totalResults === 0 && (
-                    <div className="text-center py-20 bg-slate-50 dark:bg-slate-900/50 rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-slate-800">
-                        <div className="w-24 h-24 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
-                            <HiOutlineSearch className="w-10 h-10 text-slate-300" />
-                        </div>
-                        <h3 className="text-2xl font-bold mb-2">No results matching your search</h3>
-                        <p className="text-slate-500 max-w-sm mx-auto">Try different keywords or check your spelling for better results.</p>
-                    </div>
+                ) : (
+                    <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.2)', fontSize: 14 }}>Type at least 2 characters to search</p>
                 )}
             </div>
         </div>
-    );
-}
-
-export default function SearchPage() {
-    return (
-        <Suspense fallback={<div>Loading search...</div>}>
-            <SearchContent />
-        </Suspense>
     );
 }

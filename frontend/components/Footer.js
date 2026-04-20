@@ -1,115 +1,64 @@
+'use client';
+
 import Link from 'next/link';
-import {
-    HiOutlineLightBulb, HiOutlineBookOpen,
-    HiOutlineTrendingUp, HiOutlineHeart,
-} from 'react-icons/hi';
-import { FaGithub, FaTwitter, FaDiscord, FaLinkedin } from 'react-icons/fa';
+import { HiOutlineLightningBolt } from 'react-icons/hi';
+import { FaGithub, FaTwitter } from 'react-icons/fa';
+
+const LINKS = {
+    Product: ['Problems', 'Articles', 'Leaderboard', 'Dashboard'],
+    Company: ['About', 'Blog', 'Careers', 'Press'],
+    Legal: ['Privacy', 'Terms', 'Security', 'Cookies'],
+};
 
 export default function Footer() {
-    const footerLinks = {
-        Platform: [
-            { label: 'Problems', href: '/problems' },
-            { label: 'Articles', href: '/articles' },
-            { label: 'Leaderboard', href: '/leaderboard' },
-            { label: 'Categories', href: '/categories' },
-        ],
-        Community: [
-            { label: 'Guidelines', href: '/guidelines' },
-            { label: 'FAQ', href: '/faq' },
-            { label: 'Blog', href: '/blog' },
-            { label: 'Events', href: '/events' },
-        ],
-        Company: [
-            { label: 'About Us', href: '/about' },
-            { label: 'Careers', href: '/careers' },
-            { label: 'Contact', href: '/contact' },
-            { label: 'Press', href: '/press' },
-        ],
-        Legal: [
-            { label: 'Privacy Policy', href: '/privacy' },
-            { label: 'Terms of Service', href: '/terms' },
-            { label: 'Cookie Policy', href: '/cookies' },
-            { label: 'DMCA', href: '/dmca' },
-        ],
-    };
-
-    const socialLinks = [
-        { icon: FaGithub, href: '#', label: 'GitHub' },
-        { icon: FaTwitter, href: '#', label: 'Twitter' },
-        { icon: FaDiscord, href: '#', label: 'Discord' },
-        { icon: FaLinkedin, href: '#', label: 'LinkedIn' },
-    ];
-
     return (
-        <footer className="bg-slate-900 dark:bg-slate-950 text-slate-400 border-t 
-                      border-slate-800 mt-20">
-            {/* Top section */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
+        <footer style={{ background: '#0d0d0f', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '64px 24px 40px' }}>
+            <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+                {/* Top */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr repeat(3,auto)', gap: 48, marginBottom: 56, flexWrap: 'wrap' }}>
                     {/* Brand */}
-                    <div className="col-span-2">
-                        <Link href="/" className="flex items-center space-x-2 mb-4">
-                            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-purple-600 
-                            rounded-xl flex items-center justify-center">
-                                <span className="text-white font-bold text-xl">S</span>
-                            </div>
-                            <span className="text-2xl font-bold text-white">SolveHub</span>
+                    <div>
+                        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginBottom: 16 }}>
+                            <div style={{ width: 34, height: 34, borderRadius: 9, background: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, fontWeight: 900, color: '#0d0d0f', fontFamily: "'Syne',sans-serif" }}>S</div>
+                            <span style={{ fontSize: 17, fontWeight: 800, color: '#fff', fontFamily: "'Syne',sans-serif" }}>SolveHub</span>
                         </Link>
-                        <p className="text-sm text-slate-500 mb-6 max-w-xs">
-                            A collaborative platform where communities come together to solve
-                            problems, share knowledge, and grow together.
+                        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', lineHeight: 1.7, maxWidth: 260 }}>
+                            Where hard problems find great answers. Built for engineers, by engineers.
                         </p>
-                        <div className="flex items-center space-x-3">
-                            {socialLinks.map(({ icon: Icon, href, label }) => (
-                                <a
-                                    key={label}
-                                    href={href}
-                                    aria-label={label}
-                                    className="w-10 h-10 rounded-xl bg-slate-800 flex items-center 
-                           justify-center text-slate-400 hover:bg-primary-600 
-                           hover:text-white transition-all duration-300"
+                        <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+                            {[FaGithub, FaTwitter].map((Icon, i) => (
+                                <a key={i} href="#" style={{ width: 34, height: 34, borderRadius: 8, border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'border-color 0.2s, color 0.2s' }}
+                                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(245,158,11,0.4)'; e.currentTarget.style.color = '#f59e0b'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.4)'; }}
                                 >
-                                    <Icon className="w-5 h-5" />
+                                    <Icon size={14} />
                                 </a>
                             ))}
                         </div>
                     </div>
 
-                    {/* Links */}
-                    {Object.entries(footerLinks).map(([title, links]) => (
-                        <div key={title}>
-                            <h3 className="font-semibold text-white text-sm uppercase tracking-wider mb-4">
-                                {title}
-                            </h3>
-                            <ul className="space-y-3">
-                                {links.map((link) => (
-                                    <li key={link.label}>
-                                        <Link
-                                            href={link.href}
-                                            className="text-sm text-slate-500 hover:text-primary-400 
-                                transition-colors duration-200"
-                                        >
-                                            {link.label}
-                                        </Link>
-                                    </li>
+                    {/* Link columns */}
+                    {Object.entries(LINKS).map(([section, items]) => (
+                        <div key={section}>
+                            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#f59e0b', marginBottom: 16 }}>{section.toUpperCase()}</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {items.map(item => (
+                                    <Link key={item} href={`/${item.toLowerCase()}`} style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500 }}
+                                        onMouseEnter={e => e.target.style.color = '#fff'}
+                                        onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.4)'}
+                                    >{item}</Link>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     ))}
                 </div>
-            </div>
 
-            {/* Bottom section */}
-            <div className="border-t border-slate-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-                        <p className="text-sm text-slate-500">
-                            © {new Date().getFullYear()} SolveHub. All rights reserved.
-                        </p>
-                        <p className="text-sm text-slate-500 flex items-center">
-                            Made with <HiOutlineHeart className="w-4 h-4 text-red-500 mx-1" />
-                            for the community
-                        </p>
+                {/* Bottom */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 28, flexWrap: 'wrap', gap: 12 }}>
+                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.04em' }}>© 2026 SOLVEHUB · ALL RIGHTS RESERVED</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
+                        <HiOutlineLightningBolt style={{ color: '#f59e0b', width: 14 }} />
+                        Made with purpose
                     </div>
                 </div>
             </div>

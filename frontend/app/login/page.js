@@ -1,131 +1,97 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { HiOutlineMail, HiOutlineLockClosed, HiOutlineArrowRight } from 'react-icons/hi';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 
 export default function LoginPage() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [formData, setFormData] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
     const { login } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const result = await login(email, password);
-        if (result.success) {
-            router.push('/dashboard');
-        }
+        await login(formData.email, formData.password);
         setLoading(false);
     };
 
     return (
-        <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950">
-            <div className="w-full max-w-md">
-                <div className="card p-8 sm:p-10">
-                    <div className="text-center mb-10">
-                        <Link href="/" className="inline-flex items-center space-x-2 mb-6 group">
-                            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-purple-600 
-                            rounded-2xl flex items-center justify-center shadow-lg 
-                            group-hover:scale-110 transition-transform duration-300">
-                                <span className="text-white font-bold text-xl uppercase">S</span>
-                            </div>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', background: '#0d0d0f', position: 'relative', overflow: 'hidden' }}>
+            {/* Grid background */}
+            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(245,158,11,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(245,158,11,0.03) 1px,transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
+            {/* Glow */}
+            <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(245,158,11,0.07) 0%,transparent 70%)', pointerEvents: 'none' }} />
+
+            <div style={{ width: '100%', maxWidth: 420, position: 'relative', zIndex: 1 }}>
+                {/* Card */}
+                <div style={{ background: '#111114', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: '40px 36px' }}>
+
+                    {/* Header */}
+                    <div style={{ textAlign: 'center', marginBottom: 36 }}>
+                        <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', marginBottom: 24 }}>
+                            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 18, color: '#0d0d0f', fontFamily: "'Syne',sans-serif" }}>S</div>
                         </Link>
-                        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">
-                            Welcome Back
-                        </h1>
-                        <p className="text-slate-500 dark:text-slate-400 mt-2">
-                            Sign in to your SolveHub account
-                        </p>
+                        <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 28, fontWeight: 900, color: '#fff', marginBottom: 8, letterSpacing: '-0.02em' }}>Welcome back</h1>
+                        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Sign in to your SolveHub account</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        <div className="space-y-1">
+                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        <div>
                             <label className="label-text">Email Address</label>
-                            <div className="relative">
-                                <HiOutlineMail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                            <div style={{ position: 'relative' }}>
+                                <HiOutlineMail style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)', width: 18, height: 18 }} />
                                 <input
-                                    type="email"
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="input-field pl-12"
-                                    placeholder="name@example.com"
+                                    type="email" required
+                                    value={formData.email}
+                                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                    className="input-field" placeholder="you@example.com"
+                                    style={{ paddingLeft: 44 }}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="label-text">Password</label>
+                            <div style={{ position: 'relative' }}>
+                                <HiOutlineLockClosed style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)', width: 18, height: 18 }} />
+                                <input
+                                    type="password" required
+                                    value={formData.password}
+                                    onChange={e => setFormData({ ...formData, password: e.target.value })}
+                                    className="input-field" placeholder="••••••••"
+                                    style={{ paddingLeft: 44 }}
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-1">
-                            <div className="flex items-center justify-between">
-                                <label className="label-text">Password</label>
-                                <Link href="#" className="text-xs font-bold text-primary-600 hover:underline">
-                                    Forgot?
-                                </Link>
-                            </div>
-                            <div className="relative">
-                                <HiOutlineLockClosed className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    type="password"
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="input-field pl-12"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full btn-primary !py-4 text-lg"
-                        >
-                            {loading ? (
-                                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            ) : (
-                                <span className="flex items-center justify-center">
-                                    Sign In <HiOutlineArrowRight className="ml-2 w-5 h-5" />
-                                </span>
-                            )}
+                        <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 8, width: '100%', justifyContent: 'center' }}>
+                            {loading ? <div style={{ width: 18, height: 18, border: '2px solid rgba(13,13,15,0.3)', borderTop: '2px solid #0d0d0f', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> : <><span>SIGN IN</span><HiOutlineArrowRight /></>}
                         </button>
                     </form>
 
-                    <div className="relative my-8">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-slate-200 dark:border-slate-800" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-white dark:bg-slate-900 px-3 text-slate-500 font-bold tracking-widest">
-                                Or continue with
-                            </span>
-                        </div>
+                    {/* Divider */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '24px 0' }}>
+                        <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.07)' }} />
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: '0.08em' }}>OR</span>
+                        <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.07)' }} />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <button className="flex items-center justify-center px-4 py-3 border-2 
-                             border-slate-100 dark:border-slate-800 rounded-xl 
-                             hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-bold text-sm">
-                            <FaGoogle className="w-4 h-4 mr-2 text-red-500" />
-                            Google
-                        </button>
-                        <button className="flex items-center justify-center px-4 py-3 border-2 
-                             border-slate-100 dark:border-slate-800 rounded-xl 
-                             hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-bold text-sm">
-                            <FaGithub className="w-4 h-4 mr-2 text-slate-900 dark:text-white" />
-                            GitHub
-                        </button>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                        {[{ icon: FaGoogle, label: 'Google', color: '#ea4335' }, { icon: FaGithub, label: 'GitHub', color: '#fff' }].map(({ icon: Icon, label, color }) => (
+                            <button key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 0', borderRadius: 10, border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'border-color 0.2s, background 0.2s', fontFamily: "'Syne',sans-serif" }}
+                                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
+                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                            >
+                                <Icon style={{ color, width: 15, height: 15 }} /> {label}
+                            </button>
+                        ))}
                     </div>
 
-                    <p className="text-center text-sm text-slate-500 mt-8">
-                        Don&apos;t have an account?{' '}
-                        <Link href="/register" className="font-bold text-primary-600 hover:underline">
-                            Create account
-                        </Link>
+                    <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.35)', marginTop: 28 }}>
+                        No account?{' '}
+                        <Link href="/register" style={{ color: '#f59e0b', fontWeight: 700, textDecoration: 'none' }}>Create one free</Link>
                     </p>
                 </div>
             </div>

@@ -1,92 +1,70 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import LeaderboardTable from '@/components/LeaderboardTable';
-import UserCard from '@/components/UserCard';
-import Sidebar from '@/components/Sidebar';
-import { leaderboard } from '@/lib/data';
-import { HiOutlineStar, HiOutlineTrendingUp, HiOutlineInformationCircle } from 'react-icons/hi';
+import { HiOutlineChartBar, HiOutlineTrendingUp } from 'react-icons/hi';
+
+const MOCK_LEADERS = [
+    { rank: 1, name: 'Alex Johnson', reputation: 15420, solved: 234, badge: '🥇', color: '#f59e0b' },
+    { rank: 2, name: 'Sarah Chen', reputation: 12800, solved: 189, badge: '🥈', color: '#94a3b8' },
+    { rank: 3, name: 'Marcus Webb', reputation: 11200, solved: 156, badge: '🥉', color: '#cd7c2f' },
+    { rank: 4, name: 'Yuki Tanaka', reputation: 9800, solved: 134, badge: null, color: '#818cf8' },
+    { rank: 5, name: 'Priya Anand', reputation: 8600, solved: 121, badge: null, color: '#34d399' },
+    { rank: 6, name: 'David Kim', reputation: 7400, solved: 108, badge: null, color: '#f472b6' },
+    { rank: 7, name: 'Elena Russo', reputation: 6900, solved: 97, badge: null, color: '#38bdf8' },
+    { rank: 8, name: 'Omar Hassan', reputation: 5800, solved: 84, badge: null, color: '#fb923c' },
+];
 
 export default function LeaderboardPage() {
-    const [period, setPeriod] = useState('all-time');
-
-    const users = leaderboard || [];
-    const topThree = users.slice(0, 3);
-    const theRest = users.slice(3);
-
     return (
-        <div className="page-container">
-            <div className="flex flex-col lg:flex-row gap-12">
-                <div className="flex-1 min-w-0">
-                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
-                        <div>
-                            <div className="flex items-center space-x-2 mb-2">
-                                <HiOutlineStar className="w-6 h-6 text-amber-500" />
-                                <span className="text-xs font-black uppercase tracking-widest text-primary-600">Expert Rankings</span>
-                            </div>
-                            <h1 className="text-4xl font-black text-slate-900 dark:text-white leading-tight">
-                                Global Leaderboard
-                            </h1>
-                            <p className="text-slate-500 mt-2">Recognizing our most dedicated problem solvers and knowledge contributors.</p>
-                        </div>
-
-                        <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl border border-slate-200 dark:border-slate-700">
-                            {['weekly', 'monthly', 'all-time'].map(p => (
-                                <button
-                                    key={p}
-                                    onClick={() => setPeriod(p)}
-                                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${period === p
-                                        ? 'bg-white dark:bg-slate-900 text-primary-600 shadow-sm'
-                                        : 'text-slate-400 hover:text-slate-600'
-                                        }`}
-                                >
-                                    {p.replace('-', ' ')}
-                                </button>
-                            ))}
-                        </div>
+        <div style={{ minHeight: '100vh', background: '#0d0d0f', paddingTop: 88 }}>
+            {/* Header */}
+            <div style={{ background: '#111114', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '40px 24px 32px' }}>
+                <div style={{ maxWidth: 900, margin: '0 auto' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                        <HiOutlineChartBar style={{ color: '#f59e0b', width: 20, height: 20 }} />
+                        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#f59e0b' }}>LEADERBOARD</span>
                     </div>
+                    <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>Top Contributors</h1>
+                    <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>Weekly rankings based on reputation, solutions, and engagement</p>
+                </div>
+            </div>
 
-                    {/* Top 3 Champions */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                        {topThree.map((user, i) => (
-                            <div key={user.id} className="relative group">
-                                <div className={`absolute inset-0 bg-gradient-to-br transition-opacity duration-500 rounded-3xl opacity-0 group-hover:opacity-10 -z-10 ${i === 0 ? 'from-amber-400 to-amber-600' :
-                                    i === 1 ? 'from-slate-400 to-slate-600' :
-                                        'from-orange-400 to-orange-600'
-                                    }`} />
-                                <UserCard user={{ ...user, rank: i + 1 }} />
+            <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
+                {/* Podium top 3 */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 32 }}>
+                    {MOCK_LEADERS.slice(0, 3).map((u, i) => (
+                        <div key={u.rank} style={{
+                            background: i === 0 ? 'linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.04))' : 'rgba(255,255,255,0.02)',
+                            border: i === 0 ? '1px solid rgba(245,158,11,0.35)' : '1px solid rgba(255,255,255,0.07)',
+                            borderRadius: 16, padding: '28px 20px', textAlign: 'center',
+                            order: i === 0 ? -1 : i,
+                        }}>
+                            <div style={{ fontSize: 32, marginBottom: 10 }}>{u.badge}</div>
+                            <div style={{ width: 48, height: 48, borderRadius: '50%', background: `linear-gradient(135deg,${u.color},${u.color}80)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800, color: '#0d0d0f', margin: '0 auto 12px' }}>
+                                {u.name[0]}
                             </div>
-                        ))}
-                    </div>
-
-                    <div className="space-y-6">
-                        <div className="flex items-center justify-between mb-4 px-2">
-                            <h3 className="font-bold text-slate-900 dark:text-white flex items-center">
-                                <HiOutlineTrendingUp className="w-5 h-5 mr-2 text-primary-500" />
-                                Top Ranked Experts
-                            </h3>
-                            <div className="flex items-center text-xs font-bold text-slate-400">
-                                <HiOutlineInformationCircle className="w-4 h-4 mr-1.5" />
-                                Rankings updated every 24 hours
-                            </div>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{u.name}</div>
+                            <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 20, fontWeight: 900, color: u.color }}>{u.reputation.toLocaleString()}</div>
+                            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em', marginTop: 4 }}>REP POINTS</div>
                         </div>
-                        <LeaderboardTable users={leaderboard} />
-                    </div>
+                    ))}
                 </div>
 
-                <div className="w-full lg:w-80 flex-shrink-0">
-                    <Sidebar />
-                    <div className="card p-6 mt-6 bg-primary-600 text-white border-0 overflow-hidden relative">
-                        <div className="relative z-10">
-                            <h4 className="font-bold text-lg mb-2">Want to rank up?</h4>
-                            <p className="text-sm text-primary-100 mb-6 leading-relaxed">Solve complex problems, write featured articles, and help others to climb the leaderboard.</p>
-                            <Link href="/problems" className="block w-full py-3 bg-white text-primary-600 rounded-xl font-bold text-center text-sm shadow-xl shadow-primary-900/20 active:scale-95 transition-all">
-                                Browse Challenges
-                            </Link>
+                {/* Remaining */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {MOCK_LEADERS.slice(3).map((u) => (
+                        <div key={u.rank} className="card" style={{ padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 20 }}>
+                            <span style={{ fontSize: 13, fontWeight: 800, color: 'rgba(255,255,255,0.25)', width: 28, textAlign: 'center', fontFamily: "'Playfair Display',serif" }}>#{u.rank}</span>
+                            <div style={{ width: 38, height: 38, borderRadius: '50%', background: `linear-gradient(135deg,${u.color},${u.color}70)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 800, color: '#0d0d0f' }}>{u.name[0]}</div>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{u.name}</div>
+                                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{u.solved} problems solved</div>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                                <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, fontWeight: 900, color: u.color }}>{u.reputation.toLocaleString()}</div>
+                                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em' }}>POINTS</div>
+                            </div>
                         </div>
-                        <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>
