@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const ProblemSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -14,4 +14,4 @@ const ProblemSchema = new mongoose.Schema({
     solutions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Solution' }],
 }, { timestamps: true });
 
-export default mongoose.models.Problem || mongoose.model('Problem', ProblemSchema);
+module.exports = mongoose.models.Problem || mongoose.model('Problem', ProblemSchema);

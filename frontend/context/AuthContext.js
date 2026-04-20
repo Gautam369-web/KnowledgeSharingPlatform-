@@ -62,18 +62,25 @@ export function AuthProvider({ children }) {
     const login = async (email, password) => {
         setLoading(true);
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Since we don't have [...nextauth] yet, we can't use signIn from next-auth/react
+            // But we can implement a temporary login API or just wait for NextAuth setup.
+            // For now, let's just use the mock logic but prepare for real API
 
-            const foundUser = MOCK_USERS.find(
-                u => u.email === email && u.password === password
-            );
+            // TODO: Implement real login API call
+            console.log('Login attempt with:', email);
 
-            if (foundUser) {
-                const { password: _, ...userWithoutPassword } = foundUser;
-                setUser(userWithoutPassword);
-                localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
-                toast.success(`Welcome back, ${foundUser.name}!`);
+            // Temporary: keep mock until NextAuth is fully configured
+            const HARDCODED_USER = {
+                id: '1',
+                name: 'Test User',
+                email: 'test@example.com',
+                password: 'password123',
+            };
+
+            if (email === HARDCODED_USER.email && password === HARDCODED_USER.password) {
+                setUser(HARDCODED_USER);
+                localStorage.setItem('currentUser', JSON.stringify(HARDCODED_USER));
+                toast.success(`Welcome back!`);
                 return { success: true };
             } else {
                 toast.error('Invalid email or password');
@@ -90,31 +97,20 @@ export function AuthProvider({ children }) {
     const register = async (userData) => {
         setLoading(true);
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await fetch('http://localhost:5000/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData),
+            });
+            const data = await response.json();
 
-            const newUser = {
-                id: Date.now().toString(),
-                name: userData.name,
-                email: userData.email,
-                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=6366f1&color=fff&size=200`,
-                bio: '',
-                skills: [],
-                reputation: 0,
-                badges: ['newcomer'],
-                role: 'user',
-                joinedAt: new Date().toISOString(),
-                problemsSolved: 0,
-                articlesWritten: 0,
-                solutionsGiven: 0,
-                location: '',
-                github: '',
-                website: '',
-            };
-
-            setUser(newUser);
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
-            toast.success('Account created successfully! Welcome to SolveHub!');
-            return { success: true };
+            if (response.ok) {
+                toast.success(data.message || 'Account created successfully!');
+                return { success: true };
+            } else {
+                toast.error(data.message || 'Registration failed');
+                return { success: false, error: data.message };
+            }
         } catch (error) {
             toast.error('Registration failed. Please try again.');
             return { success: false, error: error.message };

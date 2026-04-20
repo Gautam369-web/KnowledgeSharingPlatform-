@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const CommentSchema = new mongoose.Schema({
     content: { type: String, required: true },
@@ -6,7 +6,6 @@ const CommentSchema = new mongoose.Schema({
     likes: { type: Number, default: 0 },
 }, { timestamps: true });
 
-// Add recursive replies after definition
 CommentSchema.add({
     replies: [CommentSchema]
 });
@@ -21,4 +20,4 @@ const SolutionSchema = new mongoose.Schema({
     comments: [CommentSchema],
 }, { timestamps: true });
 
-export default mongoose.models.Solution || mongoose.model('Solution', SolutionSchema);
+module.exports = mongoose.models.Solution || mongoose.model('Solution', SolutionSchema);
