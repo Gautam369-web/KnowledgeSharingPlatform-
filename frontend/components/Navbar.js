@@ -92,6 +92,28 @@ function NavInner() {
                             </Link>
                         );
                     })}
+
+                    {/* Dynamic Dashboard Link */}
+                    {user && (
+                        <Link
+                            href="/dashboard"
+                            style={{
+                                display: 'flex', alignItems: 'center', gap: 6,
+                                padding: '6px 14px', borderRadius: 8,
+                                textDecoration: 'none',
+                                fontSize: 13, fontWeight: 700,
+                                fontFamily: "'Syne', sans-serif",
+                                color: isActive('/dashboard') ? '#f59e0b' : 'rgba(245,158,11,0.7)',
+                                background: isActive('/dashboard') ? 'rgba(245,158,11,0.1)' : 'transparent',
+                                transition: 'color 0.18s, background 0.18s',
+                            }}
+                            onMouseEnter={e => { if (!isActive('/dashboard')) e.currentTarget.style.color = '#f59e0b'; }}
+                            onMouseLeave={e => { if (!isActive('/dashboard')) e.currentTarget.style.color = 'rgba(245,158,11,0.7)'; }}
+                        >
+                            <HiOutlineLogout style={{ width: 15, height: 15, transform: 'rotate(180deg)', flexShrink: 0 }} />
+                            Dashboard
+                        </Link>
+                    )}
                 </div>
 
                 {/* ── Right ── */}
@@ -176,6 +198,17 @@ function NavInner() {
                             <Icon style={{ width: 17, height: 17 }} />{label}
                         </Link>
                     ))}
+
+                    {user && (
+                        <Link href="/dashboard" onClick={() => setMobileOpen(false)} style={{
+                            display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', borderRadius: 8,
+                            textDecoration: 'none', fontSize: 14, fontWeight: 700, fontFamily: "'Syne',sans-serif",
+                            color: isActive('/dashboard') ? '#f59e0b' : 'rgba(245,158,11,0.9)',
+                            background: isActive('/dashboard') ? 'rgba(245,158,11,0.1)' : 'rgba(245,158,11,0.05)',
+                        }}>
+                            <HiOutlineLogout style={{ width: 17, height: 17, transform: 'rotate(180deg)' }} />Dashboard
+                        </Link>
+                    )}
                     <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '8px 0' }} />
                     <Link href="/login" onClick={() => setMobileOpen(false)} style={{ padding: '11px 14px', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontFamily: "'Syne',sans-serif" }}>Sign In</Link>
                     <Link href="/register" onClick={() => setMobileOpen(false)} style={{ margin: '4px 0', padding: '11px 14px', background: '#f59e0b', color: '#0d0d0f', borderRadius: 8, fontSize: 14, fontWeight: 800, textDecoration: 'none', textAlign: 'center', fontFamily: "'Syne',sans-serif" }}>GET STARTED</Link>
