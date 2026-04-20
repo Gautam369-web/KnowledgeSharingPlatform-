@@ -5,6 +5,8 @@ import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 // Mock user data for demonstration
 const MOCK_USERS = [
     {
@@ -97,7 +99,7 @@ export function AuthProvider({ children }) {
     const register = async (userData) => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/api/auth/register', {
+            const response = await fetch(`${API_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData),
