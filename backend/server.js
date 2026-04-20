@@ -28,17 +28,26 @@ app.use(express.json());
 const allowedOrigins = [
     'http://localhost:3000',
     'https://knowledge-sharing-platform-chi.vercel.app',
-    /^https:\/\/knowledge-sharing-platform-.*-projects\.vercel\.app$/ // Matches Vercel previews
+    'https://kspx.vercel.app',
+    /^https:\/\/knowledge-sharing-platform-.*-projects\.vercel\.app$/,
+    /^https:\/\/kspx-.*-projects\.vercel\.app$/
 ];
 
 app.use(cors({
     origin: (origin, callback) => {
         // Allow requests with no origin (like mobile apps or curl)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.some(o => typeof o === 'string' ? o === origin : o.test(origin))) {
-            return callback(null, true);
+
+        const isAllowed = allowedOrigins.some(o =>
+            typeof o === 'string' ? o === origin : o.test(origin)
+        );
+
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            console.error(`CORS blocked for origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
         }
-        return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
