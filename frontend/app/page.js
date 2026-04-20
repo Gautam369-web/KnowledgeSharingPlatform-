@@ -167,7 +167,7 @@ export default function LandingPage() {
 
             <div
                 className="min-h-screen text-white"
-                style={{ background: '#0d0d0f', fontFamily: "'Syne', sans-serif" }}
+                style={{ background: '#0d0d0f', fontFamily: "'Bricolage Grotesque', sans-serif" }}
             >
                 {/* ══════════════════════════
                     HERO
@@ -211,7 +211,7 @@ export default function LandingPage() {
 
                         <FadeUp delay={80}>
                             <h1 style={{
-                                fontFamily: "'Playfair Display', serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontSize: 'clamp(48px,8vw,88px)',
                                 fontWeight: 900,
                                 lineHeight: 1.06,
@@ -289,7 +289,7 @@ export default function LandingPage() {
                                     padding: '20px 16px', textAlign: 'center',
                                     background: 'rgba(13,13,15,0.7)',
                                 }}>
-                                    <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 28, fontWeight: 900, color: '#f59e0b', letterSpacing: '-0.03em' }}>{s.value}</div>
+                                    <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 28, fontWeight: 900, color: '#f59e0b', letterSpacing: '-0.03em' }}>{s.value}</div>
                                     <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '0.06em', marginTop: 4 }}>{s.label.toUpperCase()}</div>
                                 </div>
                             ))}
@@ -305,7 +305,7 @@ export default function LandingPage() {
                         <div style={{ textAlign: 'center', marginBottom: 72 }}>
                             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#f59e0b', marginBottom: 16 }}>PLATFORM CAPABILITIES</p>
                             <h2 style={{
-                                fontFamily: "'Playfair Display',serif",
+                                fontFamily: "'Bricolage Grotesque',sans-serif",
                                 fontSize: 'clamp(36px,5vw,56px)',
                                 fontWeight: 900, color: '#fff',
                                 letterSpacing: '-0.02em', lineHeight: 1.1,
@@ -336,7 +336,7 @@ export default function LandingPage() {
                                         color: f.accent, lineHeight: 1,
                                         filter: `drop-shadow(0 0 12px ${f.accent}60)`,
                                     }}>{f.icon}</div>
-                                    <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 10, letterSpacing: '-0.01em' }}>{f.title}</h3>
+                                    <h3 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 10, letterSpacing: '-0.01em' }}>{f.title}</h3>
                                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7 }}>{f.body}</p>
                                 </div>
                             ))}
@@ -356,7 +356,7 @@ export default function LandingPage() {
                         {/* Text */}
                         <div>
                             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#f59e0b', marginBottom: 16 }}>HOW IT WORKS</p>
-                            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px,4vw,48px)', fontWeight: 900, color: '#fff', lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: 24 }}>
+                            <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(32px,4vw,48px)', fontWeight: 900, color: '#fff', lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: 24 }}>
                                 A living,<br /><em>breathing</em><br />knowledge base
                             </h2>
                             <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 15, lineHeight: 1.8, marginBottom: 36 }}>
@@ -418,7 +418,7 @@ export default function LandingPage() {
                     <div style={{ maxWidth: 1000, margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: 72 }}>
                             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#f59e0b', marginBottom: 16 }}>TRANSPARENT PRICING</p>
-                            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(36px,5vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>
+                            <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(36px,5vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>
                                 Simple. No surprises.
                             </h2>
                         </div>
@@ -441,7 +441,7 @@ export default function LandingPage() {
                                     )}
                                     <p style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.1em', marginBottom: 12 }}>{plan.name.toUpperCase()}</p>
                                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 8 }}>
-                                        <span style={{ fontFamily: "'Playfair Display',serif", fontSize: 44, fontWeight: 900, color: '#fff', lineHeight: 1 }}>{plan.price}</span>
+                                        <span style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 44, fontWeight: 900, color: '#fff', lineHeight: 1 }}>{plan.price}</span>
                                         <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', paddingBottom: 6 }}>{plan.period}</span>
                                     </div>
                                     <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 28, lineHeight: 1.6 }}>{plan.desc}</p>
@@ -478,7 +478,7 @@ export default function LandingPage() {
                     <div style={{ maxWidth: 1100, margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: 72 }}>
                             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#f59e0b', marginBottom: 16 }}>SOCIAL PROOF</p>
-                            <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(36px,5vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>
+                            <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(36px,5vw,52px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>
                                 Teams who ship faster
                             </h2>
                         </div>
@@ -490,7 +490,7 @@ export default function LandingPage() {
                                     borderRadius: 18, padding: '32px 28px',
                                     position: 'relative',
                                 }}>
-                                    <div style={{ fontSize: 40, fontFamily: "'Playfair Display',serif", color: t.color, lineHeight: 1, marginBottom: 16, opacity: 0.7 }}>"</div>
+                                    <div style={{ fontSize: 40, fontFamily: "'Bricolage Grotesque',sans-serif", color: t.color, lineHeight: 1, marginBottom: 16, opacity: 0.7 }}>"</div>
                                     <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.65)', lineHeight: 1.75, marginBottom: 28, fontStyle: 'italic' }}>
                                         {t.quote}
                                     </p>
@@ -531,7 +531,7 @@ export default function LandingPage() {
                             pointerEvents: 'none',
                         }} />
                         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', color: '#f59e0b', marginBottom: 20 }}>START TODAY · FREE FOREVER</p>
-                        <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(36px,5vw,60px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 20 }}>
+                        <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(36px,5vw,60px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 20 }}>
                             Stop searching.<br /><em>Start solving.</em>
                         </h2>
                         <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)', maxWidth: 480, margin: '0 auto 44px', lineHeight: 1.7 }}>

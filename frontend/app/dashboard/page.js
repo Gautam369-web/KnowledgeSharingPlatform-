@@ -37,9 +37,9 @@ export default function DashboardPage() {
             <div style={{ minHeight: '100vh', background: '#0d0d0f', paddingTop: 88, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ textAlign: 'center', padding: '40px 24px' }}>
                     <div style={{ fontSize: 48, marginBottom: 20 }}>🔒</div>
-                    <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 28, fontWeight: 900, color: '#fff', marginBottom: 12 }}>Sign in to access your dashboard</h2>
+                    <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 28, fontWeight: 900, color: '#fff', marginBottom: 12 }}>Sign in to access your dashboard</h2>
                     <p style={{ color: 'rgba(255,255,255,0.4)', marginBottom: 28, fontSize: 15 }}>Track your progress, reputation, and contributions.</p>
-                    <Link href="/login" style={{ background: '#f59e0b', color: '#0d0d0f', fontWeight: 800, fontSize: 14, padding: '12px 28px', borderRadius: 10, textDecoration: 'none', fontFamily: "'Syne',sans-serif", letterSpacing: '0.04em' }}>
+                    <Link href="/login" style={{ background: '#f59e0b', color: '#0d0d0f', fontWeight: 800, fontSize: 14, padding: '12px 28px', borderRadius: 10, textDecoration: 'none', fontFamily: "'Bricolage Grotesque',sans-serif", letterSpacing: '0.04em' }}>
                         SIGN IN →
                     </Link>
                 </div>
@@ -55,7 +55,7 @@ export default function DashboardPage() {
                 <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
                     <div>
                         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#f59e0b', marginBottom: 6 }}>DASHBOARD</p>
-                        <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(26px,4vw,40px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', margin: 0 }}>
+                        <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(26px,4vw,40px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', margin: 0 }}>
                             Welcome back, <em style={{ color: '#f59e0b', fontStyle: 'italic' }}>{user.name?.split(' ')[0] || 'Explorer'}</em>
                         </h1>
                         <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginTop: 6 }}>Here's your activity overview · {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
@@ -65,7 +65,7 @@ export default function DashboardPage() {
                         background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)',
                         borderRadius: 12, padding: '10px 18px',
                     }}>
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#f59e0b,#d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 900, color: '#0d0d0f', fontFamily: "'Syne',sans-serif" }}>
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#f59e0b,#d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 900, color: '#0d0d0f', fontFamily: "'Bricolage Grotesque',sans-serif" }}>
                             {user.name?.[0]?.toUpperCase() || 'U'}
                         </div>
                         <div>
@@ -95,7 +95,7 @@ export default function DashboardPage() {
                                 </div>
                                 <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.25)', textAlign: 'right' }}>{s.label.toUpperCase()}</span>
                             </div>
-                            <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 40, fontWeight: 900, color: s.color, lineHeight: 1, marginBottom: 8 }}>{s.value.toLocaleString()}</div>
+                            <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 40, fontWeight: 900, color: s.color, lineHeight: 1, marginBottom: 8 }}>{s.value.toLocaleString()}</div>
                             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', fontWeight: 500 }}>{s.trend}</div>
                         </div>
                     ))}
@@ -106,7 +106,7 @@ export default function DashboardPage() {
 
                     {/* Quick Actions */}
                     <div>
-                        <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>Quick Actions</h2>
+                        <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>Quick Actions</h2>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 32 }}>
                             {QUICK.map((q, i) => (
                                 <Link key={i} href={q.href} style={{ textDecoration: 'none' }}>
@@ -136,7 +136,7 @@ export default function DashboardPage() {
                             <div style={{ fontSize: 36 }}>🔥</div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
-                                    <span style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, color: '#f59e0b' }}>{user?.streak || 7}</span>-day streak going!
+                                    <span style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 22, color: '#f59e0b' }}>{user?.streak || 7}</span>-day streak going!
                                 </div>
                                 <div style={{ height: 6, background: 'rgba(255,255,255,0.07)', borderRadius: 3, overflow: 'hidden' }}>
                                     <div style={{ height: '100%', width: `${Math.min((user?.streak || 7) / 30 * 100, 100)}%`, background: 'linear-gradient(90deg,#f87171,#f59e0b)', borderRadius: 3, transition: 'width 0.5s' }} />
@@ -148,7 +148,7 @@ export default function DashboardPage() {
 
                     {/* Activity Feed */}
                     <div>
-                        <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>Recent Activity</h2>
+                        <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>Recent Activity</h2>
                         <div style={{ background: '#111114', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, overflow: 'hidden' }}>
                             {ACTIVITY.map((a, i) => (
                                 <div key={i} style={{

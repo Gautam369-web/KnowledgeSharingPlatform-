@@ -23,7 +23,7 @@ export default function LeaderboardPage() {
                         <HiOutlineChartBar style={{ color: '#f59e0b', width: 20, height: 20 }} />
                         <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#f59e0b' }}>LEADERBOARD</span>
                     </div>
-                    <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>Top Contributors</h1>
+                    <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>Top Contributors</h1>
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>Weekly rankings based on reputation, solutions, and engagement</p>
                 </div>
             </div>
@@ -43,7 +43,7 @@ export default function LeaderboardPage() {
                                 {u.name[0]}
                             </div>
                             <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{u.name}</div>
-                            <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 20, fontWeight: 900, color: u.color }}>{u.reputation.toLocaleString()}</div>
+                            <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 20, fontWeight: 900, color: u.color }}>{u.reputation.toLocaleString()}</div>
                             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em', marginTop: 4 }}>REP POINTS</div>
                         </div>
                     ))}
@@ -53,14 +53,14 @@ export default function LeaderboardPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {MOCK_LEADERS.slice(3).map((u) => (
                         <div key={u.rank} className="card" style={{ padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 20 }}>
-                            <span style={{ fontSize: 13, fontWeight: 800, color: 'rgba(255,255,255,0.25)', width: 28, textAlign: 'center', fontFamily: "'Playfair Display',serif" }}>#{u.rank}</span>
+                            <span style={{ fontSize: 13, fontWeight: 800, color: 'rgba(255,255,255,0.25)', width: 28, textAlign: 'center', fontFamily: "'Bricolage Grotesque',sans-serif" }}>#{u.rank}</span>
                             <div style={{ width: 38, height: 38, borderRadius: '50%', background: `linear-gradient(135deg,${u.color},${u.color}70)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 800, color: '#0d0d0f' }}>{u.name[0]}</div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{u.name}</div>
                                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{u.solved} problems solved</div>
                             </div>
                             <div style={{ textAlign: 'right' }}>
-                                <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, fontWeight: 900, color: u.color }}>{u.reputation.toLocaleString()}</div>
+                                <div style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 18, fontWeight: 900, color: u.color }}>{u.reputation.toLocaleString()}</div>
                                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em' }}>POINTS</div>
                             </div>
                         </div>

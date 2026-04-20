@@ -57,11 +57,11 @@ function NavInner() {
                         background: '#f59e0b',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontWeight: 900, fontSize: 16, color: '#0d0d0f',
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         flexShrink: 0,
                     }}>S</div>
                     <span style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontWeight: 800, fontSize: 16,
                         color: '#fff', letterSpacing: '-0.01em',
                     }}>SolveHub</span>
@@ -79,7 +79,7 @@ function NavInner() {
                                     padding: '6px 14px', borderRadius: 8,
                                     textDecoration: 'none',
                                     fontSize: 13, fontWeight: 500,
-                                    fontFamily: "'Syne', sans-serif",
+                                    fontFamily: "'Bricolage Grotesque', sans-serif",
                                     color: active ? '#fff' : 'rgba(255,255,255,0.5)',
                                     background: active ? 'rgba(255,255,255,0.07)' : 'transparent',
                                     transition: 'color 0.18s, background 0.18s',
@@ -102,7 +102,7 @@ function NavInner() {
                                 padding: '6px 14px', borderRadius: 8,
                                 textDecoration: 'none',
                                 fontSize: 13, fontWeight: 700,
-                                fontFamily: "'Syne', sans-serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 color: isActive('/dashboard') ? '#f59e0b' : 'rgba(245,158,11,0.7)',
                                 background: isActive('/dashboard') ? 'rgba(245,158,11,0.1)' : 'transparent',
                                 transition: 'color 0.18s, background 0.18s',
@@ -133,7 +133,7 @@ function NavInner() {
                                 border: '1px solid rgba(245,158,11,0.45)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 fontSize: 12, fontWeight: 800, color: '#f59e0b',
-                                textDecoration: 'none', fontFamily: "'Syne',sans-serif",
+                                textDecoration: 'none', fontFamily: "'Bricolage Grotesque',sans-serif",
                             }}>
                                 {user.name?.[0]?.toUpperCase() || 'U'}
                             </Link>
@@ -142,7 +142,7 @@ function NavInner() {
                                 padding: '6px 12px', borderRadius: 7, border: 'none',
                                 background: 'rgba(248,113,113,0.1)', color: '#f87171',
                                 fontSize: 12, fontWeight: 700, cursor: 'pointer',
-                                fontFamily: "'Syne',sans-serif", transition: 'background 0.2s',
+                                fontFamily: "'Bricolage Grotesque',sans-serif", transition: 'background 0.2s',
                             }}
                                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(248,113,113,0.18)'}
                                 onMouseLeave={e => e.currentTarget.style.background = 'rgba(248,113,113,0.1)'}
@@ -153,7 +153,7 @@ function NavInner() {
                         </>
                     ) : (
                         <>
-                            <Link href="/login" style={{ padding: '6px 14px', fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', fontFamily: "'Syne',sans-serif", transition: 'color 0.18s' }}
+                            <Link href="/login" style={{ padding: '6px 14px', fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', fontFamily: "'Bricolage Grotesque',sans-serif", transition: 'color 0.18s' }}
                                 onMouseEnter={e => e.target.style.color = '#fff'}
                                 onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.55)'}
                             >
@@ -161,7 +161,7 @@ function NavInner() {
                             </Link>
                             <Link href="/register" style={{
                                 padding: '8px 18px', background: '#f59e0b', color: '#0d0d0f',
-                                fontSize: 13, fontWeight: 800, fontFamily: "'Syne',sans-serif",
+                                fontSize: 13, fontWeight: 800, fontFamily: "'Bricolage Grotesque',sans-serif",
                                 letterSpacing: '0.03em', borderRadius: 8, textDecoration: 'none',
                                 transition: 'background 0.18s, transform 0.18s', whiteSpace: 'nowrap',
                             }}
@@ -191,7 +191,7 @@ function NavInner() {
                     {NAV.map(({ label, href, icon: Icon }) => (
                         <Link key={href} href={href} onClick={() => setMobileOpen(false)} style={{
                             display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', borderRadius: 8,
-                            textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: "'Syne',sans-serif",
+                            textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: "'Bricolage Grotesque',sans-serif",
                             color: isActive(href) ? '#f59e0b' : 'rgba(255,255,255,0.6)',
                             background: isActive(href) ? 'rgba(245,158,11,0.07)' : 'transparent',
                         }}>
@@ -202,7 +202,7 @@ function NavInner() {
                     {user && (
                         <Link href="/dashboard" onClick={() => setMobileOpen(false)} style={{
                             display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', borderRadius: 8,
-                            textDecoration: 'none', fontSize: 14, fontWeight: 700, fontFamily: "'Syne',sans-serif",
+                            textDecoration: 'none', fontSize: 14, fontWeight: 700, fontFamily: "'Bricolage Grotesque',sans-serif",
                             color: isActive('/dashboard') ? '#f59e0b' : 'rgba(245,158,11,0.9)',
                             background: isActive('/dashboard') ? 'rgba(245,158,11,0.1)' : 'rgba(245,158,11,0.05)',
                         }}>
@@ -210,8 +210,8 @@ function NavInner() {
                         </Link>
                     )}
                     <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '8px 0' }} />
-                    <Link href="/login" onClick={() => setMobileOpen(false)} style={{ padding: '11px 14px', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontFamily: "'Syne',sans-serif" }}>Sign In</Link>
-                    <Link href="/register" onClick={() => setMobileOpen(false)} style={{ margin: '4px 0', padding: '11px 14px', background: '#f59e0b', color: '#0d0d0f', borderRadius: 8, fontSize: 14, fontWeight: 800, textDecoration: 'none', textAlign: 'center', fontFamily: "'Syne',sans-serif" }}>GET STARTED</Link>
+                    <Link href="/login" onClick={() => setMobileOpen(false)} style={{ padding: '11px 14px', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontFamily: "'Bricolage Grotesque',sans-serif" }}>Sign In</Link>
+                    <Link href="/register" onClick={() => setMobileOpen(false)} style={{ margin: '4px 0', padding: '11px 14px', background: '#f59e0b', color: '#0d0d0f', borderRadius: 8, fontSize: 14, fontWeight: 800, textDecoration: 'none', textAlign: 'center', fontFamily: "'Bricolage Grotesque',sans-serif" }}>GET STARTED</Link>
                 </div>
             )}
         </nav>

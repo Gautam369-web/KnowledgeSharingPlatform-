@@ -65,7 +65,7 @@ export default function NewProblemPage() {
                     <div style={{ width: 64, height: 64, background: 'rgba(245,158,11,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
                         <HiOutlineInformationCircle style={{ width: 32, height: 32, color: '#f59e0b' }} />
                     </div>
-                    <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: '#fff', marginBottom: 12 }}>Account Required</h1>
+                    <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 32, fontWeight: 900, color: '#fff', marginBottom: 12 }}>Account Required</h1>
                     <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, lineHeight: 1.6, marginBottom: 32 }}>To maintain the quality of our technical community, please sign in to post your problem.</p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                         <Link href="/login" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>SIGN IN TO PROCEED</Link>
@@ -86,7 +86,7 @@ export default function NewProblemPage() {
                         <Link href="/problems" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#f59e0b', fontSize: 12, fontWeight: 800, textDecoration: 'none', letterSpacing: '0.1em', marginBottom: 20 }}>
                             <HiOutlineArrowLeft style={{ width: 14, height: 14 }} /> BACK TO REPOSITORY
                         </Link>
-                        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, marginBottom: 16 }}>
+                        <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, marginBottom: 16 }}>
                             Submit Technical <span style={{ color: '#f59e0b' }}>Question.</span>
                         </h1>
                         <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)', maxWidth: 600, lineHeight: 1.6 }}>
@@ -96,7 +96,7 @@ export default function NewProblemPage() {
 
                     <div style={{ display: 'none', lg: 'block', width: 300 }}>
                         <div style={{ background: 'rgba(245,158,11,0.03)', border: '1px solid rgba(245,158,11,0.1)', borderRadius: 16, padding: 24 }}>
-                            <h3 style={{ fontFamily: "'Syne', sans-serif", fontSize: 12, fontWeight: 800, color: '#f59e0b', letterSpacing: '0.1em', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <h3 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 12, fontWeight: 800, color: '#f59e0b', letterSpacing: '0.1em', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <HiOutlineLightBulb /> QUICK TIPS
                             </h3>
                             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -224,7 +224,7 @@ export default function NewProblemPage() {
                                 <div style={{ width: 48, height: 48, background: 'rgba(245,158,11,0.1)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
                                     <HiOutlineLightBulb style={{ width: 24, height: 24, color: '#f59e0b' }} />
                                 </div>
-                                <h3 style={{ fontFamily: "'Syne', sans-serif", fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 8 }}>Ready to Post?</h3>
+                                <h3 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 8 }}>Ready to Post?</h3>
                                 <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6, marginBottom: 32 }}>
                                     Your question will be visible to our network of 12,000+ experts.
                                 </p>

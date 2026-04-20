@@ -26,7 +26,7 @@ export default function ProblemsPage() {
                         <HiOutlineLightningBolt style={{ color: '#f59e0b', width: 20, height: 20 }} />
                         <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#f59e0b' }}>PROBLEMS</span>
                     </div>
-                    <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>
+                    <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>
                         Open Challenges
                     </h1>
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 28 }}>Unsolved problems waiting for experts like you</p>
@@ -45,7 +45,7 @@ export default function ProblemsPage() {
                             {FILTERS.map(f => (
                                 <button key={f} onClick={() => setActiveFilter(f)} style={{
                                     padding: '5px 14px', borderRadius: 100, border: 'none', cursor: 'pointer',
-                                    fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', fontFamily: "'Syne',sans-serif",
+                                    fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', fontFamily: "'Bricolage Grotesque',sans-serif",
                                     background: activeFilter === f ? '#f59e0b' : 'rgba(255,255,255,0.04)',
                                     color: activeFilter === f ? '#0d0d0f' : 'rgba(255,255,255,0.5)',
                                     transition: 'all 0.2s',
@@ -76,7 +76,7 @@ export default function ProblemsPage() {
                                         <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', color: PRIORITIES[problem.priority] || '#f59e0b', textTransform: 'uppercase' }}>{problem.priority || 'medium'}</span>
                                         {problem.status === 'solved' && <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#34d399', fontWeight: 700, letterSpacing: '0.06em' }}><HiOutlineCheck style={{ width: 12 }} />SOLVED</span>}
                                     </div>
-                                    <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8, lineHeight: 1.4 }}>{problem.title}</h2>
+                                    <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8, lineHeight: 1.4 }}>{problem.title}</h2>
                                     <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6, marginBottom: 12, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{problem.description || problem.excerpt}</p>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                                         {(problem.tags || []).slice(0, 4).map(tag => (
@@ -85,7 +85,7 @@ export default function ProblemsPage() {
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                                    <div style={{ fontSize: 20, fontFamily: "'Playfair Display',serif", fontWeight: 900, color: '#f59e0b' }}>{problem.solutions?.length || problem.upvotes || 0}</div>
+                                    <div style={{ fontSize: 20, fontFamily: "'Bricolage Grotesque',sans-serif", fontWeight: 900, color: '#f59e0b' }}>{problem.solutions?.length || problem.upvotes || 0}</div>
                                     <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: '0.06em' }}>SOLUTIONS</div>
                                     <HiOutlineArrowRight style={{ marginTop: 12, color: 'rgba(255,255,255,0.2)', width: 18, height: 18 }} />
                                 </div>

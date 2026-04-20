@@ -25,7 +25,7 @@ export default function ArticlesPage() {
                         <HiOutlineBookOpen style={{ color: '#f59e0b', width: 20, height: 20 }} />
                         <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#f59e0b' }}>KNOWLEDGE BASE</span>
                     </div>
-                    <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>
+                    <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>
                         Articles &amp; Guides
                     </h1>
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 28 }}>In-depth knowledge from expert contributors</p>
@@ -39,7 +39,7 @@ export default function ArticlesPage() {
                             {CATEGORIES.map(c => (
                                 <button key={c} onClick={() => setActiveCategory(c)} style={{
                                     padding: '5px 14px', borderRadius: 100, border: 'none', cursor: 'pointer',
-                                    fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', fontFamily: "'Syne',sans-serif",
+                                    fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', fontFamily: "'Bricolage Grotesque',sans-serif",
                                     background: activeCategory === c ? '#f59e0b' : 'rgba(255,255,255,0.04)',
                                     color: activeCategory === c ? '#0d0d0f' : 'rgba(255,255,255,0.5)',
                                     transition: 'all 0.2s',
@@ -64,7 +64,7 @@ export default function ArticlesPage() {
                                 onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'}
                             >
                                 <span className="badge badge-primary" style={{ marginBottom: 14 }}>{article.category}</span>
-                                <h2 style={{ fontFamily: "'Playfair Display',serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.4, marginBottom: 10, letterSpacing: '-0.01em' }}>{article.title}</h2>
+                                <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.4, marginBottom: 10, letterSpacing: '-0.01em' }}>{article.title}</h2>
                                 <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 20, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{article.excerpt}</p>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
                                     <div style={{ display: 'flex', gap: 16 }}>

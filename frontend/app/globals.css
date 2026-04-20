@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200;12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@200;300;400;500;600;700&display=swap');
 
 /* ─── CSS Vars ─── */
 @layer base {
@@ -28,8 +28,9 @@
   body {
     background: #0d0d0f;
     color: #fff;
-    font-family: 'Syne', system-ui, sans-serif;
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -45,10 +46,10 @@
     padding: 12px 28px;
     background: #f59e0b;
     color: #0d0d0f;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 800;
     font-size: 13px;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     border-radius: 10px;
     border: none;
     cursor: pointer;
@@ -75,10 +76,10 @@
     padding: 12px 28px;
     background: transparent;
     color: rgba(255, 255, 255, 0.7);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700;
     font-size: 13px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     cursor: pointer;
@@ -99,7 +100,7 @@
     padding: 8px 14px;
     background: transparent;
     color: rgba(255, 255, 255, 0.5);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 600;
     font-size: 13px;
     border-radius: 8px;
@@ -139,7 +140,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     color: #fff;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 14px;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -225,18 +226,18 @@
   }
 
   .page-heading {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    letter-spacing: -0.02em;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.03em;
     color: #fff;
   }
 
   .section-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-size: clamp(30px, 4vw, 48px);
-    font-weight: 900;
+    font-weight: 800;
     color: #fff;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
   }
 
   .section-subtitle {
@@ -259,9 +260,11 @@
     border: 1px solid rgba(255, 255, 255, 0.07);
   }
 
-  /* Mono tag */
+  /* Mono tag — used for code labels, tags, metadata */
   .mono {
     font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    letter-spacing: 0.05em;
   }
 
   /* Scrollbar */

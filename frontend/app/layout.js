@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
                                 color: '#fff',
                                 borderRadius: '10px',
                                 border: '1px solid rgba(245,158,11,0.25)',
-                                fontFamily: "'Syne', sans-serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontSize: '13px',
                             },
                             success: {

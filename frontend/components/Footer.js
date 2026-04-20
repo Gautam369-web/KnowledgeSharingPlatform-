@@ -19,8 +19,8 @@ export default function Footer() {
                     {/* Brand */}
                     <div>
                         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginBottom: 16 }}>
-                            <div style={{ width: 34, height: 34, borderRadius: 9, background: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, fontWeight: 900, color: '#0d0d0f', fontFamily: "'Syne',sans-serif" }}>S</div>
-                            <span style={{ fontSize: 17, fontWeight: 800, color: '#fff', fontFamily: "'Syne',sans-serif" }}>SolveHub</span>
+                            <div style={{ width: 34, height: 34, borderRadius: 9, background: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, fontWeight: 900, color: '#0d0d0f', fontFamily: "'Bricolage Grotesque',sans-serif" }}>S</div>
+                            <span style={{ fontSize: 17, fontWeight: 800, color: '#fff', fontFamily: "'Bricolage Grotesque',sans-serif" }}>SolveHub</span>
                         </Link>
                         <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', lineHeight: 1.7, maxWidth: 260 }}>
                             Where hard problems find great answers. Built for engineers, by engineers.

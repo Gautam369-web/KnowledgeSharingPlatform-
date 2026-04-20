@@ -18,7 +18,7 @@ export default function SearchPage() {
     return (
         <div style={{ minHeight: '100vh', background: '#0d0d0f', paddingTop: 88 }}>
             <div style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px' }}>
-                <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 32, textAlign: 'center' }}>
+                <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 32, textAlign: 'center' }}>
                     Search <em style={{ color: '#f59e0b', fontStyle: 'italic' }}>Everything</em>
                 </h1>
 
@@ -33,7 +33,7 @@ export default function SearchPage() {
                             width: '100%', padding: '18px 18px 18px 54px',
                             background: '#111114', border: '1px solid rgba(245,158,11,0.3)',
                             borderRadius: 14, color: '#fff', fontSize: 16, outline: 'none',
-                            fontFamily: "'Syne',sans-serif", transition: 'border-color 0.2s, box-shadow 0.2s',
+                            fontFamily: "'Bricolage Grotesque',sans-serif", transition: 'border-color 0.2s, box-shadow 0.2s',
                         }}
                         onFocus={e => { e.target.style.borderColor = 'rgba(245,158,11,0.6)'; e.target.style.boxShadow = '0 0 0 4px rgba(245,158,11,0.08)'; }}
                         onBlur={e => { e.target.style.borderColor = 'rgba(245,158,11,0.3)'; e.target.style.boxShadow = 'none'; }}
