@@ -6,9 +6,10 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import {
     HiOutlineMail, HiOutlineLockClosed,
-    HiOutlineUser, HiOutlineArrowRight
+    HiOutlineUser, HiOutlineArrowRight, HiOutlineShieldCheck
 } from 'react-icons/hi';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -24,6 +25,8 @@ export default function RegisterPage() {
     const router = useRouter();
     const { register } = useAuth();
 
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -31,12 +34,12 @@ export default function RegisterPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (formData.password !== formData.confirmPassword) {
-            alert('Passwords do not match');
+            toast.error('Passwords do not match');
             return;
         }
         setLoading(true);
         try {
-            const response = await fetch('/api/auth/register', {
+            const response = await fetch(`${API_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -44,11 +47,12 @@ export default function RegisterPage() {
             const data = await response.json();
             if (response.ok) {
                 setShowOTP(true);
+                toast.success('Check your email for the OTP!');
             } else {
-                alert(data.message || 'Registration failed');
+                toast.error(data.message || 'Registration failed');
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -65,12 +69,13 @@ export default function RegisterPage() {
             });
             const data = await response.json();
             if (response.ok) {
+                toast.success('Email verified successfully!');
                 router.push('/login?verified=true');
             } else {
-                alert(data.message || 'Verification failed');
+                toast.error(data.message || 'Verification failed');
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -79,210 +84,177 @@ export default function RegisterPage() {
     const handleResendOTP = async () => {
         setResending(true);
         try {
-            const response = await fetch('/api/auth/resend-otp', {
+            const response = await fetch(`${API_URL}/api/auth/resend-otp`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: formData.email }),
             });
             const data = await response.json();
-            alert(data.message);
+            toast.success(data.message || 'OTP resent!');
         } catch (error) {
-            alert('Failed to resend OTP');
+            toast.error('Failed to resend OTP');
         } finally {
             setResending(false);
         }
     };
 
     return (
-        <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950">
-            <div className="w-full max-w-md">
-                <div className="card p-8 sm:p-10 shadow-2xl border-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
-                    <div className="text-center mb-10">
-                        <Link href="/" className="inline-flex items-center space-x-2 mb-6 group">
-                            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-purple-600 
-                            rounded-2xl flex items-center justify-center shadow-lg 
-                            group-hover:scale-110 transition-transform duration-300">
-                                <span className="text-white font-bold text-xl uppercase">S</span>
-                            </div>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '100px 24px', background: '#0d0d0f', position: 'relative', overflow: 'hidden' }}>
+            {/* Grid background */}
+            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(245,158,11,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(245,158,11,0.03) 1px,transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
+            {/* Glows */}
+            <div style={{ position: 'absolute', top: '20%', left: '30%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(245,158,11,0.05) 0%,transparent 70%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: '10%', right: '20%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle,rgba(129,140,248,0.04) 0%,transparent 70%)', pointerEvents: 'none' }} />
+
+            <div style={{ width: '100%', maxWidth: showOTP ? 400 : 460, position: 'relative', zIndex: 1 }}>
+
+                {/* ── Card ── */}
+                <div style={{ background: '#111114', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: '40px 32px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}>
+
+                    {/* Logo/Header */}
+                    <div style={{ textAlign: 'center', marginBottom: 36 }}>
+                        <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', marginBottom: 20 }}>
+                            <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#f59e0b,#d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 18, color: '#0d0d0f', fontFamily: "'Syne',sans-serif" }}>S</div>
                         </Link>
-                        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">
-                            {showOTP ? 'Verify Email' : 'Create Account'}
+                        <h1 style={{ fontFamily: "'Playfair Display',serif", fontSize: 32, fontWeight: 900, color: '#fff', marginBottom: 8, letterSpacing: '-0.02em' }}>
+                            {showOTP ? 'Check your mail' : 'Create an Account'}
                         </h1>
-                        <p className="text-slate-500 dark:text-slate-400 mt-2">
+                        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
                             {showOTP
-                                ? `We've sent a code to ${formData.email}`
-                                : 'Join the SolveHub expert community'}
+                                ? `We've sent a verify code to ${formData.email}`
+                                : 'Join the elite community of problem solvers and tech experts.'}
                         </p>
                     </div>
 
                     {!showOTP ? (
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="space-y-1">
-                                <label className="label-text">Full Name</label>
-                                <div className="relative">
-                                    <HiOutlineUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        required
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        className="input-field pl-12"
-                                        placeholder="John Doe"
-                                    />
+                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
+                                <div>
+                                    <label className="label-text">Full Name</label>
+                                    <div style={{ position: 'relative' }}>
+                                        <HiOutlineUser style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.25)', width: 18, height: 18 }} />
+                                        <input
+                                            type="text" name="name" required
+                                            value={formData.name} onChange={handleChange}
+                                            className="input-field" placeholder="John Doe"
+                                            style={{ paddingLeft: 44 }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="label-text">Email Address</label>
+                                    <div style={{ position: 'relative' }}>
+                                        <HiOutlineMail style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.25)', width: 18, height: 18 }} />
+                                        <input
+                                            type="email" name="email" required
+                                            value={formData.email} onChange={handleChange}
+                                            className="input-field" placeholder="you@example.com"
+                                            style={{ paddingLeft: 44 }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }} className="reg-pass-grid">
+                                    <div>
+                                        <label className="label-text">Password</label>
+                                        <div style={{ position: 'relative' }}>
+                                            <HiOutlineLockClosed style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.25)', width: 18, height: 18 }} />
+                                            <input
+                                                type="password" name="password" required
+                                                value={formData.password} onChange={handleChange}
+                                                className="input-field" placeholder="••••••••"
+                                                style={{ paddingLeft: 44 }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="label-text">Repeat</label>
+                                        <div style={{ position: 'relative' }}>
+                                            <HiOutlineLockClosed style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.25)', width: 18, height: 18 }} />
+                                            <input
+                                                type="password" name="confirmPassword" required
+                                                value={formData.confirmPassword} onChange={handleChange}
+                                                className="input-field" placeholder="••••••••"
+                                                style={{ paddingLeft: 44 }}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="space-y-1">
-                                <label className="label-text">Email Address</label>
-                                <div className="relative">
-                                    <HiOutlineMail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        required
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        className="input-field pl-12"
-                                        placeholder="name@example.com"
-                                    />
-                                </div>
+                            <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 12, width: '100%', height: 50, justifyContent: 'center' }}>
+                                {loading ? <div style={{ width: 18, height: 18, border: '2px solid rgba(13,13,15,0.3)', borderTop: '2px solid #0d0d0f', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> : <><span>CREATE ACCOUNT</span><HiOutlineArrowRight /></>}
+                            </button>
+
+                            {/* Divider */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '14px 0' }}>
+                                <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+                                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', fontWeight: 700, letterSpacing: '0.08em' }}>OR CONTINUE WITH</span>
+                                <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
                             </div>
 
-                            <div className="space-y-1">
-                                <label className="label-text">Password</label>
-                                <div className="relative">
-                                    <HiOutlineLockClosed className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        required
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        className="input-field pl-12"
-                                        placeholder="••••••••"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-1">
-                                <label className="label-text">Confirm Password</label>
-                                <div className="relative">
-                                    <HiOutlineLockClosed className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                    <input
-                                        type="password"
-                                        name="confirmPassword"
-                                        required
-                                        value={formData.confirmPassword}
-                                        onChange={handleChange}
-                                        className="input-field pl-12"
-                                        placeholder="••••••••"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="pt-2">
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="w-full btn-primary !py-4 text-lg"
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                                <button type="button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 0', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'background 0.2s', fontFamily: "'Syne',sans-serif" }}
+                                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                                 >
-                                    {loading ? (
-                                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
-                                    ) : (
-                                        <span className="flex items-center justify-center">
-                                            Create Account <HiOutlineArrowRight className="ml-2 w-5 h-5" />
-                                        </span>
-                                    )}
+                                    <FaGoogle style={{ color: '#ea4335', width: 14 }} /> Google
+                                </button>
+                                <button type="button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 0', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: 700, cursor: 'pointer', transition: 'background 0.2s', fontFamily: "'Syne',sans-serif" }}
+                                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                                >
+                                    <FaGithub style={{ color: '#fff', width: 14 }} /> GitHub
                                 </button>
                             </div>
+
+                            <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.3)', marginTop: 12 }}>
+                                By signing up you agree to our <Link href="#" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'underline' }}>Terms</Link>
+                            </p>
                         </form>
                     ) : (
-                        <form onSubmit={handleVerifyOTP} className="space-y-6">
-                            <div className="space-y-1">
-                                <label className="label-text text-center block">Enter 6-digit OTP</label>
+                        <form onSubmit={handleVerifyOTP} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                            <div style={{ textAlign: 'center' }}>
+                                <label className="label-text" style={{ display: 'block', marginBottom: 12 }}>Verification Code</label>
                                 <input
-                                    type="text"
-                                    maxLength="6"
-                                    required
-                                    value={otp}
-                                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                                    className="input-field text-center text-3xl tracking-[1rem] font-mono h-16"
+                                    type="text" maxLength="6" required
+                                    value={otp} onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
+                                    style={{
+                                        width: '100%', height: 64, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
+                                        borderRadius: 14, textAlign: 'center', fontSize: 32, fontWeight: 800, color: '#f59e0b',
+                                        letterSpacing: 8, fontFamily: "'Syne',sans-serif",
+                                    }}
                                     placeholder="000000"
                                 />
                             </div>
 
-                            <div className="space-y-4">
-                                <button
-                                    type="submit"
-                                    disabled={loading || otp.length !== 6}
-                                    className="w-full btn-primary !py-4 text-lg"
-                                >
-                                    {loading ? (
-                                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
-                                    ) : (
-                                        'Verify & Complete'
-                                    )}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                <button type="submit" disabled={loading || otp.length !== 6} className="btn-primary" style={{ width: '100%', height: 50, justifyContent: 'center' }}>
+                                    {loading ? <div style={{ width: 18, height: 18, border: '2px solid rgba(13,13,15,0.3)', borderTop: '2px solid #0d0d0f', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> : <><span>VERIFY ACCOUNT</span><HiOutlineShieldCheck /></>}
                                 </button>
 
-                                <button
-                                    type="button"
-                                    onClick={handleResendOTP}
-                                    disabled={resending}
-                                    className="w-full text-sm text-slate-500 hover:text-primary-600 transition-colors py-2 font-medium"
-                                >
-                                    {resending ? 'Resending...' : "Didn't receive the code? Resend"}
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onClick={() => setShowOTP(false)}
-                                    className="w-full text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors font-medium"
-                                >
-                                    Go back to registration
+                                <button type="button" onClick={handleResendOTP} disabled={resending} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 8 }}>
+                                    {resending ? 'RESENDING...' : "DIDN'T RECEIVE? RESEND"}
                                 </button>
                             </div>
                         </form>
                     )}
 
                     {!showOTP && (
-                        <>
-                            <div className="relative my-8">
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-slate-200 dark:border-slate-800" />
-                                </div>
-                                <div className="relative flex justify-center text-xs uppercase">
-                                    <span className="bg-white dark:bg-slate-900 px-3 text-slate-500 font-bold tracking-widest">
-                                        Or sign up with
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <button className="flex items-center justify-center px-4 py-3 border-2 
-                                     border-slate-100 dark:border-slate-800 rounded-xl 
-                                     hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-bold text-sm">
-                                    <FaGoogle className="w-4 h-4 mr-2 text-red-500" />
-                                    Google
-                                </button>
-                                <button className="flex items-center justify-center px-4 py-3 border-2 
-                                     border-slate-100 dark:border-slate-800 rounded-xl 
-                                     hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-bold text-sm">
-                                    <FaGithub className="w-4 h-4 mr-2 text-slate-900 dark:text-white" />
-                                    GitHub
-                                </button>
-                            </div>
-
-                            <p className="text-center text-sm text-slate-500 mt-8">
-                                Already have an account?{' '}
-                                <Link href="/login" className="font-bold text-primary-600 hover:underline">
-                                    Sign In
-                                </Link>
-                            </p>
-                        </>
+                        <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.35)', marginTop: 28, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 24 }}>
+                            Joined us already?{' '}
+                            <Link href="/login" style={{ color: '#f59e0b', fontWeight: 700, textDecoration: 'none' }}>Sign In</Link>
+                        </p>
                     )}
                 </div>
             </div>
+
+            <style>{`
+                @media (max-width: 480px) {
+                    .reg-pass-grid { grid-template-columns: 1fr !important; }
+                }
+            `}</style>
         </div>
     );
 }
