@@ -50,56 +50,67 @@ export default function CommentSection({ comments: initialComments, parentId, pa
         };
 
         return (
-            <div className={`group animate-in ${isReply ? 'ml-8 mt-4' : 'mt-6'}`}>
-                <div className="flex gap-3">
-                    <Link href={`/profile/${comment.author.id}`} className="flex-shrink-0">
+            <div className={`animate-in ${isReply ? 'ml-8 mt-4' : 'mt-6'}`} style={{ borderLeft: isReply ? '2px solid rgba(74, 158, 92, 0.1)' : 'none', paddingLeft: isReply ? 16 : 0 }}>
+                <div style={{ display: 'flex', gap: 12 }}>
+                    <Link href={`/profile/${comment.author.id}`} style={{ flexShrink: 0 }}>
                         <img
                             src={comment.author.avatar}
                             alt={comment.author.name}
-                            className="w-8 h-8 rounded-lg object-cover"
+                            style={{ width: 32, height: 32, borderRadius: 10, objectFit: 'cover', border: '1px solid rgba(74, 158, 92, 0.2)' }}
                         />
                     </Link>
-                    <div className="flex-1 min-w-0">
-                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 
-                          border border-slate-100 dark:border-slate-800 
-                          group-hover:border-primary-100 dark:group-hover:border-primary-900/30 
-                          transition-all duration-300">
-                            <div className="flex items-center justify-between mb-1">
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{
+                            background: 'rgba(74, 158, 92, 0.04)',
+                            borderRadius: '16px',
+                            padding: '12px 16px',
+                            border: '1px solid rgba(74, 158, 92, 0.08)',
+                            transition: 'all 0.3s'
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                                 <Link
                                     href={`/profile/${comment.author.id}`}
-                                    className="text-sm font-bold text-slate-900 dark:text-white 
-                           hover:text-primary-600 transition-colors"
+                                    style={{
+                                        fontSize: 13, fontWeight: 800, color: '#f0ebe0',
+                                        textDecoration: 'none', transition: 'color 0.3s'
+                                    }}
                                 >
                                     {comment.author.name}
                                 </Link>
-                                <span className="text-[10px] font-medium text-slate-400 capitalize">
+                                <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(240, 235, 224, 0.3)', textTransform: 'uppercase' }}>
                                     {timeAgo(comment.createdAt)}
                                 </span>
                             </div>
-                            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            <p style={{ fontSize: 14, color: 'rgba(240, 235, 224, 0.7)', lineHeight: 1.6, margin: 0 }}>
                                 {comment.content}
                             </p>
                         </div>
-                        <div className="flex items-center space-x-4 mt-2 ml-2">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 8, marginLeft: 4 }}>
                             <button
                                 onClick={toggleLike}
-                                className={`flex items-center text-xs font-bold transition-colors ${isLiked ? 'text-red-500' : 'text-slate-400 hover:text-red-500'
-                                    }`}
+                                style={{
+                                    background: 'none', border: 'none', cursor: 'pointer',
+                                    display: 'flex', alignItems: 'center', fontSize: 11, fontWeight: 800,
+                                    color: isLiked ? '#ef4444' : 'rgba(240, 235, 224, 0.3)', transition: 'color 0.2s'
+                                }}
                             >
                                 {isLiked ? (
-                                    <HiHeart className="w-3.5 h-3.5 mr-1" />
+                                    <HiHeart style={{ width: 14, height: 14, marginRight: 4 }} />
                                 ) : (
-                                    <HiOutlineHeart className="w-3.5 h-3.5 mr-1" />
+                                    <HiOutlineHeart style={{ width: 14, height: 14, marginRight: 4 }} />
                                 )}
                                 {formatNumber(likeCount)}
                             </button>
                             <button
                                 onClick={() => setReplyTo(comment.id)}
-                                className="flex items-center text-xs font-bold text-slate-400 
-                         hover:text-primary-500 transition-colors"
+                                style={{
+                                    background: 'none', border: 'none', cursor: 'pointer',
+                                    display: 'flex', alignItems: 'center', fontSize: 11, fontWeight: 800,
+                                    color: 'rgba(240, 235, 224, 0.3)', transition: 'color 0.2s'
+                                }}
                             >
-                                <HiOutlineReply className="w-3.5 h-3.5 mr-1" />
-                                Reply
+                                <HiOutlineReply style={{ width: 14, height: 14, marginRight: 4 }} />
+                                REPLY
                             </button>
                         </div>
 
@@ -113,52 +124,75 @@ export default function CommentSection({ comments: initialComments, parentId, pa
     };
 
     return (
-        <div className="mt-8">
-            <div className="flex items-center space-x-2 mb-6">
-                <HiOutlineChatAlt2 className="w-5 h-5 text-primary-500" />
-                <h3 className="font-bold text-slate-900 dark:text-white">
+        <div style={{ marginTop: 40 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+                <HiOutlineChatAlt2 style={{ width: 20, height: 20, color: '#d4a017' }} />
+                <h3 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 18, fontWeight: 800, color: '#f0ebe0' }}>
                     {comments.length} Comments
                 </h3>
             </div>
 
-            <form onSubmit={handleSubmit} className="mb-8">
-                <div className="relative group">
+            <form onSubmit={handleSubmit} style={{ marginBottom: 40 }}>
+                <div style={{ position: 'relative' }}>
                     <textarea
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
-                        placeholder={isAuthenticated ? "Add a comment..." : "Sign in to add a comment"}
+                        placeholder={isAuthenticated ? "Share your thoughts..." : "Sign in to add a comment"}
                         disabled={!isAuthenticated}
-                        className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 
-                     border border-slate-100 dark:border-slate-800 
-                     rounded-2xl text-sm focus:outline-none focus:ring-2 
-                     focus:ring-primary-500 focus:border-transparent 
-                     transition-all duration-200 min-h-[100px] resize-none
-                     disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{
+                            width: '100%',
+                            minHeight: 100,
+                            padding: '16px',
+                            background: 'rgba(10, 26, 13, 0.4)',
+                            border: '1px solid rgba(74, 158, 92, 0.15)',
+                            borderRadius: '16px',
+                            fontSize: 14,
+                            color: '#f0ebe0',
+                            outline: 'none',
+                            resize: 'none',
+                            transition: 'all 0.3s',
+                            cursor: isAuthenticated ? 'text' : 'not-allowed',
+                            opacity: isAuthenticated ? 1 : 0.6
+                        }}
                     />
                     {isAuthenticated && (
-                        <div className="absolute bottom-3 right-3 opacity-0 group-focus-within:opacity-100 transition-opacity">
+                        <div style={{
+                            position: 'absolute',
+                            bottom: 12,
+                            right: 12,
+                            opacity: newComment.trim() ? 1 : 0,
+                            transition: 'opacity 0.2s',
+                            pointerEvents: newComment.trim() ? 'auto' : 'none'
+                        }}>
                             <button
                                 type="submit"
-                                className="px-4 py-1.5 bg-primary-600 text-white text-xs 
-                         font-bold rounded-xl shadow-lg shadow-primary-500/25 
-                         hover:bg-primary-700 transition-all"
+                                className="btn-primary"
+                                style={{ padding: '8px 16px', fontSize: 11, borderRadius: 10 }}
                             >
-                                Post Comment
+                                POST COMMENT
                             </button>
                         </div>
                     )}
                 </div>
             </form>
 
-            <div className="space-y-2 divide-y divide-slate-100 dark:divide-slate-800">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {comments.map(comment => (
                     <Comment key={comment.id} comment={comment} />
                 ))}
             </div>
 
             {comments.length === 0 && (
-                <div className="text-center py-12 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
-                    <p className="text-sm text-slate-400 font-medium">No comments yet. Be the first to join the conversation!</p>
+                <div style={{
+                    textAlign: 'center',
+                    padding: '40px 20px',
+                    background: 'rgba(74, 158, 92, 0.03)',
+                    borderRadius: 20,
+                    border: '1px dashed rgba(74, 158, 92, 0.15)'
+                }}>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(240, 235, 224, 0.3)', margin: 0 }}>
+                        No comments yet. Join the conversation!
+                    </p>
                 </div>
             )}
         </div>

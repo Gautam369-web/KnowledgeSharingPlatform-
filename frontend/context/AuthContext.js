@@ -55,8 +55,13 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
         const savedUser = localStorage.getItem('currentUser');
-        if (savedUser) {
+        const token = localStorage.getItem('token');
+        if (savedUser && token) {
             setUser(JSON.parse(savedUser));
+        } else {
+            // Clear if inconsistent
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('token');
         }
         setLoading(false);
     }, []);
@@ -74,6 +79,7 @@ export function AuthProvider({ children }) {
             if (response.ok) {
                 setUser(data.user);
                 localStorage.setItem('currentUser', JSON.stringify(data.user));
+                localStorage.setItem('token', data.token);
                 toast.success(`Welcome back, ${data.user.name}!`);
                 return { success: true };
             } else {
@@ -116,6 +122,7 @@ export function AuthProvider({ children }) {
     const logout = () => {
         setUser(null);
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('token');
         toast.success('Logged out successfully');
     };
 

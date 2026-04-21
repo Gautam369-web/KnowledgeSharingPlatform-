@@ -1,8 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { getProblems, createProblem } = require('../controllers/problemController');
+const {
+    getProblems,
+    createProblem,
+    getProblemById,
+    voteProblem
+} = require('../controllers/problemController');
+const { protect } = require('../middleware/auth');
 
 router.get('/', getProblems);
-router.post('/', createProblem);
+router.get('/:id', getProblemById);
+router.post('/', protect, createProblem);
+router.put('/:id/vote', protect, voteProblem);
 
 module.exports = router;

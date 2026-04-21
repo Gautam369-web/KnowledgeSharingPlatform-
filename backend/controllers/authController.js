@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { sendOTPEmail } = require('../config/mail');
 
 // @desc    Register a new user
@@ -59,7 +60,17 @@ exports.verifyOTP = async (req, res) => {
         user.otpExpiry = undefined;
         await user.save();
 
-        res.status(200).json({ message: 'Email verified successfully' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+
+        res.status(200).json({
+            message: 'Email verified successfully',
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
@@ -120,8 +131,11 @@ exports.login = async (req, res) => {
             articlesWritten: user.articlesWritten || 0,
         };
 
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+
         res.status(200).json({
             message: 'Login successful',
+            token,
             user: userResponse
         });
     } catch (error) {

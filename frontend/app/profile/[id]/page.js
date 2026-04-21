@@ -1,148 +1,186 @@
 'use client';
 
-import { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { leaderboard, problems as mockProblems, articles as mockArticles } from '@/lib/data';
 import ProfileHeader from '@/components/ProfileHeader';
 import ProblemCard from '@/components/ProblemCard';
 import ArticleCard from '@/components/ArticleCard';
-import ActivityFeed from '@/components/ActivityFeed';
 import { useAuth } from '@/context/AuthContext';
-import { HiOutlineCode, HiOutlineBookOpen, HiOutlineLightningBolt, HiOutlineUserGroup } from 'react-icons/hi';
+import toast from 'react-hot-toast';
+import {
+    HiOutlineCode, HiOutlineBookOpen, HiOutlineLightningBolt,
+    HiOutlineUserGroup, HiOutlineClock, HiOutlineCube
+} from 'react-icons/hi';
 
 export default function ProfilePage() {
     const { id } = useParams();
-    const { user: currentUser } = useAuth();
+    const router = useRouter();
+    const { user: currentUser, isAuthenticated } = useAuth();
+    const [profileUser, setProfileUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('overview');
+    const [userResources, setUserResources] = useState({ problems: [], articles: [] });
 
-    const user = leaderboard.find(u => u.id === id) || leaderboard[0];
-    const isOwnProfile = currentUser?.id === user.id;
+    const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
-    const userProblems = mockProblems.filter(p => p.author.id === user.id);
-    const userArticles = mockArticles.filter(a => a.author.id === user.id);
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                // Fetch basic profile
+                const res = await fetch(`${API_URL}/api/users/profile/${id}`);
+                const data = await res.json();
+                if (res.ok) {
+                    setProfileUser(data);
 
-    const activities = [
-        { type: 'problem', user: user.name, action: 'posted a new problem', target: 'Implementation of LSTM in PyTorch', date: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), link: '/problems/1' },
-        { type: 'solution', user: user.name, action: 'provided a solution for', target: 'React Hydration Mismatch', date: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), link: '/problems/2' },
-        { type: 'badge', user: user.name, action: 'earned the badge', target: 'Gold Contributor', date: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString() },
-    ];
+                    // Fetch user's problems and articles specifically
+                    const [probRes, artRes] = await Promise.all([
+                        fetch(`${API_URL}/api/problems?author=${id}`),
+                        fetch(`${API_URL}/api/articles?author=${id}`)
+                    ]);
+
+                    const [probData, artData] = await Promise.all([
+                        probRes.json(),
+                        artRes.json()
+                    ]);
+
+                    setUserResources({
+                        problems: probData.filter(p => p.author?._id === id || p.author === id),
+                        articles: artData.filter(a => a.author?._id === id || a.author === id)
+                    });
+
+                } else {
+                    toast.error('Identity not found');
+                    router.push('/leaderboard');
+                }
+            } catch (error) {
+                toast.error('Synchronization failed');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id) fetchProfile();
+    }, [id, API_URL]);
+
+    const isOwnProfile = currentUser && (id === currentUser._id || id === currentUser.id);
+
+    if (loading) return <div style={{ minHeight: '100vh', background: '#0a1a0d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div className="loading-spinner" /></div>;
+    if (!profileUser) return null;
 
     const tabs = [
-        { id: 'overview', label: 'Overview', icon: HiOutlineUserGroup },
-        { id: 'problems', label: 'Problems', icon: HiOutlineLightningBolt, count: userProblems.length },
-        { id: 'articles', label: 'Articles', icon: HiOutlineBookOpen, count: userArticles.length },
-        { id: 'activity', label: 'Activity', icon: HiOutlineCode },
+        { id: 'overview', label: 'Nodes', icon: HiOutlineUserGroup },
+        { id: 'problems', label: 'Challenges', icon: HiOutlineLightningBolt, count: userResources.problems.length },
+        { id: 'articles', label: 'Insights', icon: HiOutlineBookOpen, count: userResources.articles.length },
     ];
 
     return (
-        <div className="page-container max-w-7xl mx-auto">
-            <ProfileHeader user={{ ...user, joinedAt: '2023-01-01', problemsSolved: 42, articlesWritten: 12 }} isOwnProfile={isOwnProfile} />
+        <div style={{ minHeight: '100vh', background: '#0a1a0d', padding: '100px 24px 80px' }}>
+            <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+                <ProfileHeader user={profileUser} isOwnProfile={isOwnProfile} />
 
-            <div className="mt-12">
-                <div className="flex border-b border-slate-100 dark:border-slate-800 overflow-x-auto no-scrollbar mb-8">
-                    {tabs.map(tab => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center space-x-2 px-6 py-4 text-sm font-bold uppercase tracking-widest border-b-2 transition-all whitespace-nowrap ${activeTab === tab.id
-                                ? 'border-primary-500 text-primary-600 bg-primary-50/30'
-                                : 'border-transparent text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-                                }`}
-                        >
-                            <tab.icon className="w-4 h-4" />
-                            <span>{tab.label}</span>
-                            {tab.count !== undefined && (
-                                <span className={`ml-2 px-2 py-0.5 rounded-md text-[10px] ${activeTab === tab.id ? 'bg-primary-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
-                                    }`}>
-                                    {tab.count}
-                                </span>
-                            )}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2">
-                        {activeTab === 'overview' && (
-                            <div className="space-y-8">
-                                <div className="card p-6">
-                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Recent Activity</h3>
-                                    <ActivityFeed activities={activities} />
-                                </div>
-                                <div className="card p-6">
-                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Expertise Areas</h3>
-                                    <div className="flex flex-wrap gap-3">
-                                        {['Distributed Systems', 'Computer Vision', 'Next.js', 'PyTorch', 'Rust'].map(tag => (
-                                            <span key={tag} className="px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-2xl text-sm font-bold text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700">
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {activeTab === 'problems' && (
-                            <div className="space-y-6">
-                                {userProblems.length > 0 ? (
-                                    userProblems.map(p => <ProblemCard key={p.id} problem={p} />)
-                                ) : (
-                                    <div className="card p-12 text-center text-slate-500">No problems posted yet.</div>
+                <div style={{ marginTop: 60 }}>
+                    <div style={{ display: 'flex', gap: 8, borderBottom: '1px solid rgba(74,158,92,0.1)', marginBottom: 40, overflowX: 'auto', paddingBottom: 1 }}>
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: 10, padding: '16px 24px',
+                                    background: activeTab === tab.id ? 'rgba(212,160,23,0.05)' : 'transparent',
+                                    border: 'none', borderBottom: `2px solid ${activeTab === tab.id ? '#d4a017' : 'transparent'}`,
+                                    color: activeTab === tab.id ? '#d4a017' : 'rgba(240,235,224,0.3)',
+                                    fontSize: 12, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em',
+                                    cursor: 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap'
+                                }}
+                            >
+                                <tab.icon style={{ fontSize: 16 }} />
+                                {tab.label}
+                                {tab.count !== undefined && (
+                                    <span style={{ fontSize: 10, background: activeTab === tab.id ? '#d4a017' : 'rgba(240,235,224,0.1)', color: activeTab === tab.id ? '#0a1a0d' : 'inherit', padding: '2px 6px', borderRadius: 4, marginLeft: 4 }}>
+                                        {tab.count}
+                                    </span>
                                 )}
-                            </div>
-                        )}
-
-                        {activeTab === 'articles' && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {userArticles.length > 0 ? (
-                                    userArticles.map(a => <ArticleCard key={a.id} article={a} />)
-                                ) : (
-                                    <div className="col-span-full card p-12 text-center text-slate-500">No articles published yet.</div>
-                                )}
-                            </div>
-                        )}
-
-                        {activeTab === 'activity' && (
-                            <div className="card p-6">
-                                <ActivityFeed activities={[...activities, ...activities]} />
-                            </div>
-                        )}
+                            </button>
+                        ))}
                     </div>
 
-                    <div className="space-y-8">
-                        <div className="card p-6">
-                            <h3 className="font-bold text-slate-900 dark:text-white mb-4">Top Accomplishments</h3>
-                            <div className="space-y-4">
-                                <div className="flex items-center p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-800/30">
-                                    <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center text-white mr-3">
-                                        <HiOutlineLightningBolt className="w-6 h-6" />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', lg: '1fr 340px', gap: 48 }}>
+                        <div style={{ minWidth: 0 }}>
+                            {activeTab === 'overview' && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+                                    <div className="card" style={{ padding: 32 }}>
+                                        <h3 style={{ fontSize: 14, fontWeight: 900, color: '#f0ebe0', marginBottom: 24, letterSpacing: '0.05em' }}>BIO-TECHNICAL SUMMARY</h3>
+                                        <p style={{ color: 'rgba(240,235,224,0.6)', lineHeight: 1.7, fontSize: 15 }}>
+                                            {profileUser.bio || 'This explorer has not documented their bio-technical parameters yet.'}
+                                        </p>
                                     </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400 leading-tight">Master Solver</p>
-                                        <p className="text-[10px] text-emerald-600/70 font-bold uppercase tracking-widest">50+ Problems Solved</p>
+
+                                    <div className="card" style={{ padding: 32 }}>
+                                        <h3 style={{ fontSize: 14, fontWeight: 900, color: '#f0ebe0', marginBottom: 24, letterSpacing: '0.05em' }}>EXPERTISE CORES</h3>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+                                            {['System Architecture', 'Ecosystem Integration', 'Harmony Logic'].map(skill => (
+                                                <div key={skill} style={{ padding: '8px 16px', background: 'rgba(74,158,92,0.1)', border: '1px solid rgba(74,158,92,0.2)', borderRadius: 12, color: '#6ec47a', fontSize: 12, fontWeight: 800 }}>
+                                                    {skill}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center p-3 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-100 dark:border-amber-800/30">
-                                    <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-white mr-3">
-                                        <HiOutlineBookOpen className="w-6 h-6" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-amber-700 dark:text-amber-400 leading-tight">Published Author</p>
-                                        <p className="text-[10px] text-amber-600/70 font-bold uppercase tracking-widest">10+ Featured Articles</p>
-                                    </div>
+                            )}
+
+                            {activeTab === 'problems' && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                                    {userResources.problems.length > 0 ? (
+                                        userResources.problems.map(p => <ProblemCard key={p._id} problem={p} />)
+                                    ) : (
+                                        <div style={{ padding: 60, textAlign: 'center', color: 'rgba(240,235,224,0.2)' }}>
+                                            <HiOutlineLightningBolt style={{ fontSize: 48, marginBottom: 16, margin: '0 auto' }} />
+                                            <p>No active synchronization challenges posted.</p>
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
+                            )}
+
+                            {activeTab === 'articles' && (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
+                                    {userResources.articles.length > 0 ? (
+                                        userResources.articles.map(a => <ArticleCard key={a._id} article={a} />)
+                                    ) : (
+                                        <div style={{ gridColumn: '1/-1', padding: 60, textAlign: 'center', color: 'rgba(240,235,224,0.2)' }}>
+                                            <HiOutlineBookOpen style={{ fontSize: 48, marginBottom: 16, margin: '0 auto' }} />
+                                            <p>No technical insights published yet.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
-                        <div className="card p-1 shadow-sm border-slate-100 dark:border-slate-800 overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=400" className="w-full h-40 object-cover rounded-t-[1.4rem]" alt="Tech" />
-                            <div className="p-5">
-                                <h4 className="font-bold mb-2">Latest Project</h4>
-                                <p className="text-xs text-slate-500 mb-4">Building a decentralised CDN for high-performance asset delivery using Rust.</p>
-                                <Link href="#" className="text-xs font-bold text-primary-600 hover:underline flex items-center">View Case Study <HiOutlineCode className="ml-1 w-3 h-3" /></Link>
+                        <aside style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+                            <div className="card" style={{ padding: 32 }}>
+                                <h3 style={{ fontSize: 13, fontWeight: 900, color: 'rgba(240,235,224,0.3)', letterSpacing: '0.1em', marginBottom: 24 }}>ACCOMPLISHMENTS</h3>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 16, background: 'rgba(110,196,122,0.05)', borderRadius: 16, border: '1px solid rgba(110,196,122,0.1)' }}>
+                                        <div style={{ width: 40, height: 40, borderRadius: 10, background: '#6ec47a', color: '#0a1a0d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <HiOutlineCube />
+                                        </div>
+                                        <div>
+                                            <div style={{ fontSize: 13, fontWeight: 800, color: '#6ec47a' }}>System Pillar</div>
+                                            <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(110,196,122,0.6)' }}>CONTRIBUTED 5+ SOLUTIONS</div>
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 16, background: 'rgba(212,160,23,0.05)', borderRadius: 16, border: '1px solid rgba(212,160,23,0.1)' }}>
+                                        <div style={{ width: 40, height: 40, borderRadius: 10, background: '#d4a017', color: '#0a1a0d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <HiOutlineClock />
+                                        </div>
+                                        <div>
+                                            <div style={{ fontSize: 13, fontWeight: 800, color: '#d4a017' }}>Day One Node</div>
+                                            <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(212,160,23,0.6)' }}>MEMBER SINCE GENESIS</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </aside>
                     </div>
                 </div>
             </div>

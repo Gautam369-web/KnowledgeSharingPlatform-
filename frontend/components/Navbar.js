@@ -7,16 +7,16 @@ import { useAuth } from '@/context/AuthContext';
 import {
     HiOutlineHome, HiOutlineBookOpen, HiOutlineLightningBolt,
     HiOutlineMenu, HiOutlineX, HiOutlineLogout, HiOutlineChartBar, HiOutlineSearch,
+    HiOutlineUserCircle
 } from 'react-icons/hi';
 
 const NAV = [
-    { label: 'Home', href: '/', icon: HiOutlineHome },
-    { label: 'Problems', href: '/problems', icon: HiOutlineLightningBolt },
-    { label: 'Articles', href: '/articles', icon: HiOutlineBookOpen },
-    { label: 'Leaderboard', href: '/leaderboard', icon: HiOutlineChartBar },
+    { label: 'Network', href: '/', icon: HiOutlineHome },
+    { label: 'Challenges', href: '/problems', icon: HiOutlineLightningBolt },
+    { label: 'Knowledge', href: '/articles', icon: HiOutlineBookOpen },
+    { label: 'Council', href: '/leaderboard', icon: HiOutlineChartBar },
 ];
 
-/* ── Inner nav needs usePathname → must be inside Suspense ── */
 function NavInner() {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -33,151 +33,131 @@ function NavInner() {
 
     return (
         <nav style={{
-            position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-            height: 60,
-            background: scrolled ? 'rgba(10,26,13,0.97)' : '#0c1e0f',
-            backdropFilter: scrolled ? 'blur(20px)' : 'none',
-            borderBottom: '1px solid rgba(74,158,92,0.15)',
-            transition: 'background 0.3s',
+            position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+            height: 72,
+            background: scrolled ? 'rgba(10,26,13,0.95)' : 'transparent',
+            backdropFilter: scrolled ? 'blur(16px)' : 'none',
+            borderBottom: scrolled ? '1px solid rgba(74,158,92,0.1)' : 'none',
+            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
             display: 'flex', alignItems: 'center',
         }}>
             <div style={{
-                maxWidth: 1280, margin: '0 auto', padding: '0 28px',
+                maxWidth: 1280, margin: '0 auto', padding: '0 32px',
                 width: '100%',
-                display: 'grid',
-                gridTemplateColumns: 'auto 1fr auto',
+                display: 'flex',
                 alignItems: 'center',
-                gap: 32,
+                justifyContent: 'space-between',
             }}>
-
-                {/* ── Logo ── */}
-                <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+                {/* Logo */}
+                <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
                     <div style={{
-                        width: 32, height: 32, borderRadius: 10,
-                        background: 'linear-gradient(135deg, #d4a017, #f0c040)',
+                        width: 36, height: 36, borderRadius: 12,
+                        background: '#d4a017',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontWeight: 900, fontSize: 16, color: '#0a1a0d',
+                        fontWeight: 900, fontSize: 18, color: '#0a1a0d',
                         fontFamily: "'Bricolage Grotesque', sans-serif",
-                        flexShrink: 0,
-                        boxShadow: '0 2px 12px rgba(212,160,23,0.3)',
-                    }}>S</div>
+                        boxShadow: '0 4px 20px rgba(212,160,23,0.3)',
+                    }}>K</div>
                     <span style={{
                         fontFamily: "'Bricolage Grotesque', sans-serif",
-                        fontWeight: 800, fontSize: 16,
-                        color: '#f0ebe0', letterSpacing: '-0.01em',
-                    }}>SolveHub</span>
+                        fontWeight: 900, fontSize: 18,
+                        color: '#f0ebe0', letterSpacing: '-0.02em',
+                        display: 'none', lg: 'block'
+                    }}>Solar<span style={{ color: '#d4a017' }}>Hub</span></span>
                 </Link>
 
-                {/* ── Center Nav ── */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }} className="hidden md:flex">
+                {/* Desktop Nav */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }} className="hidden md:flex">
                     {NAV.map(({ label, href, icon: Icon }) => {
                         const active = isActive(href);
                         return (
                             <Link
                                 key={href} href={href}
                                 style={{
-                                    display: 'flex', alignItems: 'center', gap: 6,
-                                    padding: '6px 14px', borderRadius: 8,
+                                    display: 'flex', alignItems: 'center', gap: 8,
+                                    padding: '10px 18px', borderRadius: 12,
                                     textDecoration: 'none',
-                                    fontSize: 13, fontWeight: 500,
+                                    fontSize: 13, fontWeight: 800,
                                     fontFamily: "'Bricolage Grotesque', sans-serif",
-                                    color: active ? '#fff' : 'rgba(255,255,255,0.5)',
-                                    background: active ? 'rgba(74,158,92,0.14)' : 'transparent',
-                                    transition: 'color 0.18s, background 0.18s',
+                                    color: active ? '#d4a017' : 'rgba(240,235,224,0.4)',
+                                    background: active ? 'rgba(212,160,23,0.05)' : 'transparent',
+                                    transition: 'all 0.2s',
+                                    letterSpacing: '0.02em'
                                 }}
-                                onMouseEnter={e => { if (!active) e.currentTarget.style.color = 'rgba(255,255,255,0.85)'; }}
-                                onMouseLeave={e => { if (!active) e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
                             >
-                                <Icon style={{ width: 15, height: 15, flexShrink: 0 }} />
+                                <Icon style={{ fontSize: 16 }} />
                                 {label}
                             </Link>
                         );
                     })}
-
-                    {/* Dynamic Dashboard Link */}
-                    {user && (
-                        <Link
-                            href="/dashboard"
-                            style={{
-                                display: 'flex', alignItems: 'center', gap: 6,
-                                padding: '6px 14px', borderRadius: 8,
-                                textDecoration: 'none',
-                                fontSize: 13, fontWeight: 700,
-                                fontFamily: "'Bricolage Grotesque', sans-serif",
-                                color: isActive('/dashboard') ? '#d4a017' : 'rgba(212,160,23,0.7)',
-                                background: isActive('/dashboard') ? 'rgba(212,160,23,0.1)' : 'transparent',
-                                transition: 'color 0.18s, background 0.18s',
-                            }}
-                            onMouseEnter={e => { if (!isActive('/dashboard')) e.currentTarget.style.color = '#d4a017'; }}
-                            onMouseLeave={e => { if (!isActive('/dashboard')) e.currentTarget.style.color = 'rgba(212,160,23,0.7)'; }}
-                        >
-                            <HiOutlineLogout style={{ width: 15, height: 15, transform: 'rotate(180deg)', flexShrink: 0 }} />
-                            Dashboard
-                        </Link>
-                    )}
                 </div>
 
-                {/* ── Right ── */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <Link href="/search" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 8, color: 'rgba(255,255,255,0.45)', textDecoration: 'none', transition: 'color 0.18s' }}
-                        onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-                        onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}
-                    >
-                        <HiOutlineSearch style={{ width: 17, height: 17 }} />
+                {/* Right Side */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <Link href="/search" style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        width: 40, height: 40, borderRadius: 12,
+                        background: 'rgba(240,235,224,0.05)', color: 'rgba(240,235,224,0.4)',
+                        textDecoration: 'none', transition: 'all 0.2s'
+                    }}>
+                        <HiOutlineSearch style={{ fontSize: 20 }} />
                     </Link>
 
                     {user ? (
-                        <>
-                            <Link href={`/profile/${user.id || user._id}`} style={{
-                                width: 32, height: 32, borderRadius: '50%',
-                                background: 'rgba(212,160,23,0.18)',
-                                border: '1px solid rgba(212,160,23,0.45)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontSize: 12, fontWeight: 800, color: '#d4a017',
-                                textDecoration: 'none', fontFamily: "'Bricolage Grotesque',sans-serif",
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                            <Link href="/dashboard" style={{
+                                display: 'flex', alignItems: 'center', gap: 8,
+                                padding: '10px 18px', borderRadius: 12,
+                                textDecoration: 'none',
+                                fontSize: 13, fontWeight: 900,
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
+                                color: '#0a1a0d',
+                                background: '#d4a017',
+                                transition: 'all 0.2s',
+                                boxShadow: '0 4px 15px rgba(212,160,23,0.2)'
                             }}>
-                                {user.name?.[0]?.toUpperCase() || 'U'}
+                                <HiOutlineLightningBolt />
+                                Dashboard
+                            </Link>
+                            <Link href={`/profile/${user.id || user._id}`} style={{
+                                width: 40, height: 40, borderRadius: 14,
+                                background: '#1a3c20',
+                                border: '1px solid rgba(74,158,92,0.2)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                overflow: 'hidden', textDecoration: 'none'
+                            }}>
+                                {user.avatar ? (
+                                    <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                ) : (
+                                    <span style={{ fontSize: 14, fontWeight: 900, color: '#6ec47a' }}>{user.name?.[0]}</span>
+                                )}
                             </Link>
                             <button onClick={logout} style={{
-                                display: 'flex', alignItems: 'center', gap: 5,
-                                padding: '6px 12px', borderRadius: 7, border: 'none',
-                                background: 'rgba(248,113,113,0.1)', color: '#f87171',
-                                fontSize: 12, fontWeight: 700, cursor: 'pointer',
-                                fontFamily: "'Bricolage Grotesque',sans-serif", transition: 'background 0.2s',
-                            }}
-                                onMouseEnter={e => e.currentTarget.style.background = 'rgba(248,113,113,0.18)'}
-                                onMouseLeave={e => e.currentTarget.style.background = 'rgba(248,113,113,0.1)'}
-                            >
-                                <HiOutlineLogout style={{ width: 13, height: 13 }} />
-                                Logout
+                                background: 'transparent', border: 'none', color: 'rgba(248,113,113,0.6)',
+                                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                                fontSize: 13, fontWeight: 800, fontFamily: "'Bricolage Grotesque', sans-serif"
+                            }}>
+                                <HiOutlineLogout />
                             </button>
-                        </>
+                        </div>
                     ) : (
-                        <>
-                            <Link href="/login" style={{ padding: '6px 14px', fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', fontFamily: "'Bricolage Grotesque',sans-serif", transition: 'color 0.18s' }}
-                                onMouseEnter={e => e.target.style.color = '#fff'}
-                                onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.55)'}
-                            >
-                                Sign In
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                            <Link href="/login" style={{ fontSize: 13, fontWeight: 800, color: 'rgba(240,235,224,0.4)', textDecoration: 'none', fontFamily: "'Bricolage Grotesque', sans-serif" }}>
+                                Login
                             </Link>
                             <Link href="/register" style={{
-                                padding: '8px 18px', background: '#d4a017', color: '#0a1a0d',
-                                fontSize: 13, fontWeight: 800, fontFamily: "'Bricolage Grotesque',sans-serif",
-                                letterSpacing: '0.03em', borderRadius: 8, textDecoration: 'none',
-                                transition: 'background 0.18s, transform 0.18s', whiteSpace: 'nowrap',
-                            }}
-                                onMouseEnter={e => { e.currentTarget.style.background = '#fbbf24'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                                onMouseLeave={e => { e.currentTarget.style.background = '#d4a017'; e.currentTarget.style.transform = 'translateY(0)'; }}
-                            >
-                                GET STARTED
+                                padding: '12px 24px', background: '#d4a017', color: '#0a1a0d',
+                                fontSize: 13, fontWeight: 900, fontFamily: "'Bricolage Grotesque', sans-serif",
+                                borderRadius: 14, textDecoration: 'none', transition: 'all 0.2s',
+                                boxShadow: '0 4px 15px rgba(212,160,23,0.2)'
+                            }}>
+                                JOIN NETWORK
                             </Link>
-                        </>
+                        </div>
                     )}
 
-                    <button className="flex md:hidden" onClick={() => setMobileOpen(!mobileOpen)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.55)', padding: 6, marginLeft: 4 }}
-                    >
-                        {mobileOpen ? <HiOutlineX style={{ width: 20, height: 20 }} /> : <HiOutlineMenu style={{ width: 20, height: 20 }} />}
+                    <button className="flex md:hidden" onClick={() => setMobileOpen(!mobileOpen)} style={{ background: 'none', border: 'none', color: '#f0ebe0', fontSize: 24, cursor: 'pointer' }}>
+                        {mobileOpen ? <HiOutlineX /> : <HiOutlineMenu />}
                     </button>
                 </div>
             </div>
@@ -185,34 +165,28 @@ function NavInner() {
             {/* Mobile Menu */}
             {mobileOpen && (
                 <div style={{
-                    position: 'absolute', top: 60, left: 0, right: 0,
-                    background: '#0c1e0f', borderBottom: '1px solid rgba(74,158,92,0.14)',
-                    padding: '12px 20px 20px', display: 'flex', flexDirection: 'column', gap: 2,
+                    position: 'absolute', top: 72, left: 0, right: 0,
+                    background: '#0a1a0d', borderBottom: '1px solid rgba(74,158,92,0.1)',
+                    padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 8,
+                    zIndex: 90
                 }}>
                     {NAV.map(({ label, href, icon: Icon }) => (
                         <Link key={href} href={href} onClick={() => setMobileOpen(false)} style={{
-                            display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', borderRadius: 8,
-                            textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: "'Bricolage Grotesque',sans-serif",
-                            color: isActive(href) ? '#d4a017' : 'rgba(255,255,255,0.6)',
-                            background: isActive(href) ? 'rgba(212,160,23,0.07)' : 'transparent',
+                            display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderRadius: 12,
+                            textDecoration: 'none', fontSize: 15, fontWeight: 800, color: isActive(href) ? '#d4a017' : '#f0ebe0',
+                            background: isActive(href) ? 'rgba(212,160,23,0.05)' : 'rgba(240,235,224,0.02)',
                         }}>
-                            <Icon style={{ width: 17, height: 17 }} />{label}
+                            <Icon /> {label}
                         </Link>
                     ))}
-
                     {user && (
                         <Link href="/dashboard" onClick={() => setMobileOpen(false)} style={{
-                            display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', borderRadius: 8,
-                            textDecoration: 'none', fontSize: 14, fontWeight: 700, fontFamily: "'Bricolage Grotesque',sans-serif",
-                            color: isActive('/dashboard') ? '#d4a017' : 'rgba(212,160,23,0.9)',
-                            background: isActive('/dashboard') ? 'rgba(212,160,23,0.1)' : 'rgba(212,160,23,0.05)',
+                            display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderRadius: 12,
+                            textDecoration: 'none', fontSize: 15, fontWeight: 900, color: '#0a1a0d', background: '#d4a017',
                         }}>
-                            <HiOutlineLogout style={{ width: 17, height: 17, transform: 'rotate(180deg)' }} />Dashboard
+                            <HiOutlineLightningBolt /> Dashboard
                         </Link>
                     )}
-                    <div style={{ height: 1, background: 'rgba(74,158,92,0.12)', margin: '8px 0' }} />
-                    <Link href="/login" onClick={() => setMobileOpen(false)} style={{ padding: '11px 14px', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontFamily: "'Bricolage Grotesque',sans-serif" }}>Sign In</Link>
-                    <Link href="/register" onClick={() => setMobileOpen(false)} style={{ margin: '4px 0', padding: '11px 14px', background: '#d4a017', color: '#0a1a0d', borderRadius: 8, fontSize: 14, fontWeight: 800, textDecoration: 'none', textAlign: 'center', fontFamily: "'Bricolage Grotesque',sans-serif" }}>GET STARTED</Link>
                 </div>
             )}
         </nav>
@@ -221,10 +195,9 @@ function NavInner() {
 
 export default function Navbar() {
     return (
-        <Suspense fallback={
-            <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 60, background: '#0c1e0f', borderBottom: '1px solid rgba(74,158,92,0.12)', zIndex: 50 }} />
-        }>
+        <Suspense fallback={<div style={{ height: 72, background: '#0a1a0d' }} />}>
             <NavInner />
         </Suspense>
     );
 }
+

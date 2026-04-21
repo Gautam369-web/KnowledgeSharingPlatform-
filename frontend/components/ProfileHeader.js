@@ -1,110 +1,124 @@
 'use client';
 
-import { HiOutlineLocationMarker, HiOutlineCalendar, HiOutlineLink } from 'react-icons/hi';
-import { FaGithub, FaTwitter } from 'react-icons/fa';
-import BadgeDisplay from '@/components/BadgeDisplay';
+import { HiOutlineLocationMarker, HiOutlineCalendar, HiOutlineLink, HiOutlineShieldCheck, HiOutlinePencil } from 'react-icons/hi';
+import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import { formatNumber } from '@/lib/utils';
 
 export default function ProfileHeader({ user, isOwnProfile = false }) {
     return (
-        <div className="relative">
-            {/* Cover Pattern */}
-            <div className="h-48 w-full bg-gradient-to-r from-primary-600 to-purple-600 rounded-3xl" />
+        <div style={{ position: 'relative' }}>
+            {/* Cover Pattern - Solarpunk Gradient */}
+            <div style={{
+                height: 240,
+                width: '100%',
+                background: 'linear-gradient(135deg, #0a1a0d 0%, #1a3c20 50%, #d4a017 100%)',
+                borderRadius: 40,
+                opacity: 0.8,
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+                <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url("https://www.transparenttextures.com/patterns/carbon-fibre.png")' }} />
+            </div>
 
             {/* Profile Info Card */}
-            <div className="card p-6 sm:p-8 -mt-16 mx-4 sm:mx-8 relative z-10">
-                <div className="flex flex-col sm:flex-row items-center sm:items-end sm:space-x-8 -mt-20 sm:-mt-24 mb-6">
-                    <div className="relative group">
+            <div className="card" style={{ padding: '32px 48px', marginTop: -80, margin: '-80px 40px 0', position: 'relative', zIndex: 10 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', md: 'row', alignItems: 'flex-end', gap: 32, marginTop: -80 }}>
+                    <div style={{ position: 'relative' }}>
                         <img
-                            src={user.avatar}
+                            src={user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Solar'}
                             alt={user.name}
-                            className="w-32 h-32 sm:w-40 sm:h-40 rounded-3xl object-cover border-4 
-                       border-white dark:border-slate-900 shadow-xl"
+                            style={{
+                                width: 160,
+                                height: 160,
+                                borderRadius: 40,
+                                objectFit: 'cover',
+                                border: '6px solid #0e2010',
+                                boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+                                background: '#0e2010'
+                            }}
                         />
                         {isOwnProfile && (
-                            <button className="absolute inset-0 bg-black/40 rounded-3xl opacity-0 
-                               group-hover:opacity-100 transition-opacity flex 
-                               items-center justify-center text-white text-xs font-bold">
-                                Change Photo
+                            <button style={{
+                                position: 'absolute', bottom: 12, right: 12,
+                                width: 40, height: 40, borderRadius: 12,
+                                background: '#d4a017', color: '#0a1a0d',
+                                border: 'none', cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}>
+                                <HiOutlinePencil />
                             </button>
                         )}
                     </div>
 
-                    <div className="flex-1 text-center sm:text-left mt-4 sm:mt-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                            <div>
-                                <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1 flex items-center">
-                                    {user.name}
-                                    {user.isVerified && (
-                                        <span className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-blue-500 text-white rounded-full text-[10px] shadow-sm" title="Verified Account">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                        </span>
-                                    )}
-                                </h1>
-                                <p className="text-slate-500 dark:text-slate-400 font-medium">
-                                    {user.bio || 'No bio provided yet.'}
-                                </p>
+                    <div style={{ flex: 1, paddingBottom: 8 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
+                            <div style={{ minWidth: 200 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 4 }}>
+                                    <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 32, fontWeight: 900, color: '#f0ebe0', margin: 0 }}>
+                                        {user.name}
+                                    </h1>
+                                    <HiOutlineShieldCheck style={{ color: '#d4a017', fontSize: 24 }} title="Verified Guardian" />
+                                </div>
+                                <p style={{ fontSize: 16, color: 'rgba(240,235,224,0.4)', fontWeight: 600 }}>@{user.name.toLowerCase().replace(/\s+/g, '')}</p>
                             </div>
-                            <div className="flex items-center justify-center space-x-3">
+
+                            <div style={{ display: 'flex', gap: 12 }}>
                                 {isOwnProfile ? (
-                                    <button className="btn-secondary text-sm">Edit Profile</button>
+                                    <button className="btn-primary" style={{ background: 'rgba(240,235,224,0.05)', color: '#f0ebe0', border: '1px solid rgba(240,235,224,0.1)' }}>
+                                        Technical Settings
+                                    </button>
                                 ) : (
                                     <>
-                                        <button className="btn-primary text-sm !py-2">Follow</button>
-                                        <button className="btn-secondary text-sm !py-2">Message</button>
+                                        <button className="btn-primary">Connect Node</button>
+                                        <button className="btn-primary" style={{ background: 'rgba(240,235,224,0.05)', color: '#f0ebe0', border: '1px solid rgba(240,235,224,0.1)' }}>Signal</button>
                                     </>
                                 )}
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 mt-6 text-sm text-slate-500">
-                            {user.location && (
-                                <span className="flex items-center">
-                                    <HiOutlineLocationMarker className="w-4 h-4 mr-1.5" />
-                                    {user.location}
-                                </span>
-                            )}
-                            <span className="flex items-center">
-                                <HiOutlineCalendar className="w-4 h-4 mr-1.5" />
-                                Joined {new Date(user.joinedAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, marginTop: 24, color: 'rgba(240,235,224,0.4)', fontSize: 13, fontWeight: 700 }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <HiOutlineLocationMarker style={{ color: '#6ec47a' }} />
+                                {user.location || 'Distributed Network'}
                             </span>
-                            {user.website && (
-                                <a href={user.website} target="_blank" rel="noopener" className="flex items-center hover:text-primary-600">
-                                    <HiOutlineLink className="w-4 h-4 mr-1.5" />
-                                    Portfolio
-                                </a>
-                            )}
-                            <div className="flex items-center space-x-3 ml-auto pt-4 sm:pt-0">
-                                <a href={`https://github.com/${user.github}`} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl hover:text-primary-600 transition-all">
-                                    <FaGithub className="w-4 h-4" />
-                                </a>
-                                <a href="#" className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl hover:text-primary-600 transition-all">
-                                    <FaTwitter className="w-4 h-4" />
-                                </a>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <HiOutlineCalendar style={{ color: '#6ec47a' }} />
+                                Joined {new Date(user.createdAt || Date.now()).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+                            </span>
+                            <div style={{ display: 'flex', gap: 16, marginLeft: 'auto' }}>
+                                <a href="#" style={{ color: 'inherit', fontSize: 18 }}><FaGithub /></a>
+                                <a href="#" style={{ color: 'inherit', fontSize: 18 }}><FaTwitter /></a>
+                                <a href="#" style={{ color: 'inherit', fontSize: 18 }}><FaLinkedin /></a>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
-                    <div className="text-center md:text-left">
-                        <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Reputation</p>
-                        <p className="text-2xl font-bold text-primary-600">{formatNumber(user.reputation)}</p>
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: 20,
+                    marginTop: 40,
+                    paddingTop: 32,
+                    borderTop: '1px solid rgba(74,158,92,0.1)'
+                }}>
+                    <div>
+                        <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>REPUTATION</p>
+                        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#d4a017' }}>{user.reputation}</p>
                     </div>
-                    <div className="text-center md:text-left">
-                        <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Solved</p>
-                        <p className="text-2xl font-bold text-slate-900 dark:text-white">{user.problemsSolved}</p>
+                    <div>
+                        <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>SYNCHRONIZATIONS</p>
+                        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#f0ebe0' }}>{user.problemsSolved || 0}</p>
                     </div>
-                    <div className="text-center md:text-left">
-                        <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Articles</p>
-                        <p className="text-2xl font-bold text-slate-900 dark:text-white">{user.articlesWritten}</p>
+                    <div>
+                        <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>ARTIFACTS</p>
+                        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#f0ebe0' }}>0</p>
                     </div>
-                    <div className="text-center md:text-left">
-                        <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Badges</p>
-                        <div className="mt-1">
-                            <BadgeDisplay badges={user.badges || []} />
+                    <div>
+                        <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>NETWORK STATUS</p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#6ec47a', fontSize: 14, fontWeight: 800 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6ec47a', boxShadow: '0 0 10px #6ec47a' }} />
+                            ACTIVE
                         </div>
                     </div>
                 </div>
@@ -112,3 +126,4 @@ export default function ProfileHeader({ user, isOwnProfile = false }) {
         </div>
     );
 }
+

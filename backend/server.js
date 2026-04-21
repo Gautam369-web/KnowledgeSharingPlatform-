@@ -9,7 +9,7 @@ const connectDB = require('./config/db');
 dotenv.config();
 
 // Required Environment Variables Check
-const requiredEnvs = ['MONGODB_URI', 'EMAIL_SERVER_USER', 'EMAIL_SERVER_PASSWORD', 'EMAIL_SERVER_HOST', 'EMAIL_SERVER_PORT'];
+const requiredEnvs = ['MONGODB_URI', 'JWT_SECRET', 'EMAIL_SERVER_USER', 'EMAIL_SERVER_PASSWORD', 'EMAIL_SERVER_HOST', 'EMAIL_SERVER_PORT'];
 const missingEnvs = requiredEnvs.filter(env => !process.env[env]);
 
 if (missingEnvs.length > 0) {
@@ -84,11 +84,17 @@ app.get('/', (req, res) => {
 const authRoutes = require('./routes/authRoutes');
 const articleRoutes = require('./routes/articleRoutes');
 const problemRoutes = require('./routes/problemRoutes');
+const solutionRoutes = require('./routes/solutionRoutes');
+const userRoutes = require('./routes/userRoutes');
+const searchRoutes = require('./routes/searchRoutes');
 
 // Use Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/problems', problemRoutes);
+app.use('/api/solutions', solutionRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/search', searchRoutes);
 
 const PORT = process.env.PORT || 5000;
 

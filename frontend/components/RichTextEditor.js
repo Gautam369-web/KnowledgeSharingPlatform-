@@ -16,22 +16,53 @@ export default function RichTextEditor({ value, onChange, placeholder = "Write s
     ];
 
     return (
-        <div className="w-full border-2 border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden focus-within:border-primary-500/50 transition-all">
+        <div style={{
+            width: '100%',
+            border: '1px solid rgba(74,158,92,0.15)',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            transition: 'all 0.3s',
+            background: 'rgba(10,26,13,0.2)'
+        }}>
             {/* Toolbar */}
-            <div className="flex items-center space-x-1 p-2 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
+                padding: '8px 12px',
+                background: 'rgba(74,158,92,0.05)',
+                borderBottom: '1px solid rgba(74,158,92,0.08)'
+            }}>
                 {tools.map((tool, idx) => (
                     <button
                         key={idx}
                         type="button"
-                        className="p-2 text-slate-500 hover:text-primary-600 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-all"
+                        style={{
+                            padding: 8,
+                            background: 'transparent',
+                            border: 'none',
+                            color: 'rgba(240,235,224,0.4)',
+                            cursor: 'pointer',
+                            borderRadius: 10,
+                            display: 'flex',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={e => {
+                            e.currentTarget.style.color = '#d4a017';
+                            e.currentTarget.style.background = 'rgba(212,160,23,0.05)';
+                        }}
+                        onMouseLeave={e => {
+                            e.currentTarget.style.color = 'rgba(240,235,224,0.4)';
+                            e.currentTarget.style.background = 'transparent';
+                        }}
                         title={tool.label}
                     >
-                        <tool.icon className="w-5 h-5" />
+                        <tool.icon style={{ width: 18, height: 18 }} />
                     </button>
                 ))}
-                <div className="flex-1" />
-                <button type="button" className="p-2 text-slate-400 hover:text-slate-600">
-                    <HiOutlineRectangleGroup className="w-5 h-5" />
+                <div style={{ flex: 1 }} />
+                <button type="button" style={{ background: 'none', border: 'none', color: 'rgba(240,235,224,0.2)', cursor: 'pointer' }}>
+                    <HiOutlineRectangleGroup style={{ width: 18, height: 18 }} />
                 </button>
             </div>
 
@@ -40,15 +71,36 @@ export default function RichTextEditor({ value, onChange, placeholder = "Write s
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
-                className="w-full min-h-[300px] p-4 bg-white dark:bg-slate-900 
-                 text-slate-900 dark:text-white placeholder-slate-400 
-                 focus:outline-none focus:ring-0 border-0 resize-none font-mono text-sm"
+                style={{
+                    width: '100%',
+                    minHeight: 300,
+                    padding: 24,
+                    background: 'rgba(10,26,13,0.4)',
+                    color: '#f0ebe0',
+                    fontSize: 15,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    border: 'none',
+                    outline: 'none',
+                    resize: 'vertical',
+                    lineHeight: 1.6
+                }}
             />
 
             {/* Footer */}
-            <div className="p-2 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center px-4">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Markdown Supported</p>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{value?.length || 0} characters</p>
+            <div style={{
+                padding: '10px 20px',
+                background: 'rgba(74,158,92,0.03)',
+                borderTop: '1px solid rgba(74,158,92,0.08)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+            }}>
+                <p style={{ fontSize: 10, fontWeight: 800, color: 'rgba(110,196,122,0.4)', textTransform: 'uppercase', letterSpacing: '0.15em', margin: 0 }}>
+                    Markdown Supported
+                </p>
+                <p style={{ fontSize: 10, fontWeight: 800, color: 'rgba(240,235,224,0.2)', textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0 }}>
+                    {value?.length || 0} characters
+                </p>
             </div>
         </div>
     );

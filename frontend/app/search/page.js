@@ -1,92 +1,148 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { problems, articles } from '@/lib/data';
-import { HiOutlineSearch, HiOutlineLightningBolt, HiOutlineBookOpen } from 'react-icons/hi';
+import { HiOutlineSearch, HiOutlineLightningBolt, HiOutlineBookOpen, HiOutlineChevronRight } from 'react-icons/hi';
+import toast from 'react-hot-toast';
 
 export default function SearchPage() {
     const [query, setQuery] = useState('');
+    const [results, setResults] = useState({ problems: [], articles: [] });
+    const [loading, setLoading] = useState(false);
+    const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
-    const matchedProblems = query.length > 1
-        ? problems.filter(p => p.title.toLowerCase().includes(query.toLowerCase())).slice(0, 4)
-        : [];
-    const matchedArticles = query.length > 1
-        ? articles.filter(a => a.title.toLowerCase().includes(query.toLowerCase())).slice(0, 4)
-        : [];
+    useEffect(() => {
+        const timeoutId = setTimeout(async () => {
+            if (query.length > 1) {
+                setLoading(true);
+                try {
+                    const res = await fetch(`${API_URL}/api/search?q=${encodeURIComponent(query)}`);
+                    const data = await res.json();
+                    if (res.ok) {
+                        setResults(data);
+                    }
+                } catch (error) {
+                    console.error('Search failed');
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setResults({ problems: [], articles: [] });
+            }
+        }, 300);
+
+        return () => clearTimeout(timeoutId);
+    }, [query, API_URL]);
 
     return (
-        <div style={{ minHeight: '100vh', background: '#0a1a0d', paddingTop: 88 }}>
-            <div style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px' }}>
-                <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 'clamp(32px,5vw,48px)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 32, textAlign: 'center' }}>
-                    Search <em style={{ color: '#d4a017', fontStyle: 'italic' }}>Everything</em>
-                </h1>
+        <div style={{ minHeight: '100vh', background: '#0a1a0d', paddingTop: 100 }}>
+            <div style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px' }}>
+                <div style={{ textAlign: 'center', marginBottom: 48 }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: 'rgba(212,160,23,0.1)', padding: '6px 16px', borderRadius: 100, marginBottom: 24 }}>
+                        <HiOutlineSearch style={{ color: '#d4a017' }} />
+                        <span style={{ fontSize: 11, fontWeight: 900, color: '#d4a017', letterSpacing: '0.1em' }}>GLOBAL ACCESS</span>
+                    </div>
+                    <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, color: '#f0ebe0', marginBottom: 20, letterSpacing: '-0.02em' }}>
+                        Scan the <span style={{ color: '#d4a017' }}>Ecosystem</span>
+                    </h1>
+                </div>
 
                 {/* Search input */}
-                <div style={{ position: 'relative', marginBottom: 40 }}>
-                    <HiOutlineSearch style={{ position: 'absolute', left: 18, top: '50%', transform: 'translateY(-50%)', color: '#d4a017', width: 22, height: 22 }} />
+                <div style={{ position: 'relative', marginBottom: 60 }}>
+                    <HiOutlineSearch style={{ position: 'absolute', left: 24, top: '50%', transform: 'translateY(-50%)', color: '#d4a017', fontSize: 24 }} />
                     <input
-                        autoFocus type="text"
-                        placeholder="Search problems, articles, topics..."
-                        value={query} onChange={e => setQuery(e.target.value)}
+                        autoFocus
+                        type="text"
+                        placeholder="Search problems, articles, wisdom..."
+                        value={query}
+                        onChange={e => setQuery(e.target.value)}
                         style={{
-                            width: '100%', padding: '18px 18px 18px 54px',
-                            background: '#0e2010', border: '1px solid rgba(212,160,23,0.3)',
-                            borderRadius: 14, color: '#fff', fontSize: 16, outline: 'none',
-                            fontFamily: "'Bricolage Grotesque',sans-serif", transition: 'border-color 0.2s, box-shadow 0.2s',
+                            width: '100%',
+                            padding: '24px 24px 24px 64px',
+                            background: '#0e2010',
+                            border: '1px solid rgba(74,158,92,0.2)',
+                            borderRadius: 24,
+                            color: '#f0ebe0',
+                            fontSize: 18,
+                            outline: 'none',
+                            fontFamily: "'Bricolage Grotesque', sans-serif",
+                            transition: 'all 0.3s',
+                            boxShadow: '0 16px 32px rgba(0,0,0,0.2)'
                         }}
-                        onFocus={e => { e.target.style.borderColor = 'rgba(212,160,23,0.6)'; e.target.style.boxShadow = '0 0 0 4px rgba(212,160,23,0.08)'; }}
-                        onBlur={e => { e.target.style.borderColor = 'rgba(212,160,23,0.3)'; e.target.style.boxShadow = 'none'; }}
+                        onFocus={e => e.target.style.borderColor = '#d4a017'}
+                        onBlur={e => e.target.style.borderColor = 'rgba(74,158,92,0.2)'}
                     />
                 </div>
 
                 {/* Results */}
-                {query.length > 1 ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-                        {matchedProblems.length > 0 && (
+                {loading ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', padding: '40px 0' }}>
+                        <div className="loading-spinner" />
+                    </div>
+                ) : query.length > 1 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
+                        {results.problems.length > 0 && (
                             <div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-                                    <HiOutlineLightningBolt style={{ color: '#d4a017', width: 16 }} />
-                                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#d4a017' }}>PROBLEMS</span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                                    <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(212,160,23,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <HiOutlineLightningBolt style={{ color: '#d4a017' }} />
+                                    </div>
+                                    <h2 style={{ fontSize: 13, fontWeight: 900, color: '#f0ebe0', letterSpacing: '0.1em' }}>PROBLEMS FOUND</h2>
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    {matchedProblems.map((p, i) => (
-                                        <Link key={i} href={`/problems/${p.id}`} style={{ textDecoration: 'none' }}>
-                                            <div className="card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                <span style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{p.title}</span>
-                                                <span className="badge badge-primary">{p.category || 'General'}</span>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                    {results.problems.map((p) => (
+                                        <Link key={p._id} href={`/problems/${p._id}`} style={{ textDecoration: 'none' }}>
+                                            <div className="card hover-lift" style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                                                    <span style={{ fontSize: 16, fontWeight: 700, color: '#f0ebe0' }}>{p.title}</span>
+                                                    <span className="badge-primary" style={{ fontSize: 10 }}>{p.category}</span>
+                                                </div>
+                                                <HiOutlineChevronRight style={{ color: 'rgba(240,235,224,0.2)' }} />
                                             </div>
                                         </Link>
                                     ))}
                                 </div>
                             </div>
                         )}
-                        {matchedArticles.length > 0 && (
+
+                        {results.articles.length > 0 && (
                             <div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-                                    <HiOutlineBookOpen style={{ color: '#34d399', width: 16 }} />
-                                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: '#34d399' }}>ARTICLES</span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                                    <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(110,196,122,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <HiOutlineBookOpen style={{ color: '#6ec47a' }} />
+                                    </div>
+                                    <h2 style={{ fontSize: 13, fontWeight: 900, color: '#f0ebe0', letterSpacing: '0.1em' }}>ARTICLES FOUND</h2>
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    {matchedArticles.map((a, i) => (
-                                        <Link key={i} href={`/articles/${a.id}`} style={{ textDecoration: 'none' }}>
-                                            <div className="card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                <span style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{a.title}</span>
-                                                <span className="badge badge-accent">{a.category}</span>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                    {results.articles.map((a) => (
+                                        <Link key={a._id} href={`/articles/${a._id}`} style={{ textDecoration: 'none' }}>
+                                            <div className="card hover-lift" style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                                                    <span style={{ fontSize: 16, fontWeight: 700, color: '#f0ebe0' }}>{a.title}</span>
+                                                    <span className="badge-accent" style={{ fontSize: 10, background: 'rgba(110,196,122,0.1)', color: '#6ec47a' }}>{a.category}</span>
+                                                </div>
+                                                <HiOutlineChevronRight style={{ color: 'rgba(240,235,224,0.2)' }} />
                                             </div>
                                         </Link>
                                     ))}
                                 </div>
                             </div>
                         )}
-                        {matchedProblems.length === 0 && matchedArticles.length === 0 && (
-                            <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 15, padding: '40px 0' }}>No results for &ldquo;{query}&rdquo;</p>
+
+                        {results.problems.length === 0 && results.articles.length === 0 && (
+                            <div style={{ textAlign: 'center', padding: '60px 0' }}>
+                                <p style={{ fontSize: 18, color: 'rgba(240,235,224,0.3)' }}>No wisdom found for &ldquo;{query}&rdquo;</p>
+                                <p style={{ fontSize: 14, color: 'rgba(240,235,224,0.15)', marginTop: 8 }}>Try different keywords or contribute your own knowledge.</p>
+                            </div>
                         )}
                     </div>
                 ) : (
-                    <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.2)', fontSize: 14 }}>Type at least 2 characters to search</p>
+                    <div style={{ textAlign: 'center', padding: '60px 0', opacity: 0.3 }}>
+                        <p style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.05em' }}>AWAITING INPUT</p>
+                    </div>
                 )}
             </div>
         </div>
     );
 }
+
