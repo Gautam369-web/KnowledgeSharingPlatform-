@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -23,7 +23,16 @@ export default function RegisterPage() {
     const [loading, setLoading] = useState(false);
     const [resending, setResending] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { register } = useAuth();
+
+    useEffect(() => {
+        const verifyEmail = searchParams.get('verify');
+        if (verifyEmail) {
+            setFormData(prev => ({ ...prev, email: verifyEmail }));
+            setShowOTP(true);
+        }
+    }, [searchParams]);
 
     const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 

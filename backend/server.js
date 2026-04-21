@@ -9,7 +9,7 @@ const connectDB = require('./config/db');
 dotenv.config();
 
 // Required Environment Variables Check
-const requiredEnvs = ['MONGODB_URI', 'JWT_SECRET', 'EMAIL_SERVER_USER', 'EMAIL_SERVER_PASSWORD', 'EMAIL_SERVER_HOST', 'EMAIL_SERVER_PORT'];
+const requiredEnvs = ['MONGODB_URI', 'JWT_SECRET', 'EMAIL_SERVER_USER', 'EMAIL_SERVER_PASSWORD', 'EMAIL_SERVER_HOST', 'EMAIL_SERVER_PORT', 'EMAIL_FROM'];
 const missingEnvs = requiredEnvs.filter(env => !process.env[env]);
 
 if (missingEnvs.length > 0) {

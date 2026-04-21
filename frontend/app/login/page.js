@@ -12,15 +12,19 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const router = useRouter();
+    const [loginError, setLoginError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setLoginError('');
         const result = await login(formData.email, formData.password);
         setLoading(false);
 
         if (result && result.success) {
             router.push('/dashboard');
+        } else if (result && result.error && result.error.includes('verify your email')) {
+            setLoginError('unverified');
         }
     };
 
@@ -43,6 +47,15 @@ export default function LoginPage() {
                         <h1 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 28, fontWeight: 900, color: '#fff', marginBottom: 8, letterSpacing: '-0.02em' }}>Welcome back</h1>
                         <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Sign in to your SolveHub account</p>
                     </div>
+
+                    {loginError === 'unverified' && (
+                        <div style={{ background: 'rgba(212,160,23,0.1)', border: '1px solid rgba(212,160,23,0.3)', borderRadius: 12, padding: '16px', marginBottom: 24, textAlign: 'center' }}>
+                            <p style={{ fontSize: 13, color: '#d4a017', marginBottom: 12, fontWeight: 600 }}>Your email is not verified yet.</p>
+                            <Link href={`/register?verify=${encodeURIComponent(formData.email)}`} className="btn-primary" style={{ padding: '8px 16px', fontSize: 12, width: 'auto', display: 'inline-flex' }}>
+                                Verify Now
+                            </Link>
+                        </div>
+                    )}
 
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                         <div>
