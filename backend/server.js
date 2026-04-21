@@ -13,7 +13,12 @@ const requiredEnvs = ['MONGODB_URI', 'JWT_SECRET', 'EMAIL_SERVER_USER', 'EMAIL_S
 const missingEnvs = requiredEnvs.filter(env => !process.env[env]);
 
 if (missingEnvs.length > 0) {
-    console.error(`CRITICAL: Missing environment variables: ${missingEnvs.join(', ')}`);
+    console.error('*************************************************');
+    console.error('CRITICAL ERROR: Missing environment variables:');
+    missingEnvs.forEach(env => console.error(` - ${env}`));
+    console.error('The server may crash during authentication flows.');
+    console.error('Please add these to your .env file or Vercel dashboard.');
+    console.error('*************************************************');
 }
 
 // Connect to Database

@@ -58,7 +58,10 @@ exports.verifyOTP = async (req, res) => {
         user.isVerified = true;
         user.otp = undefined;
         user.otpExpiry = undefined;
-        await user.save();
+        if (!process.env.JWT_SECRET) {
+            console.error('CRITICAL: JWT_SECRET is not defined in environment variables');
+            return res.status(500).json({ message: 'Environment configuration error: JWT_SECRET is missing' });
+        }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
@@ -72,6 +75,7 @@ exports.verifyOTP = async (req, res) => {
             }
         });
     } catch (error) {
+        console.error('OTP Verification Error:', error);
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 };
@@ -131,6 +135,11 @@ exports.login = async (req, res) => {
             articlesWritten: user.articlesWritten || 0,
         };
 
+        if (!process.env.JWT_SECRET) {
+            console.error('CRITICAL: JWT_SECRET is not defined in environment variables');
+            return res.status(500).json({ message: 'Environment configuration error: JWT_SECRET is missing' });
+        }
+
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
         res.status(200).json({
@@ -139,6 +148,7 @@ exports.login = async (req, res) => {
             user: userResponse
         });
     } catch (error) {
+        console.error('Login Error:', error);
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 };
