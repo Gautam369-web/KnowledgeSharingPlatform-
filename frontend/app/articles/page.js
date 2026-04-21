@@ -1,20 +1,47 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { articles } from '@/lib/data';
+import { useState, useEffect } from 'react';
 import { HiOutlineSearch, HiOutlineBookOpen, HiOutlineClock, HiOutlineEye, HiOutlineArrowRight } from 'react-icons/hi';
+import ArticleCard from '@/components/ArticleCard';
 
-const CATEGORIES = ['All', 'React', 'Node.js', 'Python', 'DevOps', 'Machine Learning', 'Security'];
+const CATEGORIES = ['All', 'Technology', 'Science', 'Mathematics', 'Business', 'Health', 'Education', 'Engineering', 'Design'];
 
 export default function ArticlesPage() {
     const [search, setSearch] = useState('');
     const [activeCategory, setActiveCategory] = useState('All');
+    const [articles, setArticles] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const filtered = articles.filter(a =>
-        (activeCategory === 'All' || a.category === activeCategory) &&
-        a.title.toLowerCase().includes(search.toLowerCase())
-    );
+    const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+
+    useEffect(() => {
+        const fetchArticles = async () => {
+            setLoading(true);
+            try {
+                const query = new URLSearchParams();
+                if (activeCategory !== 'All') query.append('category', activeCategory);
+                if (search) query.append('search', search);
+
+                const res = await fetch(`${API_URL}/api/articles?${query.toString()}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setArticles(data);
+                }
+            } catch (error) {
+                console.error('Failed to fetch articles', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        // Debounce search slightly
+        const timer = setTimeout(() => {
+            fetchArticles();
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [search, activeCategory, API_URL]);
 
     return (
         <div style={{ minHeight: '100vh', background: '#0a1a0d', paddingTop: 88 }}>
@@ -52,33 +79,21 @@ export default function ArticlesPage() {
 
             <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', fontWeight: 600 }}>{filtered.length} ARTICLES</span>
+                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', fontWeight: 600 }}>{articles.length} ARTICLES FOUND</span>
                     <Link href="/articles/new" className="btn-primary" style={{ padding: '9px 20px', fontSize: 12 }}>+ WRITE ARTICLE</Link>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(340px,1fr))', gap: 20 }}>
-                    {filtered.map((article, i) => (
-                        <Link key={article.id || i} href={`/articles/${article.id}`} style={{ textDecoration: 'none' }}>
-                            <div className="card card-hover" style={{ padding: '28px', height: '100%' }}
-                                onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(212,160,23,0.25)'}
-                                onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(74,158,92,0.14)'}
-                            >
-                                <span className="badge badge-primary" style={{ marginBottom: 14 }}>{article.category}</span>
-                                <h2 style={{ fontFamily: "'Bricolage Grotesque',sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.4, marginBottom: 10, letterSpacing: '-0.01em' }}>{article.title}</h2>
-                                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 20, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{article.excerpt}</p>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
-                                    <div style={{ display: 'flex', gap: 16 }}>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}><HiOutlineClock style={{ width: 13 }} />{article.readTime || 5} min</span>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.3)' }}><HiOutlineEye style={{ width: 13 }} />{article.views || 0}</span>
-                                    </div>
-                                    <HiOutlineArrowRight style={{ color: '#d4a017', width: 18 }} />
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+                {loading ? (
+                    <div style={{ padding: '60px 0', textAlign: 'center' }}><div className="loading-spinner"></div></div>
+                ) : (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(340px,1fr))', gap: 20 }}>
+                        {articles.map((article, i) => (
+                            <ArticleCard key={article._id || i} article={article} />
+                        ))}
+                    </div>
+                )}
 
-                {filtered.length === 0 && (
+                {!loading && articles.length === 0 && (
                     <div style={{ textAlign: 'center', padding: '80px 0' }}>
                         <HiOutlineBookOpen style={{ width: 48, height: 48, color: 'rgba(212,160,23,0.3)', margin: '0 auto 16px' }} />
                         <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 15 }}>No articles found. Be the first to write one!</p>

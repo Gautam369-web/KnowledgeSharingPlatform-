@@ -4,7 +4,7 @@ import { HiOutlineLocationMarker, HiOutlineCalendar, HiOutlineLink, HiOutlineShi
 import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import { formatNumber } from '@/lib/utils';
 
-export default function ProfileHeader({ user, isOwnProfile = false }) {
+export default function ProfileHeader({ user, isOwnProfile = false, problemCount = 0, articleCount = 0 }) {
     return (
         <div style={{ position: 'relative' }}>
             {/* Cover Pattern - Solarpunk Gradient */}
@@ -108,11 +108,11 @@ export default function ProfileHeader({ user, isOwnProfile = false }) {
                     </div>
                     <div>
                         <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>SYNCHRONIZATIONS</p>
-                        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#f0ebe0' }}>{user.problemsSolved || 0}</p>
+                        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#f0ebe0' }}>{problemCount}</p>
                     </div>
                     <div>
                         <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>ARTIFACTS</p>
-                        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#f0ebe0' }}>0</p>
+                        <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#f0ebe0' }}>{articleCount}</p>
                     </div>
                     <div>
                         <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>NETWORK STATUS</p>

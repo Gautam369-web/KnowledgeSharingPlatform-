@@ -7,48 +7,6 @@ const AuthContext = createContext();
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
-// Mock user data for demonstration
-const MOCK_USERS = [
-    {
-        id: '1',
-        name: 'Alex Johnson',
-        email: 'alex@example.com',
-        password: 'password123',
-        avatar: 'https://ui-avatars.com/api/?name=Alex+Johnson&background=6366f1&color=fff&size=200',
-        bio: 'Full-stack developer passionate about open source and knowledge sharing.',
-        skills: ['React', 'Node.js', 'Python', 'MongoDB'],
-        reputation: 15420,
-        badges: ['gold-contributor', 'problem-solver', 'mentor', 'early-adopter'],
-        role: 'expert',
-        joinedAt: '2023-01-15',
-        problemsSolved: 234,
-        articlesWritten: 45,
-        solutionsGiven: 567,
-        location: 'San Francisco, CA',
-        github: 'alexjohnson',
-        website: 'https://alexjohnson.dev',
-    },
-    {
-        id: '2',
-        name: 'Sarah Chen',
-        email: 'sarah@example.com',
-        password: 'password123',
-        avatar: 'https://ui-avatars.com/api/?name=Sarah+Chen&background=8b5cf6&color=fff&size=200',
-        bio: 'AI/ML researcher and educator. Love helping others learn.',
-        skills: ['Python', 'TensorFlow', 'Machine Learning', 'Data Science'],
-        reputation: 12800,
-        badges: ['ai-expert', 'top-writer', 'helpful'],
-        role: 'expert',
-        joinedAt: '2023-03-20',
-        problemsSolved: 189,
-        articlesWritten: 67,
-        solutionsGiven: 423,
-        location: 'Boston, MA',
-        github: 'sarahchen',
-        website: 'https://sarahchen.ai',
-    },
-];
-
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -59,12 +17,17 @@ export function AuthProvider({ children }) {
         if (savedUser && token) {
             setUser(JSON.parse(savedUser));
         } else {
-            // Clear if inconsistent
             localStorage.removeItem('currentUser');
             localStorage.removeItem('token');
         }
         setLoading(false);
     }, []);
+
+    const normalizeUser = (u) => ({
+        ...u,
+        id: u._id || u.id,
+        _id: u._id || u.id,
+    });
 
     const login = async (email, password) => {
         setLoading(true);
@@ -77,10 +40,11 @@ export function AuthProvider({ children }) {
             const data = await response.json();
 
             if (response.ok) {
-                setUser(data.user);
-                localStorage.setItem('currentUser', JSON.stringify(data.user));
+                const normalized = normalizeUser(data.user);
+                setUser(normalized);
+                localStorage.setItem('currentUser', JSON.stringify(normalized));
                 localStorage.setItem('token', data.token);
-                toast.success(`Welcome back, ${data.user.name}!`);
+                toast.success(`Welcome back, ${normalized.name}!`);
                 return { success: true };
             } else {
                 toast.error(data.message || 'Invalid email or password');
@@ -119,6 +83,34 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const refreshUser = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        try {
+            const res = await fetch(`${API_URL}/api/users/stats`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setUser(prev => {
+                    const updated = {
+                        ...prev,
+                        problemsSolved: data.stats.problemsSolved,
+                        problemsPosted: data.stats.problemsPosted,
+                        articlesWritten: data.stats.articlesWritten,
+                        reputation: data.stats.reputation,
+                        level: data.stats.level,
+                        streak: data.stats.streak,
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(updated));
+                    return updated;
+                });
+            }
+        } catch (error) {
+            console.error('Failed to refresh user:', error);
+        }
+    };
+
     const logout = () => {
         setUser(null);
         localStorage.removeItem('currentUser');
@@ -141,6 +133,7 @@ export function AuthProvider({ children }) {
             register,
             logout,
             updateProfile,
+            refreshUser,
             isAuthenticated: !!user,
         }}>
             {children}

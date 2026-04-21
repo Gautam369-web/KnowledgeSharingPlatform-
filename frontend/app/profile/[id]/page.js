@@ -2,55 +2,43 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
 import ProfileHeader from '@/components/ProfileHeader';
 import ProblemCard from '@/components/ProblemCard';
 import ArticleCard from '@/components/ArticleCard';
 import { useAuth } from '@/context/AuthContext';
 import toast from 'react-hot-toast';
 import {
-    HiOutlineCode, HiOutlineBookOpen, HiOutlineLightningBolt,
-    HiOutlineUserGroup, HiOutlineClock, HiOutlineCube
+    HiOutlineLightningBolt, HiOutlineBookOpen, HiOutlineUserGroup,
+    HiOutlineCube, HiOutlineClock
 } from 'react-icons/hi';
 
 export default function ProfilePage() {
     const { id } = useParams();
     const router = useRouter();
-    const { user: currentUser, isAuthenticated } = useAuth();
+    const { user: currentUser } = useAuth();
+
     const [profileUser, setProfileUser] = useState(null);
+    const [userResources, setUserResources] = useState({ problems: [], articles: [] });
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('overview');
-    const [userResources, setUserResources] = useState({ problems: [], articles: [] });
 
     const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                // Fetch basic profile
+                // Fetch unified profile payload
                 const res = await fetch(`${API_URL}/api/users/profile/${id}`);
                 const data = await res.json();
+
                 if (res.ok) {
-                    setProfileUser(data);
-
-                    // Fetch user's problems and articles specifically
-                    const [probRes, artRes] = await Promise.all([
-                        fetch(`${API_URL}/api/problems?author=${id}`),
-                        fetch(`${API_URL}/api/articles?author=${id}`)
-                    ]);
-
-                    const [probData, artData] = await Promise.all([
-                        probRes.json(),
-                        artRes.json()
-                    ]);
-
+                    setProfileUser(data.user);
                     setUserResources({
-                        problems: probData.filter(p => p.author?._id === id || p.author === id),
-                        articles: artData.filter(a => a.author?._id === id || a.author === id)
+                        problems: data.problems || [],
+                        articles: data.articles || []
                     });
-
                 } else {
-                    toast.error('Identity not found');
+                    toast.error(data.message || 'Identity not found');
                     router.push('/leaderboard');
                 }
             } catch (error) {
@@ -61,7 +49,7 @@ export default function ProfilePage() {
         };
 
         if (id) fetchProfile();
-    }, [id, API_URL]);
+    }, [id, API_URL, router]);
 
     const isOwnProfile = currentUser && (id === currentUser._id || id === currentUser.id);
 
@@ -77,7 +65,12 @@ export default function ProfilePage() {
     return (
         <div style={{ minHeight: '100vh', background: '#0a1a0d', padding: '100px 24px 80px' }}>
             <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-                <ProfileHeader user={profileUser} isOwnProfile={isOwnProfile} />
+                <ProfileHeader
+                    user={profileUser}
+                    isOwnProfile={isOwnProfile}
+                    problemCount={userResources.problems.length}
+                    articleCount={userResources.articles.length}
+                />
 
                 <div style={{ marginTop: 60 }}>
                     <div style={{ display: 'flex', gap: 8, borderBottom: '1px solid rgba(74,158,92,0.1)', marginBottom: 40, overflowX: 'auto', paddingBottom: 1 }}>
@@ -166,7 +159,7 @@ export default function ProfilePage() {
                                         </div>
                                         <div>
                                             <div style={{ fontSize: 13, fontWeight: 800, color: '#6ec47a' }}>System Pillar</div>
-                                            <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(110,196,122,0.6)' }}>CONTRIBUTED 5+ SOLUTIONS</div>
+                                            <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(110,196,122,0.6)' }}>CONTRIBUTED {userResources.problems.length}+ SOLUTIONS</div>
                                         </div>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 16, background: 'rgba(212,160,23,0.05)', borderRadius: 16, border: '1px solid rgba(212,160,23,0.1)' }}>
