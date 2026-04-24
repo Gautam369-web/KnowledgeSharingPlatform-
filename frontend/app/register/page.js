@@ -18,6 +18,9 @@ export default function RegisterPage() {
         password: '',
         confirmPassword: '',
     });
+    const [step, setStep] = useState('details');
+    const [otp, setOtp] = useState('');
+    const [registeredEmail, setRegisteredEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const { isAuthenticated } = useAuth();
@@ -54,12 +57,36 @@ export default function RegisterPage() {
             });
             const data = await response.json();
             if (response.ok) {
-                toast.success('Registration successful!');
+                toast.success('Registration successful! Please check your email.');
+                setRegisteredEmail(formData.email);
+                setStep('otp');
+            } else {
+                toast.error(data.message || 'Registration failed');
+            }
+        } catch (error) {
+            toast.error('An error occurred. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleVerify = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const response = await fetch(`${API_URL}/api/auth/verify-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: registeredEmail, otp })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                toast.success('Email verified successfully!');
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('currentUser', JSON.stringify(data.user));
                 setTimeout(() => window.location.href = '/dashboard', 400);
             } else {
-                toast.error(data.message || 'Registration failed');
+                toast.error(data.message || 'Verification failed');
             }
         } catch (error) {
             toast.error('An error occurred. Please try again.');
@@ -94,85 +121,116 @@ export default function RegisterPage() {
                         </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 20 }}>
-                            <div style={{ position: 'relative' }}>
-                                <HiOutlineUser style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,235,224,0.3)', width: 20, height: 20, pointerEvents: 'none' }} />
-                                <input
-                                    type="text" name="name" required
-                                    value={formData.name} onChange={handleChange}
-                                    placeholder="Display Name"
-                                    style={{ width: '100%', height: 52, background: 'rgba(10, 26, 13, 0.5)', border: '1px solid rgba(74, 158, 92, 0.2)', borderRadius: 16, padding: '0 20px 0 48px', color: '#f0ebe0', fontSize: 14, fontWeight: 600, outline: 'none', transition: 'all 0.3s' }}
-                                    onFocus={e => { e.target.style.borderColor = '#6ec47a'; e.target.style.background = 'rgba(74, 158, 92, 0.05)'; }}
-                                    onBlur={e => { e.target.style.borderColor = 'rgba(74, 158, 92, 0.2)'; e.target.style.background = 'rgba(10, 26, 13, 0.5)'; }}
-                                />
-                            </div>
-                            <div style={{ position: 'relative' }}>
-                                <HiOutlineMail style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,235,224,0.3)', width: 20, height: 20, pointerEvents: 'none' }} />
-                                <input
-                                    type="email" name="email" required
-                                    value={formData.email} onChange={handleChange}
-                                    placeholder="Communication Signal (Email)"
-                                    style={{ width: '100%', height: 52, background: 'rgba(10, 26, 13, 0.5)', border: '1px solid rgba(74, 158, 92, 0.2)', borderRadius: 16, padding: '0 20px 0 48px', color: '#f0ebe0', fontSize: 14, fontWeight: 600, outline: 'none', transition: 'all 0.3s' }}
-                                    onFocus={e => { e.target.style.borderColor = '#6ec47a'; e.target.style.background = 'rgba(74, 158, 92, 0.05)'; }}
-                                    onBlur={e => { e.target.style.borderColor = 'rgba(74, 158, 92, 0.2)'; e.target.style.background = 'rgba(10, 26, 13, 0.5)'; }}
-                                />
-                            </div>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 16 }}>
+                    {step === 'details' ? (
+                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 20 }}>
                                 <div style={{ position: 'relative' }}>
-                                    <HiOutlineLockClosed style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,235,224,0.3)', width: 20, height: 20, pointerEvents: 'none' }} />
+                                    <HiOutlineUser style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,235,224,0.3)', width: 20, height: 20, pointerEvents: 'none' }} />
                                     <input
-                                        type="password" name="password" required
-                                        value={formData.password} onChange={handleChange}
-                                        placeholder="Security Protocol"
+                                        type="text" name="name" required
+                                        value={formData.name} onChange={handleChange}
+                                        placeholder="Display Name"
                                         style={{ width: '100%', height: 52, background: 'rgba(10, 26, 13, 0.5)', border: '1px solid rgba(74, 158, 92, 0.2)', borderRadius: 16, padding: '0 20px 0 48px', color: '#f0ebe0', fontSize: 14, fontWeight: 600, outline: 'none', transition: 'all 0.3s' }}
                                         onFocus={e => { e.target.style.borderColor = '#6ec47a'; e.target.style.background = 'rgba(74, 158, 92, 0.05)'; }}
                                         onBlur={e => { e.target.style.borderColor = 'rgba(74, 158, 92, 0.2)'; e.target.style.background = 'rgba(10, 26, 13, 0.5)'; }}
                                     />
                                 </div>
                                 <div style={{ position: 'relative' }}>
-                                    <HiOutlineLockClosed style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,235,224,0.3)', width: 20, height: 20, pointerEvents: 'none' }} />
+                                    <HiOutlineMail style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,235,224,0.3)', width: 20, height: 20, pointerEvents: 'none' }} />
                                     <input
-                                        type="password" name="confirmPassword" required
-                                        value={formData.confirmPassword} onChange={handleChange}
-                                        placeholder="Confirm Protocol"
+                                        type="email" name="email" required
+                                        value={formData.email} onChange={handleChange}
+                                        placeholder="Communication Signal (Email)"
                                         style={{ width: '100%', height: 52, background: 'rgba(10, 26, 13, 0.5)', border: '1px solid rgba(74, 158, 92, 0.2)', borderRadius: 16, padding: '0 20px 0 48px', color: '#f0ebe0', fontSize: 14, fontWeight: 600, outline: 'none', transition: 'all 0.3s' }}
                                         onFocus={e => { e.target.style.borderColor = '#6ec47a'; e.target.style.background = 'rgba(74, 158, 92, 0.05)'; }}
                                         onBlur={e => { e.target.style.borderColor = 'rgba(74, 158, 92, 0.2)'; e.target.style.background = 'rgba(10, 26, 13, 0.5)'; }}
                                     />
                                 </div>
-                            </div>
-                        </div>
-
-                        <button type="submit" disabled={loading} className="btn-primary" style={{ height: 52, justifyContent: 'center', marginTop: 12, fontSize: 14, padding: '0', background: 'linear-gradient(135deg, #6ec47a 0%, #34d399 100%)', color: '#0a1a0d', border: 'none', boxShadow: '0 8px 16px rgba(110,196,122,0.2)' }}>
-                            {loading ? (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                    <div style={{ width: 16, height: 16, border: '2px solid rgba(10,26,13,0.2)', borderTop: '2px solid #0a1a0d', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
-                                    <span>SYNTHESIZING IDENTITY...</span>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 16 }}>
+                                    <div style={{ position: 'relative' }}>
+                                        <HiOutlineLockClosed style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,235,224,0.3)', width: 20, height: 20, pointerEvents: 'none' }} />
+                                        <input
+                                            type="password" name="password" required
+                                            value={formData.password} onChange={handleChange}
+                                            placeholder="Security Protocol"
+                                            style={{ width: '100%', height: 52, background: 'rgba(10, 26, 13, 0.5)', border: '1px solid rgba(74, 158, 92, 0.2)', borderRadius: 16, padding: '0 20px 0 48px', color: '#f0ebe0', fontSize: 14, fontWeight: 600, outline: 'none', transition: 'all 0.3s' }}
+                                            onFocus={e => { e.target.style.borderColor = '#6ec47a'; e.target.style.background = 'rgba(74, 158, 92, 0.05)'; }}
+                                            onBlur={e => { e.target.style.borderColor = 'rgba(74, 158, 92, 0.2)'; e.target.style.background = 'rgba(10, 26, 13, 0.5)'; }}
+                                        />
+                                    </div>
+                                    <div style={{ position: 'relative' }}>
+                                        <HiOutlineLockClosed style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(240,235,224,0.3)', width: 20, height: 20, pointerEvents: 'none' }} />
+                                        <input
+                                            type="password" name="confirmPassword" required
+                                            value={formData.confirmPassword} onChange={handleChange}
+                                            placeholder="Confirm Protocol"
+                                            style={{ width: '100%', height: 52, background: 'rgba(10, 26, 13, 0.5)', border: '1px solid rgba(74, 158, 92, 0.2)', borderRadius: 16, padding: '0 20px 0 48px', color: '#f0ebe0', fontSize: 14, fontWeight: 600, outline: 'none', transition: 'all 0.3s' }}
+                                            onFocus={e => { e.target.style.borderColor = '#6ec47a'; e.target.style.background = 'rgba(74, 158, 92, 0.05)'; }}
+                                            onBlur={e => { e.target.style.borderColor = 'rgba(74, 158, 92, 0.2)'; e.target.style.background = 'rgba(10, 26, 13, 0.5)'; }}
+                                        />
+                                    </div>
                                 </div>
-                            ) : (
-                                <><span>REGISTER</span><HiOutlineArrowRight style={{ width: 18, height: 18 }} /></>
-                            )}
-                        </button>
+                            </div>
 
-                        {/* Divider */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 16, margin: '20px 0' }}>
-                            <div style={{ flex: 1, height: 1, background: 'rgba(240,235,224,0.05)' }} />
-                            <span style={{ fontSize: 11, color: 'rgba(240,235,224,0.2)', fontWeight: 800, letterSpacing: '0.1em' }}>FOREIGN PROTOCOLS</span>
-                            <div style={{ flex: 1, height: 1, background: 'rgba(240,235,224,0.05)' }} />
-                        </div>
+                            <button type="submit" disabled={loading} className="btn-primary" style={{ height: 52, justifyContent: 'center', marginTop: 12, fontSize: 14, padding: '0', background: 'linear-gradient(135deg, #6ec47a 0%, #34d399 100%)', color: '#0a1a0d', border: 'none', boxShadow: '0 8px 16px rgba(110,196,122,0.2)' }}>
+                                {loading ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                        <div style={{ width: 16, height: 16, border: '2px solid rgba(10,26,13,0.2)', borderTop: '2px solid #0a1a0d', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
+                                        <span>SYNTHESIZING IDENTITY...</span>
+                                    </div>
+                                ) : (
+                                    <><span>REGISTER</span><HiOutlineArrowRight style={{ width: 18, height: 18 }} /></>
+                                )}
+                            </button>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                            {[{ icon: FaGoogle, label: 'Google', color: '#ea4335' }, { icon: FaGithub, label: 'GitHub', color: '#f0ebe0' }].map(({ icon: Icon, label, color }) => (
-                                <button type="button" key={label} style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, border: '1px solid rgba(240,235,224,0.1)', background: 'rgba(240,235,224,0.02)', color: 'rgba(240,235,224,0.6)', fontSize: 13, fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: "'Bricolage Grotesque', sans-serif" }}
-                                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(240,235,224,0.05)'; e.currentTarget.style.color = '#f0ebe0'; }}
-                                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(240,235,224,0.02)'; e.currentTarget.style.color = 'rgba(240,235,224,0.6)'; }}
-                                >
-                                    <Icon style={{ color, width: 16, height: 16 }} /> {label}
-                                </button>
-                            ))}
-                        </div>
-                    </form>
+                            {/* Divider */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 16, margin: '20px 0' }}>
+                                <div style={{ flex: 1, height: 1, background: 'rgba(240,235,224,0.05)' }} />
+                                <span style={{ fontSize: 11, color: 'rgba(240,235,224,0.2)', fontWeight: 800, letterSpacing: '0.1em' }}>FOREIGN PROTOCOLS</span>
+                                <div style={{ flex: 1, height: 1, background: 'rgba(240,235,224,0.05)' }} />
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                                {[{ icon: FaGoogle, label: 'Google', color: '#ea4335' }, { icon: FaGithub, label: 'GitHub', color: '#f0ebe0' }].map(({ icon: Icon, label, color }) => (
+                                    <button type="button" key={label} style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, border: '1px solid rgba(240,235,224,0.1)', background: 'rgba(240,235,224,0.02)', color: 'rgba(240,235,224,0.6)', fontSize: 13, fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: "'Bricolage Grotesque', sans-serif" }}
+                                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(240,235,224,0.05)'; e.currentTarget.style.color = '#f0ebe0'; }}
+                                        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(240,235,224,0.02)'; e.currentTarget.style.color = 'rgba(240,235,224,0.6)'; }}
+                                    >
+                                        <Icon style={{ color, width: 16, height: 16 }} /> {label}
+                                    </button>
+                                ))}
+                            </div>
+                        </form>
+                    ) : (
+                        <form onSubmit={handleVerify} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                            <div style={{ textAlign: 'center', marginBottom: 20 }}>
+                                <p style={{ color: 'rgba(240,235,224,0.6)', fontSize: 14 }}>
+                                    We've sent a verification code to <span style={{ color: '#d4a017', fontWeight: 800 }}>{registeredEmail}</span>
+                                </p>
+                            </div>
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type="text" required
+                                    value={otp} onChange={(e) => setOtp(e.target.value)}
+                                    placeholder="Enter 6-digit OTP"
+                                    maxLength={6}
+                                    style={{ width: '100%', height: 52, background: 'rgba(10, 26, 13, 0.5)', border: '1px solid rgba(74, 158, 92, 0.2)', borderRadius: 16, padding: '0 20px', color: '#f0ebe0', fontSize: 18, fontWeight: 600, outline: 'none', transition: 'all 0.3s', textAlign: 'center', letterSpacing: '0.2em' }}
+                                    onFocus={e => { e.target.style.borderColor = '#6ec47a'; e.target.style.background = 'rgba(74, 158, 92, 0.05)'; }}
+                                    onBlur={e => { e.target.style.borderColor = 'rgba(74, 158, 92, 0.2)'; e.target.style.background = 'rgba(10, 26, 13, 0.5)'; }}
+                                />
+                            </div>
+                            <button type="submit" disabled={loading} className="btn-primary" style={{ height: 52, justifyContent: 'center', fontSize: 14, padding: '0', background: 'linear-gradient(135deg, #6ec47a 0%, #34d399 100%)', color: '#0a1a0d', border: 'none', boxShadow: '0 8px 16px rgba(110,196,122,0.2)', marginTop: 12 }}>
+                                {loading ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                        <div style={{ width: 16, height: 16, border: '2px solid rgba(10,26,13,0.2)', borderTop: '2px solid #0a1a0d', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
+                                        <span>VERIFYING...</span>
+                                    </div>
+                                ) : (
+                                    'VERIFY & ENTER'
+                                )}
+                            </button>
+                        </form>
+                    )}
 
                     <div style={{ textAlign: 'center', marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(240,235,224,0.05)' }}>
                         <p style={{ fontSize: 14, color: 'rgba(240,235,224,0.4)', fontWeight: 600 }}>
