@@ -132,7 +132,7 @@ export default function DashboardPage() {
                     </div>
                     <Link href={`/profile/${user?.id}`} style={{ textDecoration: 'none' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '12px 24px', background: 'rgba(212,160,23,0.05)', borderRadius: 20, border: '1px solid rgba(212,160,23,0.1)' }}>
-                            <img src={user?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=u'} alt="" style={{ width: 44, height: 44, borderRadius: 14 }} />
+                            <img src={user?.avatar || 'https://api.dicebear.com/8.x/micah/svg?seed=Solarpunk&backgroundColor=0a1a0d'} alt="" style={{ width: 44, height: 44, borderRadius: 14 }} />
                             <div>
                                 <div style={{ fontSize: 14, fontWeight: 800, color: '#f0ebe0' }}>{user?.name}</div>
                                 <div style={{ fontSize: 11, fontWeight: 700, color: '#d4a017' }}>Level {user?.level || 1} Explorer →</div>

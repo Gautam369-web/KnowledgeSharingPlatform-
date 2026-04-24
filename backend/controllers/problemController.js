@@ -81,6 +81,11 @@ exports.createProblem = async (req, res) => {
             author: req.user._id
         });
 
+        const User = require('../models/User');
+        await User.findByIdAndUpdate(req.user._id, {
+            $inc: { problemsSolved: 1, reputation: 10 }
+        });
+
         res.status(201).json(problem);
     } catch (error) {
         console.error('Create Problem Error:', error);

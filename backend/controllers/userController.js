@@ -55,7 +55,7 @@ exports.getLeaderboard = async (req, res) => {
         const users = await User.find()
             .sort('-reputation')
             .limit(50)
-            .select('name avatar level reputation reputation badges');
+            .select('name avatar level reputation problemsSolved articlesWritten badges');
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching leaderboard', error: error.message });

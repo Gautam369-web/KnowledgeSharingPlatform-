@@ -14,8 +14,14 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const savedUser = localStorage.getItem('currentUser');
         const token = localStorage.getItem('token');
-        if (savedUser && token) {
-            setUser(JSON.parse(savedUser));
+        if (savedUser && token && savedUser !== 'undefined') {
+            try {
+                setUser(JSON.parse(savedUser));
+            } catch (e) {
+                console.error("Corrupted local storage data for user. Clearing session.");
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('token');
+            }
         } else {
             localStorage.removeItem('currentUser');
             localStorage.removeItem('token');

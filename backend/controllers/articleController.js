@@ -69,6 +69,11 @@ exports.createArticle = async (req, res) => {
             author: req.user._id
         });
 
+        const User = require('../models/User');
+        await User.findByIdAndUpdate(req.user._id, {
+            $inc: { articlesWritten: 1, reputation: 25 }
+        });
+
         res.status(201).json(article);
     } catch (error) {
         res.status(500).json({ message: 'Error creating article', error: error.message });

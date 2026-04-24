@@ -29,7 +29,7 @@ export default function ArticleCard({ article }) {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                             <img
-                                src={article.author?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=user'}
+                                src={article.author?.avatar || 'https://api.dicebear.com/8.x/micah/svg?seed=Solarpunk&backgroundColor=0a1a0d'}
                                 alt={article.author?.name}
                                 style={{ width: 28, height: 28, borderRadius: 8, objectFit: 'cover' }}
                             />

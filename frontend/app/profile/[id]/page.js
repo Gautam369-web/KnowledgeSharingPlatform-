@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import ProfileHeader from '@/components/ProfileHeader';
 import ProblemCard from '@/components/ProblemCard';
 import ArticleCard from '@/components/ArticleCard';
+import EditProfileModal from '@/components/EditProfileModal';
 import { useAuth } from '@/context/AuthContext';
 import toast from 'react-hot-toast';
 import {
@@ -21,6 +22,7 @@ export default function ProfilePage() {
     const [userResources, setUserResources] = useState({ problems: [], articles: [] });
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('overview');
+    const [isEditing, setIsEditing] = useState(false);
 
     const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
@@ -70,7 +72,12 @@ export default function ProfilePage() {
                     isOwnProfile={isOwnProfile}
                     problemCount={userResources.problems.length}
                     articleCount={userResources.articles.length}
+                    onEditClick={() => setIsEditing(true)}
                 />
+
+                {isEditing && (
+                    <EditProfileModal user={profileUser} onClose={() => setIsEditing(false)} onUpdate={(updatedUser) => setProfileUser(updatedUser)} />
+                )}
 
                 <div style={{ marginTop: 60 }}>
                     <div style={{ display: 'flex', gap: 8, borderBottom: '1px solid rgba(74,158,92,0.1)', marginBottom: 40, overflowX: 'auto', paddingBottom: 1 }}>

@@ -15,25 +15,33 @@ exports.register = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
-
         const user = await User.create({
             name,
             email,
             password: hashedPassword,
-            otp,
-            otpExpiry,
-            isVerified: false,
+            isVerified: true,
         });
 
-        const emailResult = await sendOTPEmail(email, otp);
+        if (!process.env.JWT_SECRET) {
+            console.error('CRITICAL: JWT_SECRET is not defined in environment variables');
+            return res.status(500).json({ message: 'Environment configuration error: JWT_SECRET is missing' });
+        }
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
         res.status(201).json({
-            message: 'User registered successfully. Please verify your email.',
-            userId: user._id,
-            emailSent: emailResult.success
+            message: 'User registered successfully.',
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                reputation: 0,
+                problemsSolved: 0,
+                articlesWritten: 0
+            }
         });
+
     } catch (error) {
         console.error('Registration Error:', error);
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
@@ -58,6 +66,9 @@ exports.verifyOTP = async (req, res) => {
         user.isVerified = true;
         user.otp = undefined;
         user.otpExpiry = undefined;
+
+        await user.save();
+
         if (!process.env.JWT_SECRET) {
             console.error('CRITICAL: JWT_SECRET is not defined in environment variables');
             return res.status(500).json({ message: 'Environment configuration error: JWT_SECRET is missing' });
@@ -114,14 +125,11 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        if (!user.isVerified) {
-            return res.status(401).json({ message: 'Please verify your email before logging in' });
-        }
-
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
+
 
         // Return user data (excluding password)
         const userResponse = {

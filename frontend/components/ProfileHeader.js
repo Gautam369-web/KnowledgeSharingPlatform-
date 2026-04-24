@@ -1,10 +1,9 @@
 'use client';
 
-import { HiOutlineLocationMarker, HiOutlineCalendar, HiOutlineLink, HiOutlineShieldCheck, HiOutlinePencil } from 'react-icons/hi';
-import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
-import { formatNumber } from '@/lib/utils';
+import { HiOutlineLocationMarker, HiOutlineCalendar, HiOutlineShieldCheck, HiOutlinePencil } from 'react-icons/hi';
+import { FaGithub, FaTwitter, FaLinkedin, FaGlobe } from 'react-icons/fa';
 
-export default function ProfileHeader({ user, isOwnProfile = false, problemCount = 0, articleCount = 0 }) {
+export default function ProfileHeader({ user, isOwnProfile = false, problemCount = 0, articleCount = 0, onEditClick }) {
     return (
         <div style={{ position: 'relative' }}>
             {/* Cover Pattern - Solarpunk Gradient */}
@@ -25,7 +24,7 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                 <div style={{ display: 'flex', flexDirection: 'column', md: 'row', alignItems: 'flex-end', gap: 32, marginTop: -80 }}>
                     <div style={{ position: 'relative' }}>
                         <img
-                            src={user.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Solar'}
+                            src={user.avatar || 'https://api.dicebear.com/8.x/micah/svg?seed=Solarpunk&backgroundColor=0a1a0d'}
                             alt={user.name}
                             style={{
                                 width: 160,
@@ -38,14 +37,15 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                             }}
                         />
                         {isOwnProfile && (
-                            <button style={{
+                            <button onClick={onEditClick} style={{
                                 position: 'absolute', bottom: 12, right: 12,
                                 width: 40, height: 40, borderRadius: 12,
                                 background: '#d4a017', color: '#0a1a0d',
                                 border: 'none', cursor: 'pointer',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center'
-                            }}>
-                                <HiOutlinePencil />
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(212,160,23,0.3)'
+                            }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+                                <HiOutlinePencil style={{ fontSize: 20 }} />
                             </button>
                         )}
                     </div>
@@ -64,7 +64,7 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
 
                             <div style={{ display: 'flex', gap: 12 }}>
                                 {isOwnProfile ? (
-                                    <button className="btn-primary" style={{ background: 'rgba(240,235,224,0.05)', color: '#f0ebe0', border: '1px solid rgba(240,235,224,0.1)' }}>
+                                    <button onClick={onEditClick} className="btn-primary" style={{ background: 'rgba(240,235,224,0.05)', color: '#f0ebe0', border: '1px solid rgba(240,235,224,0.1)' }}>
                                         Technical Settings
                                     </button>
                                 ) : (
@@ -86,9 +86,8 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                                 Joined {new Date(user.createdAt || Date.now()).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
                             </span>
                             <div style={{ display: 'flex', gap: 16, marginLeft: 'auto' }}>
-                                <a href="#" style={{ color: 'inherit', fontSize: 18 }}><FaGithub /></a>
-                                <a href="#" style={{ color: 'inherit', fontSize: 18 }}><FaTwitter /></a>
-                                <a href="#" style={{ color: 'inherit', fontSize: 18 }}><FaLinkedin /></a>
+                                {user.github && <a href={`https://github.com/${user.github}`} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', fontSize: 18 }}><FaGithub /></a>}
+                                {user.website && <a href={user.website} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', fontSize: 18 }}><FaGlobe /></a>}
                             </div>
                         </div>
                     </div>
@@ -126,4 +125,3 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
         </div>
     );
 }
-

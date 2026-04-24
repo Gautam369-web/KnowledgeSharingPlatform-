@@ -120,16 +120,21 @@ function NavInner() {
                                 Dashboard
                             </Link>
                             <Link href={`/profile/${user.id || user._id}`} style={{
-                                width: 40, height: 40, borderRadius: 14,
-                                background: '#1a3c20',
-                                border: '1px solid rgba(74,158,92,0.2)',
+                                width: 42, height: 42, borderRadius: 16,
+                                background: 'rgba(212,160,23,0.1)',
+                                border: '2px solid rgba(212,160,23,0.5)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                overflow: 'hidden', textDecoration: 'none'
-                            }}>
+                                overflow: 'hidden', textDecoration: 'none',
+                                transition: 'all 0.2s', boxShadow: '0 4px 15px rgba(212,160,23,0.3)'
+                            }}
+                                onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.borderColor = '#f59e0b'; }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.borderColor = 'rgba(212,160,23,0.5)'; }}>
                                 {user.avatar ? (
-                                    <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <img src={user.avatar} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Avatar" />
                                 ) : (
-                                    <span style={{ fontSize: 14, fontWeight: 900, color: '#6ec47a' }}>{user.name?.[0]}</span>
+                                    <span style={{ fontSize: 16, fontWeight: 900, color: '#f59e0b', fontFamily: "'Bricolage Grotesque', sans-serif" }}>
+                                        {user.name ? user.name[0].toUpperCase() : 'U'}
+                                    </span>
                                 )}
                             </Link>
                             <button onClick={logout} style={{
