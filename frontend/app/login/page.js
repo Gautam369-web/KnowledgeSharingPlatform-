@@ -102,7 +102,7 @@ export default function LoginPage() {
                         </div>
 
                         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-8px' }}>
-                            <Link href="#" style={{ color: 'rgba(240,235,224,0.4)', fontSize: 12, fontWeight: 700, textDecoration: 'none', transition: 'color 0.2s' }} className="hover-gold">Recovery Protocol?</Link>
+                            <Link href="/forgot-password" style={{ color: 'rgba(240,235,224,0.4)', fontSize: 12, fontWeight: 700, textDecoration: 'none', transition: 'color 0.2s' }} className="hover-gold">Recovery Protocol?</Link>
                         </div>
 
                         <button type="submit" disabled={isSubmitting} className="btn-primary" style={{ height: 56, justifyContent: 'center', marginTop: 12, fontSize: 15, padding: '0', background: 'linear-gradient(135deg, #d4a017 0%, #b8860b 100%)', color: '#0a1a0d', border: 'none', boxShadow: '0 8px 16px rgba(212,160,23,0.2)' }}>
