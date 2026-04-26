@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { categories } from '@/lib/data';
 import { formatNumber } from '@/lib/utils';
-import { HiOutlineFire, HiOutlineTag, HiOutlineUsers } from 'react-icons/hi';
+import { HiOutlineFire, HiOutlineTag, HiOutlineUsers, HiOutlineGlobeAlt } from 'react-icons/hi';
 
 export default function Sidebar() {
     const trendingTags = [
@@ -25,6 +25,21 @@ export default function Sidebar() {
 
     return (
         <aside className="space-y-6">
+            {/* Knowledge Map Call to Action */}
+            <Link
+                href="/knowledge"
+                className="card p-5 block border-dashed border-[#6ec47a] hover:bg-[rgba(110,196,122,0.05)] transition-all group"
+            >
+                <div className="flex items-center gap-3 mb-2">
+                    <HiOutlineGlobeAlt className="text-[#6ec47a] group-hover:animate-spin-slow" />
+                    <span className="text-xs font-black tracking-tighter text-[#6ec47a]">SYSTEM ACCESS</span>
+                </div>
+                <h4 className="text-[#f0ebe0] font-bold text-sm mb-1">Knowledge Topology</h4>
+                <p className="text-[10px] text-[rgba(240,235,224,0.4)] leading-relaxed">
+                    Access the interactive 2D IQ interface to visualize platform intelligence.
+                </p>
+            </Link>
+
             {/* Categories */}
             <div className="card p-5">
                 <h3 className="font-semibold text-[#f0ebe0] mb-4 flex items-center">

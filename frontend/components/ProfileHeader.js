@@ -1,12 +1,23 @@
-'use client';
-
-import { HiOutlineLocationMarker, HiOutlineCalendar, HiOutlineShieldCheck, HiOutlinePencil } from 'react-icons/hi';
-import { FaGithub, FaTwitter, FaLinkedin, FaGlobe } from 'react-icons/fa';
+import EvolutionBadge from './EvolutionBadge';
+import { HiOutlinePencil, HiOutlineChat, HiOutlineBookOpen, HiOutlineLightningBolt, HiOutlineGlobeAlt, HiOutlineMail, HiOutlineLocationMarker, HiOutlineCalendar } from 'react-icons/hi';
+import { FaGithub, FaGlobe } from 'react-icons/fa';
 
 export default function ProfileHeader({ user, isOwnProfile = false, problemCount = 0, articleCount = 0, onEditClick }) {
     return (
         <>
             <div style={{ position: 'relative' }}>
+                {/* Evolution Aura Overlay */}
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 240,
+                    background: `radial-gradient(circle at 10% 50%, ${user.reputationPoints > 500 ? 'rgba(212,160,23,0.1)' : 'transparent'} 0%, transparent 70%)`,
+                    pointerEvents: 'none',
+                    zIndex: 1
+                }} />
+
                 {/* Cover Pattern - Solarpunk Gradient */}
                 <div style={{
                     height: 240,
@@ -36,9 +47,12 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                                     boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
                                     background: '#0e2010'
                                 }} />
+                            <div style={{ position: 'absolute', top: -10, right: -10 }}>
+                                <EvolutionBadge stage={user.evolutionStage} size={50} />
+                            </div>
                             {isOwnProfile && (
                                 <button onClick={onEditClick} style={{
-                                    position: 'absolute', bottom: 12, right: 12,
+                                    position: 'absolute', bottom: 12, left: -10,
                                     width: 40, height: 40, borderRadius: 12,
                                     background: '#d4a017', color: '#0a1a0d',
                                     border: 'none', cursor: 'pointer',
@@ -57,20 +71,23 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                                         <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 32, fontWeight: 900, color: '#f0ebe0', margin: 0 }}>
                                             {user.name}
                                         </h1>
-                                        <HiOutlineShieldCheck style={{ color: '#d4a017', fontSize: 24 }} title="Verified Guardian" />
+                                        <div style={{ background: 'rgba(110,196,122,0.1)', padding: '4px 12px', borderRadius: 8, border: '1px solid rgba(110,196,122,0.2)' }}>
+                                            <span style={{ fontSize: 10, fontWeight: 900, color: '#6ec47a', letterSpacing: '0.1em' }}>{user.evolutionStage.toUpperCase()}</span>
+                                        </div>
                                     </div>
+                                    <p style={{ fontSize: 14, color: '#d4a017', fontWeight: 800, marginBottom: 8 }}>{user.specialization || 'Neural Architect'}</p>
                                     <p style={{ fontSize: 16, color: 'rgba(240,235,224,0.4)', fontWeight: 600 }}>@{user.name.toLowerCase().replace(/\s+/g, '')}</p>
                                 </div>
 
                                 <div style={{ display: 'flex', gap: 12 }}>
                                     {isOwnProfile ? (
                                         <button onClick={onEditClick} className="btn-primary" style={{ background: 'rgba(240,235,224,0.05)', color: '#f0ebe0', border: '1px solid rgba(240,235,224,0.1)' }}>
-                                            Technical Settings
+                                            Universal Sync
                                         </button>
                                     ) : (
                                         <>
                                             <button className="btn-primary">Connect Node</button>
-                                            <button className="btn-primary" style={{ background: 'rgba(240,235,224,0.05)', color: '#f0ebe0', border: '1px solid rgba(240,235,224,0.1)' }}>Signal</button>
+                                            <button className="btn-primary" style={{ background: 'rgba(240,235,224,0.05)', color: '#f0ebe0', border: '1px solid rgba(240,235,224,0.1)' }}>Pulse</button>
                                         </>
                                     )}
                                 </div>
@@ -80,7 +97,7 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, marginTop: 24, color: 'rgba(240,235,224,0.4)', fontSize: 13, fontWeight: 700 }}>
                             <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <HiOutlineLocationMarker style={{ color: '#6ec47a' }} />
-                                {user.location || 'Distributed Network'}
+                                {user.location || 'Mesh Network'}
                             </span>
                             <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <HiOutlineCalendar style={{ color: '#6ec47a' }} />
@@ -104,22 +121,22 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                 borderTop: '1px solid rgba(74,158,92,0.1)'
             }}>
                 <div>
-                    <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>REPUTATION</p>
-                    <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#d4a017' }}>{user.reputation}</p>
+                    <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>EXP (REPUTATION)</p>
+                    <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#d4a017' }}>{user.reputationPoints || 10}</p>
                 </div>
                 <div>
-                    <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>SYNCHRONIZATIONS</p>
-                    <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#f0ebe0' }}>{problemCount}</p>
-                </div>
-                <div>
-                    <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>ARTIFACTS</p>
+                    <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>KNOWLEDGE ARTIFACS</p>
                     <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#f0ebe0' }}>{articleCount}</p>
                 </div>
                 <div>
-                    <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>NETWORK STATUS</p>
+                    <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>DATA CHALLENGES</p>
+                    <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#f0ebe0' }}>{problemCount}</p>
+                </div>
+                <div>
+                    <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>NODE STATUS</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#6ec47a', fontSize: 14, fontWeight: 800 }}>
                         <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6ec47a', boxShadow: '0 0 10px #6ec47a' }} />
-                        ACTIVE
+                        STABLE
                     </div>
                 </div>
             </div>

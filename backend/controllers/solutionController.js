@@ -3,6 +3,7 @@ const Problem = require('../models/Problem');
 const { scanContent } = require('../utils/moderation');
 const { sendModerationWarning } = require('../config/mail');
 const User = require('../models/User');
+const { getEvolutionStage } = require('../utils/gamification');
 
 // @desc    Add a solution to a problem
 // @route   POST /api/solutions/:problemId
@@ -35,6 +36,14 @@ exports.addSolution = async (req, res) => {
         // Add solution to problem's solutions array
         problem.solutions.push(solution._id);
         await problem.save();
+
+        // Reward user for providing a potential intelligence node
+        const solver = await User.findById(req.user._id);
+        if (solver) {
+            solver.reputationPoints += 20;
+            solver.evolutionStage = getEvolutionStage(solver.reputationPoints);
+            await solver.save();
+        }
 
         res.status(201).json(solution);
     } catch (error) {

@@ -7,13 +7,14 @@ import { useAuth } from '@/context/AuthContext';
 import {
     HiOutlineHome, HiOutlineBookOpen, HiOutlineLightningBolt,
     HiOutlineMenu, HiOutlineX, HiOutlineLogout, HiOutlineChartBar, HiOutlineSearch,
-    HiOutlineUserCircle
+    HiOutlineUserCircle, HiOutlineGlobeAlt
 } from 'react-icons/hi';
 
 const NAV = [
     { label: 'Network', href: '/', icon: HiOutlineHome },
     { label: 'Challenges', href: '/problems', icon: HiOutlineLightningBolt },
     { label: 'Knowledge', href: '/articles', icon: HiOutlineBookOpen },
+    { label: 'IQ Web', href: '/knowledge', icon: HiOutlineGlobeAlt },
     { label: 'Council', href: '/leaderboard', icon: HiOutlineChartBar },
 ];
 

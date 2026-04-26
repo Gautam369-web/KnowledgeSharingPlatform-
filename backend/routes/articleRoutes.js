@@ -5,7 +5,9 @@ const {
     createArticle,
     getArticleById,
     likeArticle,
-    summarizeArticle
+    summarizeArticle,
+    getArticleGraph,
+    analyzeDraft
 } = require('../controllers/articleController');
 const { protect } = require('../middleware/auth');
 
@@ -14,5 +16,7 @@ router.get('/:id', getArticleById);
 router.post('/', protect, createArticle);
 router.put('/:id/like', protect, likeArticle);
 router.post('/:id/summarize', protect, summarizeArticle);
+router.get('/stats/graph', getArticleGraph);
+router.post('/analyze-draft', protect, analyzeDraft);
 
 module.exports = router;

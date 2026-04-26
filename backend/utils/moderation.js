@@ -21,8 +21,8 @@ const scanContent = async (text) => {
     });
 
     const maskedPatterns = [
-        /[f|ph][u|*|v|0|i][c|k|q][k|i|1|n]*/i,
-        /sh[i|*|1|!]t/i
+        /\b[f|ph][u|*|v|0|i][c|k|q][k|i|1|n]*\b/i,
+        /\bsh[i|*|1|!]t\b/i
     ];
 
     maskedPatterns.forEach(pattern => {
@@ -46,7 +46,7 @@ const scanContent = async (text) => {
                     messages: [
                         {
                             role: 'system',
-                            content: 'Analyze text for toxicity, sexual content, or severe vulgarity. If unsafe, return JSON: { "isSafe": false, "reason": "toxicity/vulgarity" }. If safe, return { "isSafe": true }.'
+                            content: 'You are a technical content moderator. Analyze text for malicious intent, toxicity, severe harassment, or explicit sexual content. Ignore technical terminology, code snippets, or common technical jargon. If unsafe, return JSON: { "isSafe": false, "reason": "toxicity/vulgarity" }. If safe, return { "isSafe": true }.'
                         },
                         {
                             role: 'user',
@@ -60,13 +60,20 @@ const scanContent = async (text) => {
             if (response.ok) {
                 const result = await response.json();
                 const aiSafety = JSON.parse(result.choices[0].message.content);
+                console.log(`🛡️ Sentinel Analysis [AI]: ${aiSafety.isSafe ? 'SAFE' : 'FLAGGED - ' + aiSafety.reason}`);
                 if (!aiSafety.isSafe) {
                     detected.push(`ai_flagged_${aiSafety.reason}`);
                 }
+            } else {
+                console.error(`🛡️ Sentinel Analysis [ERROR]: Groq API returned ${response.status}`);
             }
         } catch (error) {
-            console.error('Groq Moderation Error:', error);
+            console.error('🛡️ Sentinel Analysis [CRITICAL]:', error.message);
         }
+    }
+
+    if (detected.length > 0) {
+        console.warn(`🛡️ Sentinel Blocking Content: [${detected.join(', ')}]`);
     }
 
     return {

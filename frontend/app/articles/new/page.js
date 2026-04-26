@@ -10,6 +10,7 @@ import {
     HiOutlinePhotograph, HiOutlineX,
     HiOutlineArrowLeft, HiOutlineSave
 } from 'react-icons/hi';
+import DraftingSentinel from '@/components/DraftingSentinel';
 
 const CATEGORIES = [
     { id: 1, name: 'Technology', icon: '💻' },
@@ -35,6 +36,8 @@ export default function NewArticlePage() {
         coverImage: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop', // default fallback
     });
     const [tagInput, setTagInput] = useState('');
+    const [sentinelResult, setSentinelResult] = useState(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
 
     const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
@@ -73,7 +76,7 @@ export default function NewArticlePage() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ ...formData, readTime: 5 }),
+                body: JSON.stringify({ ...formData, status: 'published', readTime: 5 }),
             });
 
             const data = await response.json();
@@ -85,6 +88,74 @@ export default function NewArticlePage() {
             }
         } catch (error) {
             toast.error('Network error during publication');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDraftAnalysis = async () => {
+        if (!formData.title || !formData.content) {
+            toast.error('Analyze requires Title and Content data.');
+            return;
+        }
+
+        setIsAnalyzing(true);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API_URL}/api/articles/analyze-draft`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    title: formData.title,
+                    content: formData.content,
+                    category: formData.category,
+                    tags: formData.tags
+                })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                setSentinelResult(data);
+                toast.success('Sentinel Diagnostic Complete');
+            } else {
+                toast.error('Sentinel Link Refused');
+            }
+        } catch (error) {
+            toast.error('Network interference in Sentinel link');
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
+    const handleSaveDraft = async () => {
+        if (!formData.title) {
+            toast.error('Title is required to save a draft');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/api/articles`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ ...formData, status: 'draft', readTime: 5 }),
+            });
+
+            if (response.ok) {
+                toast.success('Draft saved successfully!');
+            } else {
+                const data = await response.json();
+                toast.error(data.message || 'Failed to save draft');
+            }
+        } catch (error) {
+            toast.error('Network error during draft save');
         } finally {
             setLoading(false);
         }
@@ -112,109 +183,124 @@ export default function NewArticlePage() {
                     <HiOutlineArrowLeft /> Back to Knowledge Base
                 </Link>
 
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', md: 'row', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24 }}>
-                        <div style={{ flex: 1 }}>
-                            <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 36, fontWeight: 900, color: '#f0ebe0', marginBottom: 8, letterSpacing: '-0.02em' }}>Write an Article</h1>
-                            <p style={{ fontSize: 14, color: 'rgba(240,235,224,0.4)' }}>Contribute your expertise to the community knowledge base.</p>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                            <button type="button" style={{ padding: '12px 24px', background: 'transparent', border: '1px solid rgba(240,235,224,0.2)', borderRadius: 12, color: '#f0ebe0', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <HiOutlineSave /> Save Draft
-                            </button>
-                            <button type="submit" disabled={loading} className="btn-primary" style={{ padding: '12px 32px' }}>
-                                {loading ? 'Publishing...' : 'Publish Article'}
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="card" style={{ padding: 40, border: '1px solid rgba(74,158,92,0.15)', display: 'flex', flexDirection: 'column', gap: 40 }}>
-                        <div>
-                            <label className="label-text">Article Title</label>
-                            <input
-                                type="text" name="title" required
-                                value={formData.title} onChange={handleChange}
-                                placeholder="e.g., Mastering Distributed Systems: A Practical Guide"
-                                className="input-field"
-                                style={{ fontSize: 24, fontWeight: 900, fontFamily: "'Bricolage Grotesque', sans-serif", letterSpacing: '-0.02em', height: 'auto', padding: '16px 24px' }}
-                            />
-                        </div>
-
-                        <div>
-                            <label className="label-text" style={{ marginBottom: 12, display: 'block' }}>Select Category</label>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-                                {CATEGORIES.map(cat => (
-                                    <button
-                                        key={cat.id} type="button"
-                                        onClick={() => setFormData({ ...formData, category: cat.name })}
-                                        style={{
-                                            padding: '8px 20px', borderRadius: 100,
-                                            background: formData.category === cat.name ? 'rgba(212,160,23,0.1)' : 'transparent',
-                                            border: `1px solid ${formData.category === cat.name ? '#d4a017' : 'rgba(240,235,224,0.1)'}`,
-                                            color: formData.category === cat.name ? '#d4a017' : 'rgba(240,235,224,0.5)',
-                                            fontSize: 13, fontWeight: 700, letterSpacing: '0.05em', cursor: 'pointer', transition: 'all 0.2s'
-                                        }}
-                                    >
-                                        {cat.icon} {cat.name}
-                                    </button>
-                                ))}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 40, alignItems: 'start', className: 'responsive-article-grid' }}>
+                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', md: 'row', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24 }}>
+                            <div style={{ flex: 1 }}>
+                                <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 36, fontWeight: 900, color: '#f0ebe0', marginBottom: 8, letterSpacing: '-0.02em' }}>Write an Article</h1>
+                                <p style={{ fontSize: 14, color: 'rgba(240,235,224,0.4)' }}>Contribute your expertise to the community knowledge base.</p>
                             </div>
-                        </div>
-
-                        <div>
-                            <label className="label-text">Short Excerpt</label>
-                            <textarea
-                                name="excerpt" required rows={3}
-                                value={formData.excerpt} onChange={handleChange}
-                                placeholder="Give readers a quick summary of what they'll learn..."
-                                className="input-field" style={{ height: 'auto', resize: 'none' }}
-                            />
-                        </div>
-
-                        <div>
-                            <label className="label-text">Cover Image URL</label>
-                            <input
-                                type="url" name="coverImage"
-                                value={formData.coverImage} onChange={handleChange}
-                                placeholder="https://images.unsplash.com/your-image-url"
-                                className="input-field"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="label-text">Article Content</label>
-                            <RichTextEditor
-                                value={formData.content}
-                                onChange={(val) => setFormData({ ...formData, content: val })}
-                                placeholder="Use markdown to structure your article. Add code snippets, images, and clear headings..."
-                            />
-                        </div>
-
-                        <div>
-                            <label className="label-text">Tags</label>
-                            <div style={{ position: 'relative', marginBottom: 16 }}>
-                                <input
-                                    type="text" value={tagInput}
-                                    onChange={(e) => setTagInput(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag(e))}
-                                    placeholder="Add up to 8 tags..."
-                                    className="input-field" style={{ paddingRight: 100 }}
-                                />
-                                <button type="button" onClick={addTag} style={{ position: 'absolute', right: 8, top: 8, height: 32, padding: '0 16px', background: 'rgba(240,235,224,0.1)', color: '#f0ebe0', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer', fontSize: 12 }}>
-                                    Add Tag
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                                <button
+                                    type="button"
+                                    onClick={handleSaveDraft}
+                                    disabled={loading}
+                                    style={{ padding: '12px 24px', background: 'transparent', border: '1px solid rgba(240,235,224,0.2)', borderRadius: 12, color: '#f0ebe0', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
+                                >
+                                    <HiOutlineSave /> Save Draft
+                                </button>
+                                <button type="submit" disabled={loading} className="btn-primary" style={{ padding: '12px 32px' }}>
+                                    {loading ? 'Publishing...' : 'Publish Article'}
                                 </button>
                             </div>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                                {formData.tags.map(tag => (
-                                    <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 14px', background: '#0e2010', border: '1px solid rgba(74,158,92,0.1)', color: 'rgba(240,235,224,0.6)', borderRadius: 100, fontSize: 12, fontWeight: 700 }}>
-                                        {tag}
-                                        <button type="button" onClick={() => removeTag(tag)} style={{ background: 'none', border: 'none', color: '#ff5555', cursor: 'pointer', display: 'flex', padding: 0 }}><HiOutlineX size={14} /></button>
-                                    </span>
-                                ))}
+                        </div>
+
+                        <div className="card" style={{ padding: 40, border: '1px solid rgba(74,158,92,0.15)', display: 'flex', flexDirection: 'column', gap: 40 }}>
+                            <div>
+                                <label className="label-text">Article Title</label>
+                                <input
+                                    type="text" name="title" required
+                                    value={formData.title} onChange={handleChange}
+                                    placeholder="e.g., Mastering Distributed Systems: A Practical Guide"
+                                    className="input-field"
+                                    style={{ fontSize: 24, fontWeight: 900, fontFamily: "'Bricolage Grotesque', sans-serif", letterSpacing: '-0.02em', height: 'auto', padding: '16px 24px' }}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="label-text" style={{ marginBottom: 12, display: 'block' }}>Select Category</label>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                                    {CATEGORIES.map(cat => (
+                                        <button
+                                            key={cat.id} type="button"
+                                            onClick={() => setFormData({ ...formData, category: cat.name })}
+                                            style={{
+                                                padding: '8px 20px', borderRadius: 100,
+                                                background: formData.category === cat.name ? 'rgba(212,160,23,0.1)' : 'transparent',
+                                                border: `1px solid ${formData.category === cat.name ? '#d4a017' : 'rgba(240,235,224,0.1)'}`,
+                                                color: formData.category === cat.name ? '#d4a017' : 'rgba(240,235,224,0.5)',
+                                                fontSize: 13, fontWeight: 700, letterSpacing: '0.05em', cursor: 'pointer', transition: 'all 0.2s'
+                                            }}
+                                        >
+                                            {cat.icon} {cat.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="label-text">Short Excerpt</label>
+                                <textarea
+                                    name="excerpt" required rows={3}
+                                    value={formData.excerpt} onChange={handleChange}
+                                    placeholder="Give readers a quick summary of what they'll learn..."
+                                    className="input-field" style={{ height: 'auto', resize: 'none' }}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="label-text">Cover Image URL</label>
+                                <input
+                                    type="url" name="coverImage"
+                                    value={formData.coverImage} onChange={handleChange}
+                                    placeholder="https://images.unsplash.com/your-image-url"
+                                    className="input-field"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="label-text">Article Content</label>
+                                <RichTextEditor
+                                    value={formData.content}
+                                    onChange={(val) => setFormData({ ...formData, content: val })}
+                                    placeholder="Use markdown to structure your article. Add code snippets, images, and clear headings..."
+                                />
+                            </div>
+
+                            <div>
+                                <label className="label-text">Tags</label>
+                                <div style={{ position: 'relative', marginBottom: 16 }}>
+                                    <input
+                                        type="text" value={tagInput}
+                                        onChange={(e) => setTagInput(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag(e))}
+                                        placeholder="Add up to 8 tags..."
+                                        className="input-field" style={{ paddingRight: 100 }}
+                                    />
+                                    <button type="button" onClick={addTag} style={{ position: 'absolute', right: 8, top: 8, height: 32, padding: '0 16px', background: 'rgba(240,235,224,0.1)', color: '#f0ebe0', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer', fontSize: 12 }}>
+                                        Add Tag
+                                    </button>
+                                </div>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                    {formData.tags.map(tag => (
+                                        <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 14px', background: '#0e2010', border: '1px solid rgba(74,158,92,0.1)', color: 'rgba(240,235,224,0.6)', borderRadius: 100, fontSize: 12, fontWeight: 700 }}>
+                                            {tag}
+                                            <button type="button" onClick={() => removeTag(tag)} style={{ background: 'none', border: 'none', color: '#ff5555', cursor: 'pointer', display: 'flex', padding: 0 }}><HiOutlineX size={14} /></button>
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+
+                        <div style={{ position: 'sticky', top: 120 }}>
+                            <DraftingSentinel
+                                analysis={sentinelResult}
+                                onAnalyze={handleDraftAnalysis}
+                                loading={isAnalyzing}
+                            />
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

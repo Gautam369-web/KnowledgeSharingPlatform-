@@ -10,7 +10,10 @@ const UserSchema = new mongoose.Schema({
     website: { type: String },
     github: { type: String },
     reputation: { type: Number, default: 0 },
-    level: { type: String, default: 'Learner' },
+    reputationPoints: { type: Number, default: 10 }, // For level calculations
+    level: { type: String, default: 'Seed Node' },
+    evolutionStage: { type: String, default: 'Dormant Seed' }, // Dormant Seed, Sprout, Sapling, Knowledge Tree, Solar Architect
+    specialization: { type: String, default: 'Generalist' }, // Assigned based on tag interaction
     streak: { type: Number, default: 0 },
     badges: [{ type: String }],
     problemsSolved: { type: Number, default: 0 },

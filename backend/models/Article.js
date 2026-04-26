@@ -13,6 +13,7 @@ const ArticleSchema = new mongoose.Schema({
     views: { type: Number, default: 0 },
     readTime: { type: Number, default: 5 },
     featured: { type: Boolean, default: false },
+    status: { type: String, enum: ['draft', 'published'], default: 'published' }
 }, { timestamps: true });
 
 module.exports = mongoose.models.Article || mongoose.model('Article', ArticleSchema);

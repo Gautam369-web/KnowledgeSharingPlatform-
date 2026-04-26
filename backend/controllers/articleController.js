@@ -3,13 +3,15 @@ const { scanContent } = require('../utils/moderation');
 const { sendModerationWarning } = require('../config/mail');
 const User = require('../models/User');
 const { generateSummary } = require('../utils/aiSummarizer');
+const { getEvolutionStage } = require('../utils/gamification');
+const { analyzeDraft } = require('../utils/draftSentinel');
 
 // @desc    Get all articles with filtering
 // @route   GET /api/articles
 exports.getArticles = async (req, res) => {
     try {
-        const { category, search, sort } = req.query;
-        let query = {};
+        const { category, search, sort, status } = req.query;
+        let query = { status: status || { $in: ['published', undefined] } };
 
         if (category) query.category = category;
         if (search) {
@@ -56,11 +58,50 @@ exports.getArticleById = async (req, res) => {
     }
 };
 
+// @desc    Get Knowledge Web graph data
+// @route   GET /api/articles/stats/graph
+exports.getArticleGraph = async (req, res) => {
+    try {
+        const articles = await Article.find({}, 'category tags');
+
+        const nodesMap = {};
+        const linksSet = new Set();
+
+        articles.forEach(article => {
+            const cat = article.category || 'Uncategorized';
+            if (!nodesMap[cat]) {
+                nodesMap[cat] = { id: cat, val: 1, group: 1 };
+            } else {
+                nodesMap[cat].val += 1;
+            }
+
+            // Connect category to its tags
+            article.tags?.forEach(tag => {
+                if (!nodesMap[tag]) {
+                    nodesMap[tag] = { id: tag, val: 0.5, group: 2 };
+                }
+                const linkKey = [cat, tag].sort().join('->');
+                linksSet.add(linkKey);
+            });
+        });
+
+        const nodes = Object.values(nodesMap);
+        const links = Array.from(linksSet).map(key => {
+            const [source, target] = key.split('->');
+            return { source, target };
+        });
+
+        res.status(200).json({ nodes, links });
+    } catch (error) {
+        res.status(500).json({ message: 'Error generating graph', error: error.message });
+    }
+};
+
 // @desc    Create new article
 // @route   POST /api/articles
 exports.createArticle = async (req, res) => {
     try {
-        const { title, content, excerpt, category, tags, coverImage, readTime } = req.body;
+        const { title, content, excerpt, category, tags, coverImage, readTime, status } = req.body;
 
         // AI Moderation Check
         const moderationResult = await scanContent(`${title} ${content} ${excerpt}`);
@@ -81,12 +122,20 @@ exports.createArticle = async (req, res) => {
             tags,
             coverImage,
             readTime,
+            status: status || 'published',
             author: req.user._id
         });
 
-        await User.findByIdAndUpdate(req.user._id, {
-            $inc: { articlesWritten: 1, reputation: 25 }
-        });
+        // Update author reputation and evolution
+        if (status !== 'draft') {
+            const author = await User.findById(req.user._id);
+            if (author) {
+                author.reputationPoints += 50; // Award points for meaningful creation
+                author.articlesWritten += 1;
+                author.evolutionStage = getEvolutionStage(author.reputationPoints);
+                await author.save();
+            }
+        }
 
         res.status(201).json(article);
     } catch (error) {
@@ -125,5 +174,17 @@ exports.summarizeArticle = async (req, res) => {
         res.status(200).json(summaryData);
     } catch (error) {
         res.status(500).json({ message: 'Error generating summary', error: error.message });
+    }
+};
+
+// @desc    Analyze article draft using AI
+// @route   POST /api/articles/analyze-draft
+exports.analyzeDraft = async (req, res) => {
+    try {
+        const { title, content, category, tags } = req.body;
+        const analysis = await analyzeDraft(title, content, category, tags);
+        res.status(200).json(analysis);
+    } catch (error) {
+        res.status(500).json({ message: 'Sentinel analysis failed', error: error.message });
     }
 };

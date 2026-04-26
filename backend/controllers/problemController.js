@@ -3,6 +3,7 @@ const Solution = require('../models/Solution');
 const { scanContent } = require('../utils/moderation');
 const { sendModerationWarning } = require('../config/mail');
 const User = require('../models/User');
+const { getEvolutionStage } = require('../utils/gamification');
 
 // @desc    Get all problems with filtering and sorting
 // @route   GET /api/problems
@@ -98,6 +99,14 @@ exports.createProblem = async (req, res) => {
         await User.findByIdAndUpdate(req.user._id, {
             $inc: { problemsSolved: 1, reputation: 10 }
         });
+
+        // Reward user for contributing a challenge
+        const creator = await User.findById(req.user._id);
+        if (creator) {
+            creator.reputationPoints += 30;
+            creator.evolutionStage = getEvolutionStage(creator.reputationPoints);
+            await creator.save();
+        }
 
         res.status(201).json(problem);
     } catch (error) {

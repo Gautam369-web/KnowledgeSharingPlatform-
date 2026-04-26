@@ -53,9 +53,9 @@ exports.updateProfile = async (req, res) => {
 exports.getLeaderboard = async (req, res) => {
     try {
         const users = await User.find()
-            .sort('-reputation')
+            .sort({ reputationPoints: -1, articlesWritten: -1, problemsSolved: -1 })
             .limit(50)
-            .select('name avatar level reputation problemsSolved articlesWritten badges');
+            .select('name avatar level reputation reputationPoints evolutionStage specialization problemsSolved articlesWritten badges');
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching leaderboard', error: error.message });
@@ -72,7 +72,7 @@ exports.getUserStats = async (req, res) => {
         const articleCount = await Article.countDocuments({ author: userId });
 
         // Mocking some trends and recent activity handles
-        const user = await User.findById(userId).select('reputation level streak');
+        const user = await User.findById(userId).select('reputation reputationPoints evolutionStage specialization level streak');
 
         res.status(200).json({
             stats: {
@@ -80,7 +80,9 @@ exports.getUserStats = async (req, res) => {
                 problemsSolved: solvedCount,
                 articlesWritten: articleCount,
                 reputation: user.reputation,
+                reputationPoints: user.reputationPoints,
                 level: user.level,
+                evolutionStage: user.evolutionStage,
                 streak: user.streak
             }
         });
