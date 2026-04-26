@@ -7,7 +7,7 @@ const STAGE_CONFIG = {
     'Dormant Seed': { icon: HiOutlineCubeTransparent, color: '#f0ebe0', glow: 'rgba(240,235,224,0.2)' },
     'Emergent Sprout': { icon: GiSprout, color: '#6ec47a', glow: 'rgba(110,196,122,0.4)' },
     'Resilient Sapling': { icon: GiOakLeaf, color: '#4a9e5c', glow: 'rgba(74,158,92,0.5)' },
-    'Knowledge Tree': { icon: GiRoots, color: '#d4a017', glow: 'rgba(212,160,23,0.6)' },
+    'Knowledge Tree': { icon: HiOutlineDatabase, color: '#d4a017', glow: 'rgba(212,160,23,0.6)' },
     'Solar Architect': { icon: HiOutlineSparkles, color: '#f59e0b', glow: 'rgba(245,158,11,0.8)' }
 };
 

@@ -1,9 +1,12 @@
-'use client';
-
-import KnowledgeWeb from '@/components/KnowledgeWeb';
+import dynamic from 'next/dynamic';
 import Sidebar from '@/components/Sidebar';
 import Link from 'next/link';
 import { HiOutlineArrowLeft, HiOutlineGlobeAlt } from 'react-icons/hi';
+
+const KnowledgeWeb = dynamic(() => import('@/components/KnowledgeWeb'), {
+    ssr: false,
+    loading: () => <div className="card p-20 text-center animate-pulse text-[#6ec47a]">INITIALIZING IQ MESH...</div>
+});
 
 export default function KnowledgeMapPage() {
     return (
