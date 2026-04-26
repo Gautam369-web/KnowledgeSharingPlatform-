@@ -1,5 +1,8 @@
 const Problem = require('../models/Problem');
 const Solution = require('../models/Solution');
+const { scanContent } = require('../utils/moderation');
+const { sendModerationWarning } = require('../config/mail');
+const User = require('../models/User');
 
 // @desc    Get all problems with filtering and sorting
 // @route   GET /api/problems
@@ -72,6 +75,17 @@ exports.createProblem = async (req, res) => {
     try {
         const { title, description, category, tags, priority } = req.body;
 
+        // AI Moderation Check
+        const moderationResult = await scanContent(`${title} ${description}`);
+        if (!moderationResult.isSafe) {
+            const user = await User.findById(req.user._id);
+            await sendModerationWarning(user.email, description, moderationResult.detected);
+            return res.status(400).json({
+                message: 'Inappropriate content detected. Post blocked and security warning dispatched.',
+                detected: moderationResult.detected
+            });
+        }
+
         const problem = await Problem.create({
             title,
             description,
@@ -81,7 +95,6 @@ exports.createProblem = async (req, res) => {
             author: req.user._id
         });
 
-        const User = require('../models/User');
         await User.findByIdAndUpdate(req.user._id, {
             $inc: { problemsSolved: 1, reputation: 10 }
         });

@@ -1,5 +1,8 @@
 const Solution = require('../models/Solution');
 const Problem = require('../models/Problem');
+const { scanContent } = require('../utils/moderation');
+const { sendModerationWarning } = require('../config/mail');
+const User = require('../models/User');
 
 // @desc    Add a solution to a problem
 // @route   POST /api/solutions/:problemId
@@ -10,6 +13,17 @@ exports.addSolution = async (req, res) => {
 
         if (!problem) {
             return res.status(404).json({ message: 'Problem not found' });
+        }
+
+        // AI Moderation Check
+        const moderationResult = await scanContent(content);
+        if (!moderationResult.isSafe) {
+            const user = await User.findById(req.user._id);
+            await sendModerationWarning(user.email, content, moderationResult.detected);
+            return res.status(400).json({
+                message: 'AI moderation triggered: Inappropriate content blocked.',
+                detected: moderationResult.detected
+            });
         }
 
         const solution = await Solution.create({
