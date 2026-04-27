@@ -1,3 +1,9 @@
+/**
+ * @file ProblemCard.js
+ * @description Collaborative Triage visualizer for technical challenges.
+ * Handles priority-coded styling, vote tallying, and status indicators (open/solved).
+ */
+
 'use client';
 
 import Link from 'next/link';
@@ -7,15 +13,20 @@ import {
     HiOutlineChevronDown, HiOutlineClock,
 } from 'react-icons/hi';
 
+/**
+ * @param {Object} problem - The problem document with author and solution aggregates.
+ */
 export default function ProblemCard({ problem }) {
+    // Determine visual themes based on triage metadata
     const statusColor = getStatusColor(problem.status);
     const priorityColor = getPriorityColor(problem.priority);
 
     return (
         <div className="card-hover p-5 sm:p-6">
             <div className="flex items-start gap-4 sm:gap-6">
-                {/* Vote count (desktop) */}
+                {/* Community Interaction Pillar (Desktop Only) */}
                 <div className="hidden sm:flex flex-col items-center">
+                    {/* Vote Tally: Computed delta between up/down votes */}
                     <div className="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800 
                         flex flex-col items-center justify-center border 
                         border-slate-100 dark:border-slate-700">
@@ -26,6 +37,7 @@ export default function ProblemCard({ problem }) {
                             votes
                         </span>
                     </div>
+                    {/* Solution Counter: Visual highlight if the problem is 'solved' */}
                     <div className={`mt-3 w-12 h-12 rounded-xl flex flex-col items-center 
                          justify-center border ${problem.status === 'solved'
                             ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800 text-emerald-600'
@@ -40,8 +52,9 @@ export default function ProblemCard({ problem }) {
                     </div>
                 </div>
 
-                {/* Content */}
+                {/* Technical Content Layer */}
                 <div className="flex-1 min-w-0">
+                    {/* Triage Badges */}
                     <div className="flex items-center gap-2 mb-2">
                         <span className={statusColor}>{problem.status}</span>
                         <span className={`text-xs font-bold uppercase tracking-wider 
@@ -51,6 +64,7 @@ export default function ProblemCard({ problem }) {
                         </span>
                     </div>
 
+                    {/* SEO-Optimized Title Heading */}
                     <Link href={`/problems/${problem.id}`}>
                         <h3 className="text-lg sm:text-xl font-bold text-slate-900 
                          dark:text-white mb-2 line-clamp-2 hover:text-primary-600 
@@ -59,10 +73,12 @@ export default function ProblemCard({ problem }) {
                         </h3>
                     </Link>
 
+                    {/* Challenge Synopsis */}
                     <p className="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-2">
                         {problem.description}
                     </p>
 
+                    {/* Semantic Tag Group */}
                     <div className="flex flex-wrap gap-2 mb-4">
                         {problem.tags.map((tag) => (
                             <Link
@@ -79,6 +95,7 @@ export default function ProblemCard({ problem }) {
                         ))}
                     </div>
 
+                    {/* Metadata Traceability (Views, Comments, Recency) */}
                     <div className="flex flex-wrap items-center justify-between gap-4">
                         <div className="flex items-center space-x-4 text-xs font-medium 
                           text-slate-400">
@@ -96,6 +113,7 @@ export default function ProblemCard({ problem }) {
                             </span>
                         </div>
 
+                        {/* Contributor Attribution Card */}
                         <Link
                             href={`/profile/${problem.author.id}`}
                             className="flex items-center space-x-2 group"
@@ -110,6 +128,7 @@ export default function ProblemCard({ problem }) {
                              transition-colors">
                                 {problem.author.name}
                             </span>
+                            {/* Author's Community Rank Tally */}
                             <span className="text-[10px] bg-primary-50 dark:bg-primary-900/20 
                              text-primary-600 px-1.5 py-0.5 rounded-md font-bold">
                                 {formatNumber(problem.author.reputation)}

@@ -1,3 +1,9 @@
+/**
+ * @file solutionController.js
+ * @description Controller for managing peer-provided solutions to technical problems.
+ * Handles solution submission, AI moderation, community voting, and acceptance.
+ */
+
 const Solution = require('../models/Solution');
 const Problem = require('../models/Problem');
 const { scanContent } = require('../utils/moderation');
@@ -5,8 +11,11 @@ const { sendModerationWarning } = require('../config/mail');
 const User = require('../models/User');
 const { getEvolutionStage } = require('../utils/gamification');
 
-// @desc    Add a solution to a problem
-// @route   POST /api/solutions/:problemId
+/**
+ * @desc    Propose a solution to a specific technical problem.
+ *          Involves security scanning and reputation point awarding for contributors.
+ * @route   POST /api/solutions/:problemId
+ */
 exports.addSolution = async (req, res) => {
     try {
         const { content } = req.body;
@@ -16,7 +25,7 @@ exports.addSolution = async (req, res) => {
             return res.status(404).json({ message: 'Problem not found' });
         }
 
-        // AI Moderation Check
+        // Security Layer: Moderate solution content to prevent malicious scripts or toxicity
         const moderationResult = await scanContent(content);
         if (!moderationResult.isSafe) {
             const user = await User.findById(req.user._id);
@@ -33,11 +42,11 @@ exports.addSolution = async (req, res) => {
             problemId: req.params.problemId
         });
 
-        // Add solution to problem's solutions array
+        // Register the solution with the parent problem record
         problem.solutions.push(solution._id);
         await problem.save();
 
-        // Reward user for providing a potential intelligence node
+        // Award reputation to the solver for contributing technical intelligence
         const solver = await User.findById(req.user._id);
         if (solver) {
             solver.reputationPoints += 20;
@@ -51,11 +60,13 @@ exports.addSolution = async (req, res) => {
     }
 };
 
-// @desc    Vote on a solution
-// @route   PUT /api/solutions/:id/vote
+/**
+ * @desc    Registers a community vote on a specific solution.
+ * @route   PUT /api/solutions/:id/vote
+ */
 exports.voteSolution = async (req, res) => {
     try {
-        const { type } = req.body; // 'upvote' or 'downvote'
+        const { type } = req.body; // Expects 'upvote' or 'downvote'
         const solution = await Solution.findById(req.params.id);
 
         if (!solution) {
@@ -75,8 +86,11 @@ exports.voteSolution = async (req, res) => {
     }
 };
 
-// @desc    Mark solution as accepted
-// @route   PUT /api/solutions/:id/accept
+/**
+ * @desc    Allows the original problem author to accept a solution as valid.
+ *          Updates problem status to 'solved'.
+ * @route   PUT /api/solutions/:id/accept
+ */
 exports.acceptSolution = async (req, res) => {
     try {
         const solution = await Solution.findById(req.params.id).populate('problemId');
@@ -85,7 +99,7 @@ exports.acceptSolution = async (req, res) => {
             return res.status(404).json({ message: 'Solution not found' });
         }
 
-        // Verify that the user is the author of the problem
+        // Authorization check: Only the problem's creator can accept a solution
         if (solution.problemId.author.toString() !== req.user._id.toString()) {
             return res.status(401).json({ message: 'Not authorized to accept this solution' });
         }
@@ -93,7 +107,7 @@ exports.acceptSolution = async (req, res) => {
         solution.isAccepted = true;
         await solution.save();
 
-        // Also update problem status if needed
+        // Transactional update: Mark parent problem as solved
         const problem = await Problem.findById(solution.problemId);
         problem.status = 'solved';
         await problem.save();

@@ -1,3 +1,9 @@
+/**
+ * @file problemController.js
+ * @description Controller for managing technical problems and debugging challenges.
+ * Handles problem lifecycle, category filtering, and community voting.
+ */
+
 const Problem = require('../models/Problem');
 const Solution = require('../models/Solution');
 const { scanContent } = require('../utils/moderation');
@@ -5,14 +11,17 @@ const { sendModerationWarning } = require('../config/mail');
 const User = require('../models/User');
 const { getEvolutionStage } = require('../utils/gamification');
 
-// @desc    Get all problems with filtering and sorting
-// @route   GET /api/problems
+/**
+ * @desc    Fetch a list of problems with support for filtering by priority/category 
+ *          and dynamic sorting (newest, popular, views).
+ * @route   GET /api/problems
+ */
 exports.getProblems = async (req, res) => {
     try {
         const { category, priority, status, sort, search } = req.query;
         let query = {};
 
-        // Filtering
+        // Apply filters if provided in the query parameters
         if (category) query.category = category;
         if (priority) query.priority = priority;
         if (status) query.status = status;
@@ -25,7 +34,7 @@ exports.getProblems = async (req, res) => {
 
         let result = Problem.find(query).populate('author', 'name avatar level');
 
-        // Sorting
+        // Apply sorting preferences
         if (sort === 'newest') {
             result = result.sort('-createdAt');
         } else if (sort === 'oldest') {
@@ -45,8 +54,10 @@ exports.getProblems = async (req, res) => {
     }
 };
 
-// @desc    Get single problem by ID
-// @route   GET /api/problems/:id
+/**
+ * @desc    Retrieve a single problem detail including linked solutions and author metrics.
+ * @route   GET /api/problems/:id
+ */
 exports.getProblemById = async (req, res) => {
     try {
         const problem = await Problem.findById(req.params.id)
@@ -60,7 +71,7 @@ exports.getProblemById = async (req, res) => {
             return res.status(404).json({ message: 'Problem not found' });
         }
 
-        // Increment views
+        // Increment internal engagement views
         problem.views += 1;
         await problem.save();
 
@@ -70,13 +81,16 @@ exports.getProblemById = async (req, res) => {
     }
 };
 
-// @desc    Create a new problem
-// @route   POST /api/problems
+/**
+ * @desc    Submit a new technical challenge. 
+ *          Includes mandatory AI moderation and gamification point awarding.
+ * @route   POST /api/problems
+ */
 exports.createProblem = async (req, res) => {
     try {
         const { title, description, category, tags, priority } = req.body;
 
-        // AI Moderation Check
+        // Security Layer: Moderate problem description for technical safety and toxicity
         const moderationResult = await scanContent(`${title} ${description}`);
         if (!moderationResult.isSafe) {
             const user = await User.findById(req.user._id);
@@ -96,11 +110,7 @@ exports.createProblem = async (req, res) => {
             author: req.user._id
         });
 
-        await User.findByIdAndUpdate(req.user._id, {
-            $inc: { problemsSolved: 1, reputation: 10 }
-        });
-
-        // Reward user for contributing a challenge
+        // Award points for seeding new technical knowledge challenges
         const creator = await User.findById(req.user._id);
         if (creator) {
             creator.reputationPoints += 30;
@@ -115,11 +125,13 @@ exports.createProblem = async (req, res) => {
     }
 };
 
-// @desc    Vote on a problem
-// @route   PUT /api/problems/:id/vote
+/**
+ * @desc    Registers a community vote (up/down) on a problem.
+ * @route   PUT /api/problems/:id/vote
+ */
 exports.voteProblem = async (req, res) => {
     try {
-        const { type } = req.body; // 'upvote' or 'downvote'
+        const { type } = req.body; // Expects 'upvote' or 'downvote'
         const problem = await Problem.findById(req.params.id);
 
         if (!problem) {

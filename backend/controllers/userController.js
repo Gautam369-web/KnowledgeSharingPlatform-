@@ -1,9 +1,16 @@
+/**
+ * @file userController.js
+ * @description Controller for managing user profiles, high-fidelity stats, and the Council Leaderboard.
+ */
+
 const User = require('../models/User');
 const Problem = require('../models/Problem');
 const Article = require('../models/Article');
 
-// @desc    Get user profile with their contributions
-// @route   GET /api/users/profile/:id
+/**
+ * @desc    Fetch a public user profile along with their technical contributions.
+ * @route   GET /api/users/profile/:id
+ */
 exports.getUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.params.id).select('-password');
@@ -11,6 +18,7 @@ exports.getUserProfile = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // Aggregate user contributions (Articles + Problems)
         const problems = await Problem.find({ author: user._id }).sort('-createdAt');
         const articles = await Article.find({ author: user._id }).sort('-createdAt');
 
@@ -24,13 +32,16 @@ exports.getUserProfile = async (req, res) => {
     }
 };
 
-// @desc    Update user profile
-// @route   PUT /api/users/profile
+/**
+ * @desc    Update the authenticated user's profile metadata.
+ * @route   PUT /api/users/profile
+ */
 exports.updateProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
 
         if (user) {
+            // Apply partial updates from request body
             user.name = req.body.name || user.name;
             user.bio = req.body.bio || user.bio;
             user.location = req.body.location || user.location;
@@ -48,8 +59,11 @@ exports.updateProfile = async (req, res) => {
     }
 };
 
-// @desc    Get leaderboard
-// @route   GET /api/users/leaderboard
+/**
+ * @desc    Fetch the high-reputation "Council" leaderboard.
+ *          Sorted by reputation points and contribution volume.
+ * @route   GET /api/users/leaderboard
+ */
 exports.getLeaderboard = async (req, res) => {
     try {
         const users = await User.find()
@@ -62,16 +76,20 @@ exports.getLeaderboard = async (req, res) => {
     }
 };
 
-// @desc    Get user stats for dashboard
-// @route   GET /api/users/stats
+/**
+ * @desc    Fetch personalized technical stats for the user's Solarpunk dashboard.
+ * @route   GET /api/users/stats
+ */
 exports.getUserStats = async (req, res) => {
     try {
         const userId = req.user._id;
+
+        // Parallel count of technical activity
         const problemCount = await Problem.countDocuments({ author: userId });
         const solvedCount = await Problem.countDocuments({ author: userId, status: 'solved' });
         const articleCount = await Article.countDocuments({ author: userId });
 
-        // Mocking some trends and recent activity handles
+        // Retrieve deep gamification metrics
         const user = await User.findById(userId).select('reputation reputationPoints evolutionStage specialization level streak');
 
         res.status(200).json({

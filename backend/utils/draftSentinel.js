@@ -1,11 +1,24 @@
 /**
- * AI-Assisted Drafting Sentinel
- * Provides real-time feedback on article drafts using Groq Cloud AI.
+ * @file draftSentinel.js
+ * @description The AI-Assisted Drafting Sentinel.
+ * Provides real-time technical auditing and structural feedback for article drafts.
+ * Acts as a pre-publication quality control layer.
  */
 
+/**
+ * Analyzes an article draft and returns tactical feedback and technical metrics.
+ * 
+ * @param {string} title - The proposed title of the article.
+ * @param {string} content - The markdown/HTML content body.
+ * @param {string} category - The primary category (e.g., "Full Stack").
+ * @param {string[]} tags - Associated metadata tags.
+ * @returns {Promise<Object>} - A JSON object containing technical audit results.
+ */
 const analyzeDraft = async (title, content, category, tags = []) => {
     try {
         const GROQ_API_KEY = process.env.GROQ_API_KEY;
+
+        // Handle missing API credentials gracefully
         if (!GROQ_API_KEY) {
             return {
                 suggestions: ["Warning: Sentinel Offline. Connect Groq API for tactical analysis."],
@@ -14,6 +27,8 @@ const analyzeDraft = async (title, content, category, tags = []) => {
             };
         }
 
+        // Prompt Engineering: Define the persona and constraints for the LLM.
+        // We enforce a strict flat JSON structure to prevent React rendering errors on the frontend.
         const prompt = `
             You are the Solomon Drafting Sentinel, an AI specialized in technical knowledge architecture.
             Analyze this article draft for the SolveHub platform (Solarpunk/Cyberpunk aesthetic).
@@ -50,7 +65,8 @@ const analyzeDraft = async (title, content, category, tags = []) => {
         const data = await response.json();
         const analysis = JSON.parse(data.choices[0].message.content);
 
-        // Security Layer: Also scan for vulgarity/safety
+        // Security Layer: Synchronize with the global moderation engine.
+        // This ensures authors receive immediate warnings for toxicity before they attempt to publish.
         const { scanContent } = require('./moderation');
         const securityResult = await scanContent(`${title} ${content}`);
 

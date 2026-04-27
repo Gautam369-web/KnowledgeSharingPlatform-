@@ -1,22 +1,36 @@
+/**
+ * @file authController.js
+ * @description Authentication Engine for SolveHub.
+ * Implements a dual-layer registration process with OTP verification, 
+ * JWT-based session management, and password recovery protocols.
+ */
+
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { sendOTPEmail } = require('../config/mail');
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
+/**
+ * @desc    Initial registration handshake.
+ *          Creates an unverified user and dispatches a security OTP.
+ * @route   POST /api/auth/register
+ */
 exports.register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
+        // Check for existing identity to prevent duplicate entry
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
+        // Securely hash the password before database persistence
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Generate a cryptographically random 6-digit OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+        const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minute TTL
 
         const user = await User.create({
             name,
@@ -27,6 +41,7 @@ exports.register = async (req, res) => {
             otpExpiry
         });
 
+        // Dispatch OTP via the secure mail transport layer
         await sendOTPEmail(email, otp);
 
         res.status(201).json({
@@ -40,8 +55,11 @@ exports.register = async (req, res) => {
     }
 };
 
-// @desc    Verify OTP
-// @route   POST /api/auth/verify-otp
+/**
+ * @desc    Standardizes user verification by validating the security OTP.
+ *          Activates the account and generates the initial session JWT.
+ * @route   POST /api/auth/verify-otp
+ */
 exports.verifyOTP = async (req, res) => {
     try {
         const { email, otp } = req.body;
@@ -51,10 +69,12 @@ exports.verifyOTP = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // Validate OTP match and ensure it has not expired
         if (user.otp !== otp || user.otpExpiry < Date.now()) {
             return res.status(400).json({ message: 'Invalid or expired OTP' });
         }
 
+        // Activate the profile and clear the temporary OTP fields
         user.isVerified = true;
         user.otp = undefined;
         user.otpExpiry = undefined;
@@ -66,6 +86,7 @@ exports.verifyOTP = async (req, res) => {
             return res.status(500).json({ message: 'Environment configuration error: JWT_SECRET is missing' });
         }
 
+        // Generate a long-lived JWT for the verified session
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
         res.status(200).json({
@@ -83,8 +104,10 @@ exports.verifyOTP = async (req, res) => {
     }
 };
 
-// @desc    Resend OTP
-// @route   POST /api/auth/resend-otp
+/**
+ * @desc    Regenerates a fresh security OTP for a user-requested verification retry.
+ * @route   POST /api/auth/resend-otp
+ */
 exports.resendOTP = async (req, res) => {
     try {
         const { email } = req.body;
@@ -106,8 +129,10 @@ exports.resendOTP = async (req, res) => {
     }
 };
 
-// @desc    Login user
-// @route   POST /api/auth/login
+/**
+ * @desc    Standard login flow. Compares hashes and returns a session token.
+ * @route   POST /api/auth/login
+ */
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -117,13 +142,14 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
+        // Validate password using bcrypt's secure comparison
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
 
-        // Return user data (excluding password)
+        // Construct the public user response (excluding sensitive hashes)
         const userResponse = {
             id: user._id,
             name: user.name,
@@ -153,8 +179,10 @@ exports.login = async (req, res) => {
     }
 };
 
-// @desc    Forgot Password
-// @route   POST /api/auth/forgot-password
+/**
+ * @desc    Initiates the password recovery flow by dispatching a reset OTP.
+ * @route   POST /api/auth/forgot-password
+ */
 exports.forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
@@ -179,8 +207,10 @@ exports.forgotPassword = async (req, res) => {
     }
 };
 
-// @desc    Reset Password
-// @route   POST /api/auth/reset-password
+/**
+ * @desc    Finalizes password recovery by validating the reset OTP and applying the new hash.
+ * @route   POST /api/auth/reset-password
+ */
 exports.resetPassword = async (req, res) => {
     try {
         const { email, otp, newPassword } = req.body;

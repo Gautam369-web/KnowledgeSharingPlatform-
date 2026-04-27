@@ -1,12 +1,26 @@
+/**
+ * @file ProfileHeader.js
+ * @description Identity HUD for user profiles.
+ * Visualizes the user's Solarpunk aura, evolutionary stage, technical specializations, 
+ * and engagement metrics (reputation, artifacts, and node status).
+ */
+
 import EvolutionBadge from './EvolutionBadge';
 import { HiOutlinePencil, HiOutlineChat, HiOutlineBookOpen, HiOutlineLightningBolt, HiOutlineGlobeAlt, HiOutlineMail, HiOutlineLocationMarker, HiOutlineCalendar } from 'react-icons/hi';
 import { FaGithub, FaGlobe } from 'react-icons/fa';
 
+/**
+ * @param {Object} user - The profile owner's data.
+ * @param {boolean} isOwnProfile - Flag to enable editing capabilities.
+ * @param {number} problemCount - Aggregate of submitted problems.
+ * @param {number} articleCount - Aggregate of published articles.
+ * @param {Function} onEditClick - Callback for opening the profile sync modal.
+ */
 export default function ProfileHeader({ user, isOwnProfile = false, problemCount = 0, articleCount = 0, onEditClick }) {
     return (
         <>
             <div style={{ position: 'relative' }}>
-                {/* Evolution Aura Overlay */}
+                {/* Evolution Aura Overlay: Dynamic radial gradient based on reputation */}
                 <div style={{
                     position: 'absolute',
                     top: 0,
@@ -18,7 +32,7 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                     zIndex: 1
                 }} />
 
-                {/* Cover Pattern - Solarpunk Gradient */}
+                {/* Cover Pattern - High-fidelity Solarpunk Gradient */}
                 <div style={{
                     height: 240,
                     width: '100%',
@@ -31,10 +45,11 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                     <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'url("https://www.transparenttextures.com/patterns/carbon-fibre.png")' }} />
                 </div>
 
-                {/* Profile Info Card */}
+                {/* Profile Information HUD Card */}
                 <div className="card" style={{ padding: '32px 48px', marginTop: -80, margin: '-80px 40px 0', position: 'relative', zIndex: 10 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', md: 'row', alignItems: 'flex-end', gap: 32, marginTop: -80 }}>
                         <div style={{ position: 'relative' }}>
+                            {/* User Avatar with secureDicebear fallbacks */}
                             <img
                                 src={user.avatar || 'https://api.dicebear.com/8.x/micah/svg?seed=Solarpunk&backgroundColor=0a1a0d'}
                                 alt={user.name}
@@ -47,9 +62,11 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                                     boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
                                     background: '#0e2010'
                                 }} />
+                            {/* Evolutionary Rank Indicator */}
                             <div style={{ position: 'absolute', top: -10, right: -10 }}>
                                 <EvolutionBadge stage={user.evolutionStage} size={50} />
                             </div>
+                            {/* Quick-Edit Action: Only visible on the owner's profile */}
                             {isOwnProfile && (
                                 <button onClick={onEditClick} style={{
                                     position: 'absolute', bottom: 12, left: -10,
@@ -64,6 +81,7 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                             )}
                         </div>
 
+                        {/* Textual Identity Layer */}
                         <div style={{ flex: 1, paddingBottom: 8 }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
                                 <div style={{ minWidth: 200 }}>
@@ -71,6 +89,7 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                                         <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 32, fontWeight: 900, color: '#f0ebe0', margin: 0 }}>
                                             {user.name}
                                         </h1>
+                                        {/* Stage Badge: Semantic text representation */}
                                         <div style={{ background: 'rgba(110,196,122,0.1)', padding: '4px 12px', borderRadius: 8, border: '1px solid rgba(110,196,122,0.2)' }}>
                                             <span style={{ fontSize: 10, fontWeight: 900, color: '#6ec47a', letterSpacing: '0.1em' }}>{user.evolutionStage.toUpperCase()}</span>
                                         </div>
@@ -79,6 +98,7 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                                     <p style={{ fontSize: 16, color: 'rgba(240,235,224,0.4)', fontWeight: 600 }}>@{user.name.toLowerCase().replace(/\s+/g, '')}</p>
                                 </div>
 
+                                {/* Connection / Modification Actions */}
                                 <div style={{ display: 'flex', gap: 12 }}>
                                     {isOwnProfile ? (
                                         <button onClick={onEditClick} className="btn-primary" style={{ background: 'rgba(240,235,224,0.05)', color: '#f0ebe0', border: '1px solid rgba(240,235,224,0.1)' }}>
@@ -94,6 +114,7 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                             </div>
                         </div>
 
+                        {/* Geographical & Social Connectivity Grid */}
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, marginTop: 24, color: 'rgba(240,235,224,0.4)', fontSize: 13, fontWeight: 700 }}>
                             <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <HiOutlineLocationMarker style={{ color: '#6ec47a' }} />
@@ -112,6 +133,7 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                 </div>
             </div>
 
+            {/* Core Stats Matrix: Key performance indicators (KPIs) for the Architect */}
             <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(4, 1fr)',

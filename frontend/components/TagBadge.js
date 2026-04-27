@@ -1,9 +1,21 @@
+/**
+ * @file TagBadge.js
+ * @description Atomic metadata component for technical tags.
+ * Supports both informational (static) and navigational (interactive) modes, 
+ * utilizing semantic coloring for high visibility in the IQ Matrix.
+ */
+
 'use client';
 
 import Link from 'next/link';
 import { HiOutlineTag } from 'react-icons/hi';
 
+/**
+ * @param {string} tag - The technical label (e.g., "Node.js").
+ * @param {boolean} interactive - If true, the badge acts as a link to tag-specific results.
+ */
 export default function TagBadge({ tag, interactive = true }) {
+    // High-fidelity atomic UI snippet
     const content = (
         <span className="inline-flex items-center px-3 py-1.5 rounded-xl text-sm 
                    font-medium bg-primary-50 dark:bg-primary-900/20 
@@ -15,8 +27,10 @@ export default function TagBadge({ tag, interactive = true }) {
         </span>
     );
 
+    // Static mode: used in contexts like modal previews
     if (!interactive) return content;
 
+    // Search-Integrated mode: connects to the global problem/article index
     return (
         <Link href={`/problems?tag=${encodeURIComponent(tag)}`}>
             {content}

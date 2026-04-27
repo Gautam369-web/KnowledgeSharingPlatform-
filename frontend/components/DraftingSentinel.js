@@ -1,9 +1,22 @@
+/**
+ * @file DraftingSentinel.js
+ * @description Frontend interface for the Solomon AI Diagnostic tool.
+ * Provides a real-time HUD for article quality, Solarpunk aesthetic scoring, 
+ * security warnings, and structural audits.
+ */
+
 'use client';
 
 import { useState } from 'react';
 import { HiOutlineLightningBolt, HiOutlineCheckCircle, HiOutlineExclamation, HiOutlineSparkles } from 'react-icons/hi';
 
+/**
+ * @param {Object} analysis - The results from the Groq-powered AI diagnostic.
+ * @param {Function} onAnalyze - Trigger for re-initializing the neural scan.
+ * @param {boolean} loading - State of the backend inference process.
+ */
 export default function DraftingSentinel({ analysis, onAnalyze, loading }) {
+    // Idle State: Displayed before the first scan is initialized
     if (!analysis && !loading) {
         return (
             <div className="card p-6 border-dashed border-[rgba(212,160,23,0.3)] text-center">
@@ -21,6 +34,7 @@ export default function DraftingSentinel({ analysis, onAnalyze, loading }) {
         );
     }
 
+    // Loading State: Implements a "scanning" animation for aesthetic feedback
     if (loading) {
         return (
             <div className="card p-8 border-[#6ec47a] overflow-hidden relative">
@@ -35,6 +49,7 @@ export default function DraftingSentinel({ analysis, onAnalyze, loading }) {
 
     return (
         <div className="card border-[rgba(212,160,23,0.2)] overflow-hidden">
+            {/* Header: Displays the Solarpunk IQ Score */}
             <div style={{ padding: '16px 24px', background: 'rgba(212,160,23,0.05)', borderBottom: '1px solid rgba(212,160,23,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span className="text-[10px] font-black tracking-widest text-[#d4a017]">SENTINEL REPORT</span>
                 <span className="text-[10px] p-1 px-2 rounded bg-[#0a1a0d] border border-[rgba(212,160,23,0.3)] text-[#d4a017]">
@@ -42,6 +57,7 @@ export default function DraftingSentinel({ analysis, onAnalyze, loading }) {
                 </span>
             </div>
 
+            {/* Critical Alert Layer: Toxicity or Moderation triggers */}
             {analysis.securityWarning && (
                 <div style={{ padding: '16px 24px', background: 'rgba(255,85,85,0.1)', borderBottom: '1px solid rgba(255,85,85,0.2)', display: 'flex', alignItems: 'center', gap: 12 }}>
                     <HiOutlineExclamation className="text-[#ff5555] text-xl shrink-0" />
@@ -53,6 +69,7 @@ export default function DraftingSentinel({ analysis, onAnalyze, loading }) {
             )}
 
             <div className="p-6 space-y-6">
+                {/* Title Linguistic Audit */}
                 <div>
                     <h5 className="text-[10px] font-black text-[rgba(240,235,224,0.3)] mb-3 tracking-widest uppercase">Title Audit</h5>
                     {typeof analysis.titleAudit === 'object' ? (
@@ -66,6 +83,7 @@ export default function DraftingSentinel({ analysis, onAnalyze, loading }) {
                     )}
                 </div>
 
+                {/* The "Critical Fix": Single most important improvement identified by AI */}
                 <div>
                     <h5 className="text-[10px] font-black text-[rgba(240,235,224,0.3)] mb-3 tracking-widest uppercase">Critical Fix</h5>
                     <div style={{ display: 'flex', gap: 12, padding: 12, background: 'rgba(255,85,85,0.05)', border: '1px solid rgba(255,85,85,0.1)', borderRadius: 12 }}>
@@ -76,6 +94,7 @@ export default function DraftingSentinel({ analysis, onAnalyze, loading }) {
                     </div>
                 </div>
 
+                {/* Structure Analysis: Logic flow and technical depth check */}
                 <div>
                     <h5 className="text-[10px] font-black text-[rgba(240,235,224,0.3)] mb-3 tracking-widest uppercase">Structure Audit</h5>
                     <p className="text-xs text-[rgba(240,235,224,0.6)] leading-relaxed">
@@ -83,6 +102,7 @@ export default function DraftingSentinel({ analysis, onAnalyze, loading }) {
                     </p>
                 </div>
 
+                {/* SEO Optimization: Auto-generated technical tags */}
                 <div>
                     <h5 className="text-[10px] font-black text-[rgba(240,235,224,0.3)] mb-3 tracking-widest uppercase">SEO Optimization</h5>
                     <div className="flex flex-wrap gap-2">
@@ -92,6 +112,7 @@ export default function DraftingSentinel({ analysis, onAnalyze, loading }) {
                     </div>
                 </div>
 
+                {/* Re-Analyze Trigger */}
                 <button
                     onClick={onAnalyze}
                     className="w-full py-3 text-[10px] font-black tracking-widest bg-transparent border border-[rgba(240,235,224,0.1)] text-[rgba(240,235,224,0.4)] hover:border-[#d4a017] hover:text-[#d4a017] transition-all rounded-xl"

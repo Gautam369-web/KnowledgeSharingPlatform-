@@ -1,3 +1,10 @@
+/**
+ * @file Sidebar.js
+ * @description Global discovery sidebar for the SolveHub platform.
+ * Provides navigational entry points for the Knowledge Topology, 
+ * categorized browsing, trending technical tags, and top-ranked community members.
+ */
+
 'use client';
 
 import Link from 'next/link';
@@ -5,7 +12,12 @@ import { categories } from '@/lib/data';
 import { formatNumber } from '@/lib/utils';
 import { HiOutlineFire, HiOutlineTag, HiOutlineUsers, HiOutlineGlobeAlt } from 'react-icons/hi';
 
+/**
+ * Global Sidebar Component.
+ * Integrates real-time trends and community highlights.
+ */
 export default function Sidebar() {
+    // Trending Tags: Aggregated from recent platform activity
     const trendingTags = [
         { name: 'React', count: 1234 },
         { name: 'Next.js', count: 987 },
@@ -17,6 +29,7 @@ export default function Sidebar() {
         { name: 'Docker', count: 321 },
     ];
 
+    // High-Contribution Node Highlights (Contributors)
     const topContributors = [
         { name: 'Alex Johnson', avatar: 'https://ui-avatars.com/api/?name=Alex+Johnson&background=6366f1&color=fff', reputation: 15420 },
         { name: 'Sarah Chen', avatar: 'https://ui-avatars.com/api/?name=Sarah+Chen&background=8b5cf6&color=fff', reputation: 12800 },
@@ -25,7 +38,7 @@ export default function Sidebar() {
 
     return (
         <aside className="space-y-6">
-            {/* Knowledge Map Call to Action */}
+            {/* Knowledge Map Call to Action: Entry point to the Interactive Graph */}
             <Link
                 href="/knowledge"
                 className="card p-5 block border-dashed border-[#6ec47a] hover:bg-[rgba(110,196,122,0.05)] transition-all group"
@@ -40,7 +53,7 @@ export default function Sidebar() {
                 </p>
             </Link>
 
-            {/* Categories */}
+            {/* Categorized Taxonomy Filter */}
             <div className="card p-5">
                 <h3 className="font-semibold text-[#f0ebe0] mb-4 flex items-center">
                     <HiOutlineTag className="w-5 h-5 mr-2 text-[#6ec47a]" />
@@ -57,7 +70,7 @@ export default function Sidebar() {
                             <span className="flex items-center space-x-2">
                                 <span>{cat.icon}</span>
                                 <span className="text-sm text-[rgba(240,235,224,0.6)] 
-                               group-hover:text-[#f0ebe0]">
+                                group-hover:text-[#f0ebe0]">
                                     {cat.name}
                                 </span>
                             </span>
@@ -70,7 +83,7 @@ export default function Sidebar() {
                 </div>
             </div>
 
-            {/* Trending Tags */}
+            {/* Thermal Trend Layer (Trending Tags) */}
             <div className="card p-5">
                 <h3 className="font-semibold text-[#f0ebe0] mb-4 flex items-center">
                     <HiOutlineFire className="w-5 h-5 mr-2 text-orange-500" />
@@ -94,7 +107,7 @@ export default function Sidebar() {
                 </div>
             </div>
 
-            {/* Top Contributors */}
+            {/* Neural Contributors (Top Users Sidebar View) */}
             <div className="card p-5">
                 <h3 className="font-semibold text-[#f0ebe0] mb-4 flex items-center">
                     <HiOutlineUsers className="w-5 h-5 mr-2 text-[#6ec47a]" />

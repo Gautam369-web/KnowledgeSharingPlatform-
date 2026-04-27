@@ -1,3 +1,10 @@
+/**
+ * @file Navbar.js
+ * @description The global navigation shell for SolveHub.
+ * Implements a "Solarpunk Glass" aesthetic with dynamic scroll-based styles, 
+ * responsive mobile menus, and integrated user authentication state.
+ */
+
 'use client';
 
 import { Suspense, useState, useEffect } from 'react';
@@ -10,6 +17,10 @@ import {
     HiOutlineUserCircle, HiOutlineGlobeAlt
 } from 'react-icons/hi';
 
+/**
+ * Mapping of primary navigation nodes.
+ * Used for both desktop link generation and mobile menu population.
+ */
 const NAV = [
     { label: 'Network', href: '/', icon: HiOutlineHome },
     { label: 'Challenges', href: '/problems', icon: HiOutlineLightningBolt },
@@ -18,18 +29,33 @@ const NAV = [
     { label: 'Council', href: '/leaderboard', icon: HiOutlineChartBar },
 ];
 
+/**
+ * Internal component to handle search-params dependent logic within a Suspense boundary.
+ * Manages scroll detection, active states, and user session rendering.
+ */
 function NavInner() {
+    // State for dynamic "glassmorphism" effect on scroll
     const [scrolled, setScrolled] = useState(false);
+    // State for mobile drawer visibility
     const [mobileOpen, setMobileOpen] = useState(false);
+
+    // Auth context hooks for session data
     const { user, logout } = useAuth();
     const pathname = usePathname();
 
+    /**
+     * Scroll Listener: Adds a threshold-based background blur/tint 
+     * once the user leaves the hero section.
+     */
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 10);
         window.addEventListener('scroll', onScroll);
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
+    /**
+     * Helper to determine if a route is currently active.
+     */
     const isActive = (href) => pathname === href;
 
     return (
@@ -49,7 +75,7 @@ function NavInner() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
             }}>
-                {/* Logo */}
+                {/* Brand Identity / Logo */}
                 <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
                     <div style={{
                         width: 36, height: 36, borderRadius: 12,
@@ -67,7 +93,7 @@ function NavInner() {
                     }}>Solar<span style={{ color: '#d4a017' }}>Hub</span></span>
                 </Link>
 
-                {/* Desktop Nav */}
+                {/* Desktop Navigation Engine */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }} className="hidden md:flex">
                     {NAV.map(({ label, href, icon: Icon }) => {
                         const active = isActive(href);
@@ -93,8 +119,9 @@ function NavInner() {
                     })}
                 </div>
 
-                {/* Right Side */}
+                {/* Tactical Utility Group (Search/Profile/Auth) */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    {/* Global Fuzzy Search Link */}
                     <Link href="/search" style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         width: 40, height: 40, borderRadius: 12,
@@ -106,6 +133,7 @@ function NavInner() {
 
                     {user ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                            {/* Fast-access Dashboard Link */}
                             <Link href="/dashboard" style={{
                                 display: 'flex', alignItems: 'center', gap: 8,
                                 padding: '10px 18px', borderRadius: 12,
@@ -120,6 +148,8 @@ function NavInner() {
                                 <HiOutlineLightningBolt />
                                 Dashboard
                             </Link>
+
+                            {/* User Profile / Avatar Handle */}
                             <Link href={`/profile/${user.id || user._id}`} style={{
                                 width: 42, height: 42, borderRadius: 16,
                                 background: 'rgba(212,160,23,0.1)',
@@ -138,6 +168,8 @@ function NavInner() {
                                     </span>
                                 )}
                             </Link>
+
+                            {/* End Session Trigger */}
                             <button onClick={logout} style={{
                                 background: 'transparent', border: 'none', color: 'rgba(248,113,113,0.6)',
                                 cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
@@ -162,13 +194,14 @@ function NavInner() {
                         </div>
                     )}
 
+                    {/* Mobile Toggle Handle */}
                     <button className="flex md:hidden" onClick={() => setMobileOpen(!mobileOpen)} style={{ background: 'none', border: 'none', color: '#f0ebe0', fontSize: 24, cursor: 'pointer' }}>
                         {mobileOpen ? <HiOutlineX /> : <HiOutlineMenu />}
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Responsive Mobile Overlay Menu */}
             {mobileOpen && (
                 <div style={{
                     position: 'absolute', top: 72, left: 0, right: 0,
@@ -199,6 +232,10 @@ function NavInner() {
     );
 }
 
+/**
+ * Root Navbar export.
+ * Wrapped in Suspense to allow for Next.js 14 client-side navigation optimization.
+ */
 export default function Navbar() {
     return (
         <Suspense fallback={<div style={{ height: 72, background: '#0a1a0d' }} />}>

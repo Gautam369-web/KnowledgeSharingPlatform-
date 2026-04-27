@@ -1,11 +1,23 @@
+/**
+ * @file CategoryFilter.js
+ * @description Horizontal taxonomy filter for the SolveHub platform.
+ * Implements a dynamic button-based interface for filtering articles and problems 
+ * by their technical niche (AI, Web, Cybersecurity, etc.).
+ */
+
 'use client';
 
 import { categories } from '@/lib/data';
 
+/**
+ * @param {string} selected - The currently active category name.
+ * @param {Function} onSelect - Callback to update the parent state upon interaction.
+ */
 export default function CategoryFilter({ selected, onSelect }) {
   return (
     <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar 
                   pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+      {/* Universal Filter Toggle */}
       <button
         onClick={() => onSelect('All')}
         className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap 
@@ -16,6 +28,8 @@ export default function CategoryFilter({ selected, onSelect }) {
       >
         All Categories
       </button>
+
+      {/* Dynamic Taxonomy Buttons: Mapped from global configuration */}
       {categories.map((cat) => (
         <button
           key={cat.id}

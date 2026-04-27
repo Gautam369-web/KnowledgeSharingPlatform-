@@ -1,3 +1,9 @@
+/**
+ * @file DashboardStats.js
+ * @description Summary metrics component for the User Dashboard.
+ * Visualizes technical engagement levels, solutions provided, and overall IQ reputation.
+ */
+
 'use client';
 
 import {
@@ -6,7 +12,13 @@ import {
 } from 'react-icons/hi';
 import { formatNumber } from '@/lib/utils';
 
+/**
+ * @param {Object} stats - High-level user performance metrics from the backend.
+ */
 export default function DashboardStats({ stats }) {
+    /**
+     * Map of statistical categories with their associated icons and styles.
+     */
     const cards = [
         { label: 'Problems Solved', value: stats.problemsSolved, icon: HiOutlineLightBulb, color: 'text-primary-600 bg-primary-100 dark:bg-primary-900/30' },
         { label: 'Solutions Given', value: stats.solutionsGiven, icon: HiOutlineChatAlt2, color: 'text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30' },
@@ -20,6 +32,7 @@ export default function DashboardStats({ stats }) {
                 const Icon = card.icon;
                 return (
                     <div key={idx} className="card p-5 flex items-center space-x-4">
+                        {/* Status Icon Wrapper with dynamic color coding */}
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${card.color}`}>
                             <Icon className="w-6 h-6" />
                         </div>
@@ -28,7 +41,7 @@ export default function DashboardStats({ stats }) {
                                 {card.label}
                             </p>
                             <p className="text-xl font-bold text-slate-900 dark:text-white">
-                                {formatNumber(card.value)}
+                                {formatNumber(card.value)} {/* Formats large numbers (e.g., 1200 -> 1.2k) */}
                             </p>
                         </div>
                     </div>
