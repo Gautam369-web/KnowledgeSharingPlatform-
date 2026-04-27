@@ -72,8 +72,8 @@ export default function LeaderboardPage() {
                                     </div>
                                     <img src={u.avatar} style={{ width: isFirst ? 96 : 72, height: isFirst ? 96 : 72, borderRadius: 24, objectFit: 'cover', border: `3px solid ${color}`, marginBottom: 20, margin: '0 auto 20px' }} />
                                     <h3 style={{ fontSize: isFirst ? 22 : 18, fontWeight: 800, color: '#f0ebe0', marginBottom: 8 }}>{u.name}</h3>
-                                    <div style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: isFirst ? 36 : 28, fontWeight: 900, color: color, lineHeight: 1 }}>{u.reputation}</div>
-                                    <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginTop: 8 }}>REPUTATION</div>
+                                    <div style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: isFirst ? 36 : 28, fontWeight: 900, color: color, lineHeight: 1 }}>{u.reputationPoints || u.reputation || 0}</div>
+                                    <div style={{ fontSize: 11, fontWeight: 800, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginTop: 8 }}>EXP REPUTATION</div>
                                 </div>
                             );
                         })}
@@ -90,8 +90,8 @@ export default function LeaderboardPage() {
                                 <div style={{ fontSize: 12, color: 'rgba(240,235,224,0.3)', fontWeight: 700 }}>{u.problemsSolved} problems solved</div>
                             </div>
                             <div style={{ textAlign: 'right' }}>
-                                <div style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 20, fontWeight: 900, color: '#6ec47a' }}>{u.reputation}</div>
-                                <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.05em' }}>POINTS</div>
+                                <div style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 20, fontWeight: 900, color: '#6ec47a' }}>{u.reputationPoints || u.reputation || 0}</div>
+                                <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.05em' }}>EXP</div>
                             </div>
                         </div>
                     ))}

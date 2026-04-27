@@ -23,8 +23,9 @@ async function migrateReputation() {
             let changed = false;
 
             // 1. Ensure reputationPoints is at least equal to old reputation
-            if (user.reputationPoints === undefined || user.reputationPoints === 0) {
-                user.reputationPoints = user.reputation || 0;
+            const legacyPoints = user.reputation || 0;
+            if (user.reputationPoints < legacyPoints || user.reputationPoints === undefined) {
+                user.reputationPoints = legacyPoints;
                 changed = true;
             }
 
