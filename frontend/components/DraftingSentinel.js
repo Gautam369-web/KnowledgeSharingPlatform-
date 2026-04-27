@@ -42,6 +42,16 @@ export default function DraftingSentinel({ analysis, onAnalyze, loading }) {
                 </span>
             </div>
 
+            {analysis.securityWarning && (
+                <div style={{ padding: '16px 24px', background: 'rgba(255,85,85,0.1)', borderBottom: '1px solid rgba(255,85,85,0.2)', display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <HiOutlineExclamation className="text-[#ff5555] text-xl shrink-0" />
+                    <div>
+                        <p className="text-[10px] font-black text-[#ff5555] tracking-widest uppercase mb-1">Security Alert</p>
+                        <p className="text-xs text-[rgba(240,235,224,0.8)] leading-tight">{analysis.securityWarning}</p>
+                    </div>
+                </div>
+            )}
+
             <div className="p-6 space-y-6">
                 <div>
                     <h5 className="text-[10px] font-black text-[rgba(240,235,224,0.3)] mb-3 tracking-widest uppercase">Title Audit</h5>

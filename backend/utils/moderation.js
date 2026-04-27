@@ -42,15 +42,15 @@ const scanContent = async (text) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model: 'llama-3.1-8b-instant',
+                    model: 'llama-3.3-70b-versatile',
                     messages: [
                         {
                             role: 'system',
-                            content: 'You are a technical content moderator. Analyze text for malicious intent, toxicity, severe harassment, or explicit sexual content. Ignore technical terminology, code snippets, or common technical jargon. If unsafe, return JSON: { "isSafe": false, "reason": "toxicity/vulgarity" }. If safe, return { "isSafe": true }.'
+                            content: 'You are a strict technical content moderator. Analyze text for ANY malicious intent, mild to severe toxicity, harassment, vulgarity, or explicit sexual content. Ignore technical terminology, code snippets, or common technical jargon. If UNSAFE (even if borderline), return JSON: { "isSafe": false, "reason": "toxicity/vulgarity" }. If completely safe, return { "isSafe": true }.'
                         },
                         {
                             role: 'user',
-                            content: `Analyze: ${text.slice(0, 2000)}`
+                            content: `Analyze: ${text.slice(0, 3000)}`
                         }
                     ],
                     response_format: { type: 'json_object' }

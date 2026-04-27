@@ -48,7 +48,18 @@ const analyzeDraft = async (title, content, category, tags = []) => {
         });
 
         const data = await response.json();
-        return JSON.parse(data.choices[0].message.content);
+        const analysis = JSON.parse(data.choices[0].message.content);
+
+        // Security Layer: Also scan for vulgarity/safety
+        const { scanContent } = require('./moderation');
+        const securityResult = await scanContent(`${title} ${content}`);
+
+        if (!securityResult.isSafe) {
+            analysis.securityWarning = "CRITICAL: Inappropriate content detected. This draft will be BLOCKED if you attempt to publish it.";
+            analysis.detectedIssues = securityResult.detected;
+        }
+
+        return analysis;
     } catch (error) {
         console.error('Draft Sentinel Error:', error);
         return { error: "Diagnostic failure in Sentinel link." };
