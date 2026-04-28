@@ -9,7 +9,7 @@ const Solution = require('../models/Solution');
 const { scanContent } = require('../utils/moderation');
 const { sendModerationWarning } = require('../config/mail');
 const User = require('../models/User');
-const { getEvolutionStage } = require('../utils/gamification');
+const { getEvolutionStage, updateContributionStreak } = require('../utils/gamification');
 
 /**
  * @desc    Fetch a list of problems with support for filtering by priority/category 
@@ -115,6 +115,10 @@ exports.createProblem = async (req, res) => {
         if (creator) {
             creator.reputationPoints += 30;
             creator.evolutionStage = getEvolutionStage(creator.reputationPoints);
+
+            // Track contribution streak
+            updateContributionStreak(creator);
+
             await creator.save();
         }
 

@@ -25,6 +25,7 @@ const UserSchema = new mongoose.Schema({
     evolutionStage: { type: String, default: 'Dormant Seed' }, // Ranks: Seed, Sprout, Sapling, Tree, Architect
     specialization: { type: String, default: 'Generalist' }, // Assigned via semantic analysis of tags
     streak: { type: Number, default: 0 },
+    lastContributionDate: { type: Date },
     badges: [{ type: String }],
 
     // Technical Contribution Metrics

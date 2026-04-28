@@ -53,4 +53,42 @@ const determineSpecialization = (articlesWritten, problemsSolved, tags = []) => 
     return 'Knowledge Node';
 };
 
-module.exports = { getEvolutionStage, determineSpecialization, EVOLUTION_STAGES };
+/**
+ * Updates a user's contribution streak based on technical activity.
+ * 
+ * @param {Object} user - The Mongoose user document.
+ * @returns {Object} - The updated user document.
+ */
+const updateContributionStreak = (user) => {
+    const now = new Date();
+    const lastContrib = user.lastContributionDate;
+
+    if (!lastContrib) {
+        // First ever contribution initiation
+        user.streak = 1;
+    } else {
+        // Calculate date differential (Standardizing to UTC midnight for consistency)
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const last = new Date(lastContrib.getFullYear(), lastContrib.getMonth(), lastContrib.getDate());
+        const diffDays = Math.floor((today - last) / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+            // Consecutive day contribution: Increment streak
+            user.streak += 1;
+        } else if (diffDays > 1) {
+            // Streak broken: Reset to 1
+            user.streak = 1;
+        }
+        // If diffDays === 0, it means they already contributed today; no change to streak
+    }
+
+    user.lastContributionDate = now;
+    return user;
+};
+
+module.exports = {
+    getEvolutionStage,
+    determineSpecialization,
+    updateContributionStreak,
+    EVOLUTION_STAGES
+};

@@ -9,7 +9,7 @@ const { scanContent } = require('../utils/moderation');
 const { sendModerationWarning } = require('../config/mail');
 const User = require('../models/User');
 const { generateSummary } = require('../utils/aiSummarizer');
-const { getEvolutionStage } = require('../utils/gamification');
+const { getEvolutionStage, updateContributionStreak } = require('../utils/gamification');
 const { analyzeDraft } = require('../utils/draftSentinel');
 
 /**
@@ -151,6 +151,10 @@ exports.createArticle = async (req, res) => {
                 author.reputationPoints += 50;
                 author.articlesWritten += 1;
                 author.evolutionStage = getEvolutionStage(author.reputationPoints);
+
+                // Track contribution streak
+                updateContributionStreak(author);
+
                 await author.save();
             }
         }

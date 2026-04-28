@@ -9,7 +9,7 @@ const Problem = require('../models/Problem');
 const { scanContent } = require('../utils/moderation');
 const { sendModerationWarning } = require('../config/mail');
 const User = require('../models/User');
-const { getEvolutionStage } = require('../utils/gamification');
+const { getEvolutionStage, updateContributionStreak } = require('../utils/gamification');
 
 /**
  * @desc    Propose a solution to a specific technical problem.
@@ -51,6 +51,10 @@ exports.addSolution = async (req, res) => {
         if (solver) {
             solver.reputationPoints += 20;
             solver.evolutionStage = getEvolutionStage(solver.reputationPoints);
+
+            // Track contribution streak
+            updateContributionStreak(solver);
+
             await solver.save();
         }
 
