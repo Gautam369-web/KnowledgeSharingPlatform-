@@ -131,6 +131,18 @@ export function AuthProvider({ children }) {
         toast.success('Profile updated successfully!');
     };
 
+    const toggleFollow = (targetId) => {
+        if (!user) return;
+        const isFollowing = user.following?.includes(targetId);
+        const updatedFollowing = isFollowing
+            ? user.following.filter(id => id !== targetId)
+            : [...(user.following || []), targetId];
+
+        const updatedUser = { ...user, following: updatedFollowing };
+        setUser(updatedUser);
+        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+    };
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -140,6 +152,7 @@ export function AuthProvider({ children }) {
             logout,
             updateProfile,
             refreshUser,
+            toggleFollow,
             isAuthenticated: !!user,
         }}>
             {children}

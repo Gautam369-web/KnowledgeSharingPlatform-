@@ -156,9 +156,43 @@ const STATS = [
    Main Component
 ───────────────────────────────────────── */
 export default function LandingPage() {
+    const [statsData, setStatsData] = useState({
+        problemsSolved: '47K+',
+        activeExperts: '12K+',
+        knowledgeArticles: '890K+',
+        uptime: '99.9%'
+    });
+
+    const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+
+    const formatStat = (num) => {
+        if (typeof num === 'string') return num;
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K+';
+        return num.toString();
+    };
+
     useEffect(() => {
-        // Scroll logic removed with navbar
-    }, []);
+        const fetchGlobalStats = async () => {
+            try {
+                const res = await fetch(`${API_URL}/api/users/global-stats`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setStatsData(data);
+                }
+            } catch (error) {
+                console.error('Failed to load global stats');
+            }
+        };
+        fetchGlobalStats();
+    }, [API_URL]);
+
+    const STAT_LIST = [
+        { value: formatStat(statsData.problemsSolved), label: 'Problems Solved' },
+        { value: formatStat(statsData.activeExperts), label: 'Active Experts' },
+        { value: formatStat(statsData.knowledgeArticles), label: 'Knowledge Articles' },
+        { value: statsData.uptime, label: 'Uptime SLA' },
+    ];
 
     return (
         <>
@@ -284,7 +318,7 @@ export default function LandingPage() {
                             borderRadius: 14, overflow: 'hidden',
                             maxWidth: 700, width: '100%',
                         }}>
-                            {STATS.map((s, i) => (
+                            {STAT_LIST.map((s, i) => (
                                 <div key={i} style={{
                                     padding: '20px 16px', textAlign: 'center',
                                     background: 'rgba(13,13,15,0.7)',

@@ -108,3 +108,93 @@ exports.getUserStats = async (req, res) => {
         res.status(500).json({ message: 'Error fetching stats', error: error.message });
     }
 };
+
+/**
+ * @desc    Follow another user
+ * @route   POST /api/users/follow/:id
+ */
+exports.followUser = async (req, res) => {
+    try {
+        const userToFollow = await User.findById(req.params.id);
+        const currentUser = await User.findById(req.user._id);
+
+        if (!userToFollow) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (userToFollow._id.toString() === currentUser._id.toString()) {
+            return res.status(400).json({ message: 'You cannot follow yourself' });
+        }
+
+        // Check if already following
+        if (currentUser.following.includes(userToFollow._id)) {
+            return res.status(400).json({ message: 'Already following this user' });
+        }
+
+        // Add to following
+        currentUser.following.push(userToFollow._id);
+        // Add to followers
+        userToFollow.followers.push(currentUser._id);
+
+        await currentUser.save();
+        await userToFollow.save();
+
+        res.status(200).json({ message: 'Successfully followed user' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error following user', error: error.message });
+    }
+};
+
+/**
+ * @desc    Unfollow a user
+ * @route   POST /api/users/unfollow/:id
+ */
+exports.unfollowUser = async (req, res) => {
+    try {
+        const userToUnfollow = await User.findById(req.params.id);
+        const currentUser = await User.findById(req.user._id);
+
+        if (!userToUnfollow) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Remove from following
+        currentUser.following = currentUser.following.filter(
+            id => id.toString() !== userToUnfollow._id.toString()
+        );
+        // Remove from followers
+        userToUnfollow.followers = userToUnfollow.followers.filter(
+            id => id.toString() !== currentUser._id.toString()
+        );
+
+        await currentUser.save();
+        await userToUnfollow.save();
+
+        res.status(200).json({ message: 'Successfully unfollowed user' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error unfollowing user', error: error.message });
+    }
+};
+
+/**
+ * @desc    Fetch global ecosystem statistics for the landing page.
+ * @route   GET /api/users/global-stats
+ */
+exports.getGlobalStats = async (req, res) => {
+    try {
+        const [problemCount, expertCount, articleCount] = await Promise.all([
+            Problem.countDocuments(),
+            User.countDocuments({ reputationPoints: { $gt: 0 } }),
+            Article.countDocuments({ status: 'published' })
+        ]);
+
+        res.status(200).json({
+            problemsSolved: problemCount,
+            activeExperts: expertCount || 1, // Fallback for fresh instances
+            knowledgeArticles: articleCount,
+            uptime: '99.9%' // Static SLA
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching global statistics', error: error.message });
+    }
+};

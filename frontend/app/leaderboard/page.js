@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { HiOutlineChartBar, HiOutlineTrendingUp, HiOutlineShieldCheck } from 'react-icons/hi';
+import { HiOutlineChartBar, HiOutlineTrendingUp, HiOutlineShieldCheck, HiOutlineSearch } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
 export default function LeaderboardPage() {
     const [leaders, setLeaders] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
     const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
@@ -29,8 +30,13 @@ export default function LeaderboardPage() {
 
     if (loading) return <div style={{ minHeight: '100vh', background: '#0a1a0d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div className="loading-spinner" /></div>;
 
-    const topThree = leaders.slice(0, 3);
-    const others = leaders.slice(3);
+    const filteredLeaders = leaders.filter(user =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (user.specialization && user.specialization.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+
+    const topThree = searchQuery ? [] : filteredLeaders.slice(0, 3);
+    const displayedLeaders = searchQuery ? filteredLeaders : filteredLeaders.slice(3);
 
     const getBadgeColor = (rank) => {
         if (rank === 1) return '#d4a017';
@@ -50,7 +56,32 @@ export default function LeaderboardPage() {
                     <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 900, color: '#f0ebe0', marginBottom: 20, letterSpacing: '-0.03em' }}>
                         The Solarpunk <span style={{ color: '#d4a017' }}>Council</span>
                     </h1>
-                    <p style={{ fontSize: 18, color: 'rgba(240,235,224,0.4)', maxWidth: 600, margin: '0 auto' }}>Honoring the guardians of knowledge who strengthen our technical ecosystem.</p>
+                    <p style={{ fontSize: 18, color: 'rgba(240,235,224,0.4)', maxWidth: 600, margin: '0 auto', marginBottom: 40 }}>Honoring the guardians of knowledge who strengthen our technical ecosystem.</p>
+
+                    {/* Search Bar - High-fidelity Input */}
+                    <div style={{ position: 'relative', maxWidth: 400, margin: '0 auto' }}>
+                        <HiOutlineSearch style={{ position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', color: '#6ec47a', fontSize: 18 }} />
+                        <input
+                            type="text"
+                            placeholder="Find an Architect..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '16px 16px 16px 52px',
+                                background: 'rgba(110,196,122,0.05)',
+                                border: '1px solid rgba(110,196,122,0.1)',
+                                borderRadius: 16,
+                                color: '#f0ebe0',
+                                outline: 'none',
+                                fontSize: 15,
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
+                                transition: 'all 0.3s'
+                            }}
+                            onFocus={e => e.target.style.borderColor = '#d4a017'}
+                            onBlur={e => e.target.style.borderColor = 'rgba(110,196,122,0.1)'}
+                        />
+                    </div>
                 </div>
 
                 {topThree.length > 0 && (
@@ -81,24 +112,27 @@ export default function LeaderboardPage() {
                 )}
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingBottom: 100 }}>
-                    {others.map((u, i) => (
-                        <div key={u._id} className="card hover-lift" style={{ padding: '20px 32px', display: 'flex', alignItems: 'center', gap: 24 }}>
-                            <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 16, fontWeight: 900, color: 'rgba(240,235,224,0.2)', width: 32 }}>#{i + 4}</span>
-                            <img src={u.avatar} style={{ width: 44, height: 44, borderRadius: 12, objectFit: 'cover' }} />
-                            <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: 16, fontWeight: 800, color: '#f0ebe0' }}>{u.name}</div>
-                                <div style={{ fontSize: 12, color: 'rgba(240,235,224,0.3)', fontWeight: 700 }}>{u.problemsSolved} problems solved</div>
+                    {displayedLeaders.map((u, i) => {
+                        const rank = searchQuery ? leaders.findIndex(l => l._id === u._id) + 1 : i + 4;
+                        return (
+                            <div key={u._id} className="card hover-lift" style={{ padding: '20px 32px', display: 'flex', alignItems: 'center', gap: 24 }}>
+                                <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 16, fontWeight: 900, color: 'rgba(240,235,224,0.2)', width: 32 }}>#{rank}</span>
+                                <img src={u.avatar} style={{ width: 44, height: 44, borderRadius: 12, objectFit: 'cover' }} />
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: 16, fontWeight: 800, color: '#f0ebe0' }}>{u.name}</div>
+                                    <div style={{ fontSize: 12, color: 'rgba(240,235,224,0.3)', fontWeight: 700 }}>{u.problemsSolved} problems solved</div>
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <div style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 20, fontWeight: 900, color: '#6ec47a' }}>{u.reputationPoints || u.reputation || 0}</div>
+                                    <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.05em' }}>EXP</div>
+                                </div>
                             </div>
-                            <div style={{ textAlign: 'right' }}>
-                                <div style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 20, fontWeight: 900, color: '#6ec47a' }}>{u.reputationPoints || u.reputation || 0}</div>
-                                <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.05em' }}>EXP</div>
-                            </div>
-                        </div>
-                    ))}
-                    {leaders.length === 0 && !loading && (
+                        );
+                    })}
+                    {filteredLeaders.length === 0 && !loading && (
                         <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(240,235,224,0.2)' }}>
                             <HiOutlineShieldCheck style={{ fontSize: 64, marginBottom: 20, margin: '0 auto' }} />
-                            <p>No contributors found in this sector yet.</p>
+                            <p>No Architect found with that identity.</p>
                         </div>
                     )}
                 </div>

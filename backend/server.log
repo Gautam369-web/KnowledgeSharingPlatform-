@@ -1,0 +1,27 @@
+nohup: ignoring input
+◇ injected env (15) from .env // tip: ⌘ enable debugging { debug: true }
+Server running in development mode on port 5000
+MongoDB Connected: ac-xjtzatm-shard-00-01.xkphgkr.mongodb.net
+[0mGET /api/users/global-stats [32m200[0m 45.322 ms - 79[0m
+[0mGET /api/users/global-stats [32m200[0m 46.846 ms - 79[0m
+[0mGET /api/users/global-stats [32m200[0m 926.338 ms - 79[0m
+[0mGET /api/users/stats [36m304[0m 230.938 ms - -[0m
+[0mGET /api/users/profile/69ede697923e3783c3523cc2 [36m304[0m 150.638 ms - -[0m
+[0mGET /api/users/stats [36m304[0m 259.111 ms - -[0m
+[0mGET /api/users/profile/69ede697923e3783c3523cc2 [36m304[0m 162.622 ms - -[0m
+[0mGET /api/users/leaderboard [36m304[0m 63.450 ms - -[0m
+[0mGET /api/users/leaderboard [36m304[0m 71.122 ms - -[0m
+[0mGET /api/articles/stats/graph [36m304[0m 56.225 ms - -[0m
+[0mGET /api/articles/stats/graph [36m304[0m 46.926 ms - -[0m
+[0mGET /api/articles? [32m200[0m 106.874 ms - 9716[0m
+🛡️ Sentinel Analysis [AI]: SAFE
+[0mPOST /api/articles/analyze-draft [32m200[0m 1017.597 ms - 444[0m
+🛡️ Sentinel Analysis [AI]: SAFE
+[0mPOST /api/articles [32m201[0m 399.169 ms - 849[0m
+[0mGET /api/articles? [32m200[0m 95.250 ms - 10698[0m
+[0mGET /api/users/leaderboard [32m200[0m 46.042 ms - 10845[0m
+[0mGET /api/users/leaderboard [36m304[0m 50.129 ms - -[0m
+[0mGET /api/articles/stats/graph [32m200[0m 91.866 ms - 1128[0m
+[0mGET /api/articles/stats/graph [36m304[0m 54.366 ms - -[0m
+[0mGET /api/users/global-stats [32m200[0m 49.246 ms - 80[0m
+[0mGET /api/users/global-stats [36m304[0m 48.722 ms - -[0m

@@ -5,9 +5,12 @@
  * and engagement metrics (reputation, artifacts, and node status).
  */
 
+import { useState, useEffect } from 'react';
 import EvolutionBadge from './EvolutionBadge';
 import { HiOutlinePencil, HiOutlineChat, HiOutlineBookOpen, HiOutlineLightningBolt, HiOutlineGlobeAlt, HiOutlineMail, HiOutlineLocationMarker, HiOutlineCalendar } from 'react-icons/hi';
 import { FaGithub, FaGlobe } from 'react-icons/fa';
+import { useAuth } from '@/context/AuthContext';
+import toast from 'react-hot-toast';
 
 /**
  * @param {Object} user - The profile owner's data.
@@ -17,6 +20,56 @@ import { FaGithub, FaGlobe } from 'react-icons/fa';
  * @param {Function} onEditClick - Callback for opening the profile sync modal.
  */
 export default function ProfileHeader({ user, isOwnProfile = false, problemCount = 0, articleCount = 0, onEditClick }) {
+    const { user: currentUser, toggleFollow } = useAuth();
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [followerCount, setFollowerCount] = useState(user?.followers?.length || 0);
+    const [isFollowingLoading, setIsFollowingLoading] = useState(false);
+    const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+
+    useEffect(() => {
+        if (currentUser && user?.followers) {
+            setIsFollowing(user.followers.some(followerId =>
+                followerId === currentUser._id || followerId === currentUser.id ||
+                (followerId._id && (followerId._id === currentUser._id || followerId._id === currentUser.id))
+            ));
+        }
+    }, [currentUser, user]);
+
+    const handleFollowToggle = async () => {
+        if (!currentUser) {
+            toast.error('You must be logged in to connect with other nodes.');
+            return;
+        }
+
+        setIsFollowingLoading(true);
+        try {
+            const token = localStorage.getItem('token');
+            const endpoint = isFollowing ? `/api/users/unfollow/${user._id || user.id}` : `/api/users/follow/${user._id || user.id}`;
+            const res = await fetch(`${API_URL}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                const authorId = user._id || user.id;
+                toggleFollow(authorId);
+                setIsFollowing(!isFollowing);
+                setFollowerCount(prev => isFollowing ? prev - 1 : prev + 1);
+                toast.success(isFollowing ? 'Node disconnected successfully' : 'Node connected successfully');
+            } else {
+                toast.error(data.message || 'Action failed');
+            }
+        } catch (error) {
+            toast.error('Network error while toggling connection');
+        } finally {
+            setIsFollowingLoading(false);
+        }
+    };
+
     return (
         <>
             <div style={{ position: 'relative' }}>
@@ -106,7 +159,18 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                                         </button>
                                     ) : (
                                         <>
-                                            <button className="btn-primary">Connect Node</button>
+                                            <button
+                                                className={`btn-primary ${isFollowing ? 'following' : ''}`}
+                                                onClick={handleFollowToggle}
+                                                disabled={isFollowingLoading}
+                                                style={{
+                                                    background: isFollowing ? 'rgba(240,235,224,0.05)' : '#6ec47a',
+                                                    color: isFollowing ? '#f0ebe0' : '#0a1a0d',
+                                                    border: isFollowing ? '1px solid rgba(240,235,224,0.1)' : 'none'
+                                                }}
+                                            >
+                                                {isFollowingLoading ? '...' : (isFollowing ? 'Disconnect Node' : 'Connect Node')}
+                                            </button>
                                             <button className="btn-primary" style={{ background: 'rgba(240,235,224,0.05)', color: '#f0ebe0', border: '1px solid rgba(240,235,224,0.1)' }}>Pulse</button>
                                         </>
                                     )}
@@ -147,7 +211,7 @@ export default function ProfileHeader({ user, isOwnProfile = false, problemCount
                     <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#d4a017' }}>{user.reputationPoints || 10}</p>
                 </div>
                 <div>
-                    <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>KNOWLEDGE ARTIFACS</p>
+                    <p style={{ fontSize: 10, fontWeight: 900, color: 'rgba(240,235,224,0.2)', letterSpacing: '0.1em', marginBottom: 8 }}>KNOWLEDGE ARTIFACTS</p>
                     <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: 24, fontWeight: 900, color: '#f0ebe0' }}>{articleCount}</p>
                 </div>
                 <div>

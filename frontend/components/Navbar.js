@@ -119,17 +119,8 @@ function NavInner() {
                     })}
                 </div>
 
-                {/* Tactical Utility Group (Search/Profile/Auth) */}
+                {/* Tactical Utility Group (Profile/Auth) */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    {/* Global Fuzzy Search Link */}
-                    <Link href="/search" style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        width: 40, height: 40, borderRadius: 12,
-                        background: 'rgba(240,235,224,0.05)', color: 'rgba(240,235,224,0.4)',
-                        textDecoration: 'none', transition: 'all 0.2s'
-                    }}>
-                        <HiOutlineSearch style={{ fontSize: 20 }} />
-                    </Link>
 
                     {user ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>

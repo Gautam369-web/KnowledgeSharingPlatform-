@@ -16,7 +16,7 @@ exports.globalSearch = async (req, res) => {
             $or: [
                 { title: searchRegex },
                 { description: searchRegex },
-                { tags: { $in: [searchRegex] } }
+                { tags: searchRegex }
             ]
         }).populate('author', 'name avatar').limit(10);
 
@@ -25,7 +25,7 @@ exports.globalSearch = async (req, res) => {
                 { title: searchRegex },
                 { content: searchRegex },
                 { excerpt: searchRegex },
-                { tags: { $in: [searchRegex] } }
+                { tags: searchRegex }
             ]
         }).populate('author', 'name avatar').limit(10);
 

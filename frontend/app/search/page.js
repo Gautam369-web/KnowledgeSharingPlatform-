@@ -1,12 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { HiOutlineSearch, HiOutlineLightningBolt, HiOutlineBookOpen, HiOutlineChevronRight } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
-export default function SearchPage() {
-    const [query, setQuery] = useState('');
+function SearchContent() {
+    const searchParams = useSearchParams();
+    const initialQuery = searchParams.get('q') || '';
+
+    const [query, setQuery] = useState(initialQuery);
     const [results, setResults] = useState({ problems: [], articles: [] });
     const [loading, setLoading] = useState(false);
     const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
@@ -143,6 +147,14 @@ export default function SearchPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function SearchPage() {
+    return (
+        <Suspense fallback={<div style={{ minHeight: '100vh', background: '#0a1a0d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div className="loading-spinner" /></div>}>
+            <SearchContent />
+        </Suspense>
     );
 }
 

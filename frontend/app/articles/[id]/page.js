@@ -24,6 +24,9 @@ export default function ArticleDetailPage() {
     const [loading, setLoading] = useState(true);
     const [summary, setSummary] = useState(null);
     const [summarizing, setSummarizing] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [isFollowingLoading, setIsFollowingLoading] = useState(false);
+    const { toggleFollow } = useAuth();
 
     const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
@@ -48,6 +51,13 @@ export default function ArticleDetailPage() {
     useEffect(() => {
         if (id) fetchArticle();
     }, [id, API_URL]);
+
+    useEffect(() => {
+        if (user && article?.author) {
+            const authorId = article.author._id || article.author.id;
+            setIsFollowing(user.following?.includes(authorId));
+        }
+    }, [user, article]);
 
     const handleLike = async () => {
         if (!isAuthenticated) return toast.error('Sign in to like');
@@ -99,6 +109,40 @@ export default function ArticleDetailPage() {
             toast.error('Connection severed');
         } finally {
             setSummarizing(false);
+        }
+    };
+
+    const handleFollowToggle = async () => {
+        if (!isAuthenticated) {
+            toast.error('Sign in to connect with other nodes.');
+            return;
+        }
+
+        const authorId = article.author._id || article.author.id;
+        setIsFollowingLoading(true);
+        try {
+            const token = localStorage.getItem('token');
+            const endpoint = isFollowing ? `/api/users/unfollow/${authorId}` : `/api/users/follow/${authorId}`;
+            const res = await fetch(`${API_URL}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                toggleFollow(authorId);
+                setIsFollowing(!isFollowing);
+                toast.success(isFollowing ? 'Node disconnected successfully' : 'Node connected successfully');
+            } else {
+                toast.error(data.message || 'Action failed');
+            }
+        } catch (error) {
+            toast.error('Network error during connection transition');
+        } finally {
+            setIsFollowingLoading(false);
         }
     };
 
@@ -293,7 +337,20 @@ export default function ArticleDetailPage() {
                                 <p style={{ fontSize: 13, color: 'rgba(240,235,224,0.4)', lineHeight: 1.6, marginBottom: 24 }}>
                                     Dedicated to exploring technical solutions that harmonize humanity and nature.
                                 </p>
-                                <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>FOLLOW EXPERT</button>
+                                <button
+                                    className={`btn-primary ${isFollowing ? 'following' : ''}`}
+                                    style={{
+                                        width: '100%',
+                                        justifyContent: 'center',
+                                        background: isFollowing ? 'rgba(212,160,23,0.1)' : '#d4a017',
+                                        color: isFollowing ? '#d4a017' : '#0a1a0d',
+                                        border: isFollowing ? '1px solid rgba(212,160,23,0.3)' : 'none'
+                                    }}
+                                    onClick={handleFollowToggle}
+                                    disabled={isFollowingLoading}
+                                >
+                                    {isFollowingLoading ? '...' : (isFollowing ? 'CONNECTED' : 'FOLLOW EXPERT')}
+                                </button>
                             </div>
                             <Sidebar />
                         </aside>
